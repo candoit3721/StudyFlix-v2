@@ -9,6 +9,7 @@
  *   data-generator, data-params (JSON), data-count
  */
 import { generateSet } from '../generators';
+import { formatNumber } from '../lib/format';
 import { getCurrentLearner, getLessonProgress, recordItem, recordPractice } from '../lib/progress';
 import type { Item } from '../model/schemas';
 import { answerText, isCorrect } from './grading';
@@ -123,7 +124,8 @@ class SfItems extends HTMLElement {
       if (!progress.items[`${this.blockId}:${li.dataset.key}`]?.correct) continue;
       const item = JSON.parse(li.dataset.item ?? '{}') as Item;
       const input = li.querySelector<HTMLInputElement>('input');
-      if (input) input.value = answerText(item);
+      // The unit is shown after the box, so restore only the number a learner would have typed.
+      if (input) input.value = item.kind === 'number' ? formatNumber(item.answer) : answerText(item);
       for (const button of li.querySelectorAll<HTMLButtonElement>('button.choice')) {
         if (button.dataset.value === (item.kind === 'choice' ? item.answer : ''))
           button.classList.add('is-correct');

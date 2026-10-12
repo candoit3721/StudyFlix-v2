@@ -20,3 +20,22 @@ test('the printed worksheet hides the toolbar and fits the page width', async ({
   const pdf = await page.pdf({ format: 'Letter' });
   expect(pdf.byteLength).toBeGreaterThan(10_000);
 });
+
+test('generated choice and unit questions print with their choices and units', async ({ page }) => {
+  await page.goto('/courses/g6-math/ratios-and-rates/worksheet/');
+  const items = page.locator('.print-block--practice .print-items > li');
+  await expect(items).toHaveCount(8);
+  const simplify = items.filter({ hasText: 'in lowest terms?' }).first();
+  await expect(simplify.locator('.print-choices > li')).toHaveCount(4);
+  const speed = items.filter({ hasText: 'kilometres' }).first();
+  await expect(speed.locator('.print-line')).toHaveText(/km\/h/);
+
+  await page.goto('/courses/g6-math/ratios-and-rates/answer-key/');
+  const answer = page
+    .locator('.key-items')
+    .last()
+    .locator('li')
+    .filter({ hasText: 'in lowest terms?' })
+    .first();
+  await expect(answer.locator('.key-answer')).toHaveText(/^[A-D]\. \d+\u00a0:\u00a0\d+$/);
+});

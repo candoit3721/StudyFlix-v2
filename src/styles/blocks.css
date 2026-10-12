@@ -499,8 +499,17 @@ sf-items {
   text-decoration: line-through;
 }
 
+/* The answer box and its unit stay together on one line; the Check button may wrap below them. */
+.item-field {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
 .item-answer input {
-  width: min(100%, 14rem);
+  width: 14rem;
+  min-width: 8rem;
   min-height: 44px;
   padding: 0.5rem 0.8rem;
   border-radius: var(--radius-s);
@@ -629,13 +638,14 @@ sf-items {
     flex-direction: column;
   }
 
-  .item-answer {
-    flex-wrap: nowrap;
+  /* The box grows to fill the row from 8rem; when the row is too narrow, the Check button wraps. */
+  .item-field {
+    flex: 1 1 auto;
   }
 
   .item-answer input {
-    flex: 1;
-    min-width: 0;
+    flex: 1 1 8rem;
+    width: 8rem;
   }
 
   .choice {

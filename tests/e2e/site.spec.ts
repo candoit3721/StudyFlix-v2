@@ -50,6 +50,11 @@ const AXE_PAGES = [
   '/courses/math-contest-club/pairing-trick/worksheet/',
   '/courses/math-contest-club/pairing-trick/answer-key/',
   '/curricula/ontario-science-2022-g6/',
+  '/courses/g6-math/',
+  '/courses/g6-math/ratios-and-rates/',
+  '/courses/g6-math/ratios-and-rates/worksheet/',
+  '/courses/g6-math/ratios-and-rates/answer-key/',
+  '/curricula/ontario-math-2020-g6/',
 ];
 
 for (const path of AXE_PAGES) {
@@ -73,6 +78,19 @@ test('accessibility: quiz feedback states (correct, wrong, revealed, complete)',
   const results = await new AxeBuilder({ page }).include('#check').withTags(['wcag2a', 'wcag2aa']).analyze();
   const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
   expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+});
+
+test('a number answer with a unit comes back without the unit repeated in the box', async ({ page }) => {
+  await chooseLearner(page, 'Sophia');
+  await page.goto('/courses/g6-math/ratios-and-rates/');
+  const item = page.locator('#check li.item').filter({ hasText: 'What is its speed?' });
+  await answerItem(item, true);
+  await expect(item).toHaveAttribute('data-state', 'correct');
+
+  await page.reload();
+  await expect(item).toHaveAttribute('data-state', 'correct');
+  await expect(item.getByLabel('Your answer')).toHaveValue('90');
+  await expect(item.locator('.item-unit')).toHaveText('km/h');
 });
 
 test('lesson pages use the page width on desktop and stay single-column on phones', async ({ page }) => {
@@ -141,5 +159,22 @@ test('lesson pages use the page width on desktop and stay single-column on phone
     await page.locator('.lesson-foot').scrollIntoViewIfNeeded();
     await expect(status).toBeInViewport({ ratio: 1 });
     expect((await box('.lesson-status')).y).toBeGreaterThanOrEqual(64);
+  }
+});
+
+test('answer boxes stay wide enough to read, with the unit beside the box', async ({ page }) => {
+  await page.goto('/courses/g6-math/ratios-and-rates/');
+  for (let round = 0; round < 6; round++) {
+    for (const field of await page.locator('form.item-answer').all()) {
+      const input = await field.locator('input').boundingBox();
+      expect(input?.width ?? 0, 'answer box width').toBeGreaterThanOrEqual(127);
+      const unit = field.locator('.item-unit');
+      if ((await unit.count()) === 0) continue;
+      const unitBox = await unit.boundingBox();
+      expect(unitBox?.x ?? 0, `${await unit.textContent()} sits right of the box`).toBeGreaterThan(
+        (input?.x ?? 0) + (input?.width ?? 0),
+      );
+    }
+    await page.getByRole('button', { name: 'New set' }).click();
   }
 });

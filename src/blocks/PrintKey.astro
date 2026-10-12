@@ -15,10 +15,10 @@ const { block, lessonId } = Astro.props;
 const letters = 'ABCDEF';
 
 let entries: { prompt: string; answer: string; explanation?: string }[] = [];
+const letter = (item: Item) =>
+  item.kind === 'choice' ? `${letters[item.choices.indexOf(item.answer)]}. ` : '';
 const markdownAnswer = (item: Item) =>
-  item.kind === 'choice'
-    ? `${letters[item.choices.indexOf(item.answer)]}. ${renderInline(item.answer)}`
-    : escapeHtml(answerText(item));
+  item.kind === 'choice' ? `${letter(item)}${renderInline(item.answer)}` : escapeHtml(answerText(item));
 
 if (block.type === 'quiz') {
   entries = block.items.map((item) => ({
@@ -30,7 +30,7 @@ if (block.type === 'quiz') {
 if (block.type === 'practice') {
   entries = generateSet(block.generator, block.params, block.count, lessonId).map(({ item }) => ({
     prompt: escapeHtml(item.prompt),
-    answer: escapeHtml(answerText(item)),
+    answer: `${letter(item)}${escapeHtml(answerText(item))}`,
     explanation: item.explanation ? `<p>${escapeHtml(item.explanation)}</p>` : undefined,
   }));
 }

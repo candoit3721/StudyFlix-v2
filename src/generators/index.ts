@@ -1,12 +1,14 @@
 import { createRng, hashKey } from '../lib/rng';
 import type { Item } from '../model/schemas';
 import { gaussSum } from './gauss-sum';
+import { ratiosRates } from './ratios-rates';
 import type { Generator } from './types';
 
 /** Every generator a practice block may reference. Add new generators here. */
 // biome-ignore lint/suspicious/noExplicitAny: each generator has its own params type; generateSet parses them.
 export const GENERATORS: Record<string, Generator<any>> = {
   [gaussSum.id]: gaussSum,
+  [ratiosRates.id]: ratiosRates,
 };
 
 export interface KeyedItem {

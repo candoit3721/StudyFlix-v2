@@ -34,7 +34,7 @@ const minutes = course.lessons.reduce((total, lesson) => total + lesson.minutes,
       <h1>{course.title}</h1>
       <p>{course.summary}</p>
       <div class="lesson-meta">
-        <span class="chip"><Icon name="list-checks" size={14} />{course.lessons.length} lessons</span>
+        <span class="chip"><Icon name="list-checks" size={14} />{course.lessons.length} {course.lessons.length === 1 ? 'lesson' : 'lessons'}</span>
         <span class="chip"><Icon name="clock" size={14} />{minutes} min</span>
         {
           curriculum && (

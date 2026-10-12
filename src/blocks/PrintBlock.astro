@@ -80,7 +80,18 @@ const practice =
         {practice.map(({ item }) => (
           <li>
             <div class="print-prompt" set:html={escapeHtml(item.prompt)} />
-            <div class="print-line" />
+            {item.kind === 'choice' ? (
+              <ul class="print-choices">
+                {item.choices.map((choice, i) => (
+                  <li>
+                    <span class="print-bubble">{letters[i]}</span>
+                    <span>{choice}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div class="print-line">{item.kind === 'number' && item.unit ? <span>{item.unit}</span> : null}</div>
+            )}
           </li>
         ))}
       </ol>

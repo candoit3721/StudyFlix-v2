@@ -1,0 +1,48 @@
+name: Ontario Mathematics, Grade 6
+jurisdiction: Ontario
+subject: math
+grade: 6
+source: "The Ontario Curriculum, Grades 1-8: Mathematics (2020), Grade 6 overall expectations"
+strands:
+  - code: A
+    title: Social-Emotional Learning (SEL) Skills in Mathematics and the Mathematical Processes
+    expectations:
+      - code: A1
+        text: apply, to the best of their ability, a variety of social-emotional learning skills to support their use of the mathematical processes and their learning in connection with the expectations in the other five strands of the mathematics curriculum
+  - code: B
+    title: Number
+    expectations:
+      - code: B1
+        text: demonstrate an understanding of numbers and make connections to the way numbers are used in everyday life
+      - code: B2
+        text: use knowledge of numbers and operations to solve mathematical problems encountered in everyday life
+  - code: C
+    title: Algebra
+    expectations:
+      - code: C1
+        text: identify, describe, extend, create, and make predictions about a variety of patterns, including those found in real-life contexts
+      - code: C2
+        text: demonstrate an understanding of variables, expressions, equalities, and inequalities, and apply this understanding in various contexts
+      - code: C3
+        text: solve problems and create computational representations of mathematical situations using coding concepts and skills
+      - code: C4
+        text: apply the process of mathematical modelling to represent, analyse, make predictions, and provide insight into real-life situations
+  - code: D
+    title: Data
+    expectations:
+      - code: D1
+        text: manage, analyse, and use data to make convincing arguments and informed decisions, in various contexts drawn from real life
+      - code: D2
+        text: describe the likelihood that events will happen, and use that information to make predictions
+  - code: E
+    title: Spatial Sense
+    expectations:
+      - code: E1
+        text: describe and represent shape, location, and movement by applying geometric properties and spatial relationships in order to navigate the world around them
+      - code: E2
+        text: compare, estimate, and determine measurements in various contexts
+  - code: F
+    title: Financial Literacy
+    expectations:
+      - code: F1
+        text: demonstrate the knowledge and skills needed to make informed financial decisions
