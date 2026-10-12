@@ -10,3 +10,7 @@ units:
       - six-kingdoms
       - vertebrates-and-invertebrates
       - invasive-species-in-the-great-lakes
+  - id: flight
+    title: Flight
+    lessons:
+      - four-forces-of-flight
