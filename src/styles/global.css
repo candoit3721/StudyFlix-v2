@@ -24,10 +24,10 @@
   --accent: #ff7a59;
   --accent-ink: #1a0f0b;
 
-  /* Feedback */
-  --ok: #1f9d68;
+  /* Feedback: at least 4.5:1 on white, paper and the soft tints, as text or behind white text */
+  --ok: #137049;
   --ok-soft: #e1f5ec;
-  --bad: #d64545;
+  --bad: #b83232;
   --bad-soft: #fbe6e6;
   --ok-on-dark: #43d39a;
 
