@@ -13,5 +13,5 @@ npm run dev       # http://localhost:4321
 npm run verify    # lint, types, unit tests, build, browser tests
 ```
 
-New material and features are added through the software factory (`/software-factory:factory <request>`).
+New material and features are added through the software factory (`/factory:new <request>`, `/factory:next`).
 See `AGENTS.md` for how everything fits together, and `factory/` for the factory profile and backlog.

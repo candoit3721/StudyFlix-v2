@@ -113,7 +113,8 @@ The schema comments are the reference.
 ## Software factory
 
 New features and new material go through the factory:
-`/software-factory:factory <request>`, or `/software-factory:factory next` to take the next item from `factory/backlog.md`.
+`/factory:new <request>`, or `/factory:next` to take the next item from `factory/backlog.md`.
+Other commands are `/factory:status`, `/factory:approve <id>`, `/factory:rework <id> <note>`, `/factory:discard <id>` and `/factory:dashboard`.
 `factory/profile.md` holds this project's factory settings, and `factory/reviewers/` holds the review lenses.
 
 ## Astro documentation
