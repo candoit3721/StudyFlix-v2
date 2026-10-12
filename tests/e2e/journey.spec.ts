@@ -86,19 +86,47 @@ test('flashcards flip to show the meaning', async ({ page }) => {
   await expect(card).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('flashcard words never break in the middle', async ({ page }) => {
-  await page.goto('/courses/g6-science/vertebrates-and-invertebrates/');
-  const broken = await page.$$eval('.flashcard-front', (faces) =>
-    faces
-      .filter((face) => {
-        const range = document.createRange();
-        range.selectNodeContents(face);
-        return !face.textContent?.trim().includes(' ') && range.getClientRects().length > 1;
-      })
-      .map((face) => face.textContent?.trim()),
-  );
-  expect(broken).toEqual([]);
-});
+// Lessons whose flashcards have long single words such as "Metamorphosis" and "Phytoplankton".
+const LONG_WORD_LESSONS = ['vertebrates-and-invertebrates', 'invasive-species-in-the-great-lakes'];
+
+for (const slug of LONG_WORD_LESSONS) {
+  test(`flashcard words never break in the middle (${slug})`, async ({ page }) => {
+    await page.goto(`/courses/g6-science/${slug}/`);
+    const broken = await page.$$eval('.flashcard-front', (faces) =>
+      faces
+        .filter((face) => {
+          const range = document.createRange();
+          range.selectNodeContents(face);
+          return !face.textContent?.trim().includes(' ') && range.getClientRects().length > 1;
+        })
+        .map((face) => face.textContent?.trim()),
+    );
+    expect(broken).toEqual([]);
+  });
+
+  test(`flashcards fit their cards and line up in rows (${slug})`, async ({ page }) => {
+    await page.goto(`/courses/g6-science/${slug}/`);
+    const problems = await page.$$eval('.flashcard', (cards) => {
+      const found: string[] = [];
+      const rowHeights = new Map<number, Set<number>>();
+      for (const card of cards) {
+        const box = card.getBoundingClientRect();
+        for (const face of card.querySelectorAll('.flashcard-face')) {
+          if (face.getBoundingClientRect().width > box.width + 0.5) {
+            found.push(`wider than its card: ${face.textContent?.trim()}`);
+          }
+        }
+        const row = Math.round(box.top);
+        rowHeights.set(row, (rowHeights.get(row) ?? new Set()).add(Math.round(box.height)));
+      }
+      for (const [row, heights] of rowHeights) {
+        if (heights.size > 1) found.push(`uneven heights in the row at ${row}px: ${[...heights].join(', ')}`);
+      }
+      return found;
+    });
+    expect(problems).toEqual([]);
+  });
+}
 
 test('curriculum coverage links expectations to lessons', async ({ page }) => {
   await page.goto('/curricula/ontario-science-2022-g6/');

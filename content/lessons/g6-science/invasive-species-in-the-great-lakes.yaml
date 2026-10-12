@@ -1,0 +1,282 @@
+title: Invasive Species in the Great Lakes
+summary: Meet zebra mussels and sea lampreys, see how invaders change a Great Lakes food web, and find out how Ontarians stop them from spreading.
+icon: fish
+minutes: 35
+expectations: [B1]
+objectives:
+  - Explain what makes a species invasive, and how it differs from a native species.
+  - Describe how zebra mussels and sea lampreys reached the Great Lakes and how each one harms native species.
+  - Trace how an invasive species can change a Great Lakes food web.
+  - Describe ways Ontarians stop invasive species from spreading and protect biodiversity.
+blocks:
+  - type: explainer
+    id: what-is-invasive
+    title: Native or invasive?
+    markdown: |
+      Every lake, forest and wetland has its own set of species that have lived together for a very long time.
+
+      A **native species** has lived naturally in a place for a very long time, without people bringing it there. Lake trout, walleye and yellow perch are native to the Great Lakes.
+
+      Sometimes people move a living thing to a new place. They might do it on purpose, like letting a pet fish go in a pond. Or they might do it by accident, like carrying tiny animals in a ship or on a boat.
+
+      A species that people brought from somewhere else is **not native** to its new home. Many of these species cause no trouble. Most garden vegetables, such as tomatoes and potatoes, are not native to Ontario, and they do not spread into the wild and cause harm.
+
+      An **invasive species** is different. It has all three of these parts:
+
+      1. It comes from somewhere else.
+      2. People moved it to its new home, on purpose or by accident.
+      3. It spreads and causes harm to the environment, the economy or people.
+
+      Why can an invader spread so fast? In the place it came from, natural predators (animals that hunt and eat it) and diseases kept its numbers down. In its new home, it often has no natural predators or diseases to do that. So its numbers can grow quickly, and it can crowd out or harm native species.
+
+      Invasive species are one of the biggest threats to biodiversity. In this lesson you will meet two invaders of the Great Lakes: the **zebra mussel** and the **sea lamprey**.
+
+  - type: explainer
+    id: great-lakes-food-web
+    title: A Great Lakes food web
+    markdown: |
+      Every living thing needs food for energy.
+
+      A **producer** makes its own food from sunlight. Plants and algae are producers.
+
+      A **consumer** eats other living things. All animals are consumers.
+
+      A **predator** is an animal that hunts and eats other animals. The animals it eats are its **prey**.
+
+      In the Great Lakes, the main producers are **phytoplankton**. These are tiny, plant-like living things (algae) that drift in the water and make food from sunlight. Most are too small to see one at a time.
+
+      **Zooplankton** are tiny animals that drift in the water and eat phytoplankton.
+
+      A **food chain** shows who eats whom. Here is one from Lake Erie:
+
+      **phytoplankton → zooplankton → young yellow perch → walleye**
+
+      Each arrow means "is eaten by". It points from the food to the animal that eats it, so it shows which way the energy goes. Zooplankton eat phytoplankton, young yellow perch eat zooplankton, and walleye eat young yellow perch.
+
+      A real lake has many food chains that cross and join. Walleye eat other fish too, and many animals eat zooplankton. Many food chains linked together make a **food web**.
+
+      A food web is like a net. Pull on one strand and the whole net moves. A change to one species can reach many others.
+
+  - type: explainer
+    id: zebra-mussels
+    title: Zebra mussels
+    markdown: |
+      A **zebra mussel** is a small freshwater mussel. Like a snail or a clam, it is a mollusc. It is usually about 2 to 3 cm long, about the size of your fingernail. Its D-shaped shell has dark and light stripes, like a zebra.
+
+      Zebra mussels are native to lakes and rivers near the Black Sea and the Caspian Sea, in eastern Europe and western Asia.
+
+      **How they got here.** Big ocean ships carry **ballast water**. This is water a ship pumps into tanks to keep it steady, then pumps out at another port. Tiny zebra mussel larvae (young zebra mussels) rode across the ocean in ballast water. When ships pumped it out, the larvae were released into the Great Lakes. Zebra mussels were first found in the Great Lakes in 1988, in Lake St. Clair.
+
+      A close relative, the **quagga mussel**, arrived the same way. It now outnumbers zebra mussels in many parts of the Great Lakes.
+
+      **How they spread.** The larvae are too small to see, and they drift in the water. Adults attach to hard surfaces with sticky threads: rocks, docks, boats, water intake pipes, and even the shells of native mussels. People spread them to inland lakes on boats and trailers, and in the water inside boats and bait buckets.
+
+      **How they harm native species.** Zebra mussels cover native mussels in thick clumps. The native mussels cannot open to feed or move, and many die. In parts of Lake St. Clair and western Lake Erie, native mussels almost disappeared.
+
+      Zebra mussels also clog the water intake pipes of power plants and water treatment plants. Cleaning the pipes costs a lot of money.
+
+      **How they change the food web.** A zebra mussel is a **filter feeder**. It pulls in water and strains out phytoplankton to eat. One adult can filter up to about 1 L of water a day. With huge numbers of zebra mussels, much of the phytoplankton is removed. That means less food for zooplankton, and so less food for the small fish that eat zooplankton.
+
+      **Clearer is not healthier.** With much of the phytoplankton gone, the water becomes clearer. That might sound good, but clearer water is not the same as healthier water. Food has been removed from the bottom of the food web. More sunlight now reaches the lake bottom too, so more plants and algae can grow there, and that changes the habitat.
+
+  - type: example
+    id: follow-the-food-chain
+    title: Follow the food chain
+    problem: "Lake Erie has this food chain: phytoplankton → zooplankton → young yellow perch → walleye. Then zebra mussels arrive in huge numbers and filter phytoplankton out of the water. Predict what happens at each link."
+    steps:
+      - "**Phytoplankton:** zebra mussels strain phytoplankton out of the water to eat. With huge numbers of mussels, there are **fewer** phytoplankton."
+      - "**Zooplankton:** zooplankton eat phytoplankton. Fewer phytoplankton means **less food** for zooplankton, so we predict **fewer** zooplankton."
+      - "**Young yellow perch:** young yellow perch eat zooplankton. Fewer zooplankton means **less food** for young perch, so **fewer** of them may grow up."
+      - "**Walleye:** walleye eat young yellow perch. Fewer young perch means **less food** for the walleye at the top of the chain."
+    answer: "**A change at the bottom of the food web can reach the animals at the top.** Zebra mussels never eat a walleye, but they can still leave it with less food. In a real lake, walleye eat other fish too, so the change may be smaller, but it can still reach the top."
+
+  - type: explainer
+    id: sea-lamprey
+    title: Sea lampreys
+    markdown: |
+      A **sea lamprey** has a long body that looks like an eel, but it is not an eel. It is a **jawless fish**. Instead of jaws, it has a round, sucking mouth filled with sharp teeth and a rough tongue.
+
+      Sea lampreys come from the Atlantic Ocean. They entered the Great Lakes through shipping canals.
+
+      For a long time, Niagara Falls blocked the way to the upper Great Lakes. Then the **Welland Canal** was built so ships could get around the falls. It gave sea lampreys a way around too. They reached Lake Erie, and from there Lakes Huron, Michigan and Superior.
+
+      **A parasite.** A sea lamprey is a **parasite**: a living thing that feeds on another living thing while that living thing stays alive. The living thing it feeds on is its **host**.
+
+      A sea lamprey attaches to a large fish, such as a lake trout, lake whitefish or salmon. It scrapes a hole through the fish's skin and feeds on its blood and body fluids. Many fish die from the attack or the wound. One sea lamprey can kill up to about 18 kg of fish while it lives as a parasite.
+
+      **Life cycle.**
+
+      1. A sea lamprey hatches in a stream that flows into a lake.
+      2. The larvae live buried in the stream bottom for several years. They feed on tiny bits of food and harm no fish.
+      3. Then they change shape and swim out to the lake. There they live as parasites for about a year to a year and a half.
+      4. Adults swim back up streams to spawn (lay their eggs), then die.
+
+      **What it did to the food web.** Together with overfishing, sea lampreys caused lake trout numbers in the upper Great Lakes to crash in the 1940s and 1950s.
+
+      Lake trout is a **top predator**: it is at the top of its food chain. When a top predator is lost, the animals it ate can grow out of control, and the whole food web changes.
+
+  - type: explainer
+    id: what-ontarians-do
+    title: How Ontarians stop invaders
+    markdown: |
+      You can help protect the Great Lakes and the lakes near you.
+
+      **Clean, Drain, Dry.** Before you move a boat, canoe or kayak to another lake or river, along with its trailer and gear:
+
+      - **Clean** off all plants, animals and mud.
+      - **Drain** all the water from the boat, motor, live well (a tank that keeps caught fish alive) and bait bucket.
+      - **Dry** everything before you use it in a different lake. Zebra mussels can live for several days out of water, so drying matters.
+
+      **Never let them go.** Never release aquarium pets, aquarium plants or live bait into a lake, river or pond. Return an unwanted pet to a pet store or find it a new home. Put leftover bait in the garbage, not the water.
+
+      **Report it.** If you think you have seen an invasive species, take a photo, note the place and leave it where it is. Then, with a parent or teacher, report it to Ontario's Invading Species Hotline or at invadingspecies.com.
+
+      Scientists and governments help too:
+
+      - **Sea lamprey control.** Sea lamprey larvae live in streams for years, so that is where people control them. Workers put a **lampricide** into streams. It is a chemical that targets sea lamprey larvae. Barriers and traps stop adults from swimming upstream to spawn. Canada and the United States work on this together through the Great Lakes Fishery Commission, and in Canada the work is done by Fisheries and Oceans Canada. It is one of the biggest efforts to protect Great Lakes fish, and it has cut sea lamprey numbers by about 90 percent in most parts of the Great Lakes.
+      - **Ballast water rules.** Ships coming into the Great Lakes from the ocean must now exchange or treat their ballast water, so they do not bring in new species.
+
+      Every invader stopped helps native species keep their place in the food web. That is how we protect biodiversity.
+
+  - type: flashcards
+    id: key-words
+    title: Key words
+    cards:
+      - front: Native species
+        back: A species that has lived naturally in a place for a very long time, without people bringing it there.
+      - front: Invasive species
+        back: A species from somewhere else, moved by people, that spreads and causes harm in its new home.
+      - front: Producer
+        back: A living thing that makes its own food from sunlight.
+      - front: Predator
+        back: An animal that hunts and eats other animals.
+      - front: Prey
+        back: An animal that a predator hunts and eats.
+      - front: Food chain
+        back: A path of arrows that shows who eats whom, from the food to the animal that eats it.
+      - front: Food web
+        back: Many food chains linked together.
+      - front: Phytoplankton
+        back: Tiny, plant-like living things that drift in the water and make food from sunlight.
+      - front: Zooplankton
+        back: Tiny animals that drift in the water and eat phytoplankton.
+      - front: Ballast water
+        back: Water a ship pumps into tanks to keep it steady, then pumps out at another port.
+      - front: Parasite
+        back: A living thing that feeds on another living thing while that living thing stays alive.
+      - front: Host
+        back: The living thing that a parasite feeds on.
+      - front: Lampricide
+        back: A chemical put into streams that targets sea lamprey larvae.
+
+  - type: quiz
+    id: check
+    title: Check your understanding
+    items:
+      - kind: choice
+        prompt: What makes a species **invasive**?
+        choices:
+          - It is not native to the place where it lives
+          - It is a big animal that eats a lot
+          - People moved it to a new place, and it spreads and causes harm there
+          - Birds carried it to a new place
+        answer: People moved it to a new place, and it spreads and causes harm there
+        explanation: An invasive species comes from somewhere else, was moved by people, and spreads and causes harm. Not being native is not enough. Tomatoes are not native to Ontario, but they are not invasive.
+      - kind: choice
+        prompt: Why can an invasive species often spread so quickly in its new home?
+        choices:
+          - It is always bigger than the native species
+          - It often has no natural predators or diseases there to keep its numbers down
+          - People feed it every day
+          - Native animals cannot see it
+        answer: It often has no natural predators or diseases there to keep its numbers down
+        explanation: In the place it came from, predators and diseases kept its numbers down. In its new home, those checks are often missing.
+      - kind: choice
+        prompt: How did zebra mussels first reach the Great Lakes?
+        choices:
+          - They blew in on the wind
+          - They swam up the St. Lawrence River on their own
+          - Migrating birds carried them on their feet
+          - Their tiny larvae rode in ships' ballast water
+        answer: Their tiny larvae rode in ships' ballast water
+        explanation: Ocean ships pumped out ballast water carrying zebra mussel larvae. They were first found in Lake St. Clair in 1988.
+      - kind: choice
+        prompt: How do zebra mussels harm native mussels?
+        choices:
+          - They cover them in thick clumps, so the native mussels cannot open to feed or move
+          - They crack open the native mussels' shells and eat them
+          - They push the native mussels out onto the beach
+        answer: They cover them in thick clumps, so the native mussels cannot open to feed or move
+        explanation: Zebra mussels attach to the shells of native mussels. Covered in clumps, many native mussels die.
+      - kind: choice
+        prompt: Zebra mussels strain huge amounts of phytoplankton out of the water. What does this mean for the zooplankton?
+        choices:
+          - They get more food
+          - Nothing changes for them
+          - They get less food
+        answer: They get less food
+        explanation: Zooplankton eat phytoplankton. Fewer phytoplankton means less food for zooplankton, and then less food for the small fish that eat zooplankton.
+      - kind: choice
+        prompt: After zebra mussels arrived, the water in parts of Lake Erie became much clearer. Is the lake healthier now?
+        choices:
+          - Yes, clear water always means a healthy lake
+          - No, it is clearer because the mussels removed phytoplankton, the food at the bottom of the food web
+          - Yes, more sunlight reaches the bottom, so nothing has been lost
+          - No, clear water is too cold for fish
+        answer: No, it is clearer because the mussels removed phytoplankton, the food at the bottom of the food web
+        explanation: Clearer is not healthier. Food was taken from the bottom of the food web, and the extra sunlight on the bottom changes the habitat too.
+      - kind: choice
+        prompt: Niagara Falls blocked the way to the upper Great Lakes. How did sea lampreys get around it?
+        choices:
+          - They swam up the falls
+          - Gulls carried them over the falls
+          - They came down a river from Hudson Bay
+          - They went through the Welland Canal, which lets ships go around the falls
+        answer: They went through the Welland Canal, which lets ships go around the falls
+        explanation: The Welland Canal gave ships, and sea lampreys, a way around Niagara Falls into Lake Erie. From there they reached Lakes Huron, Michigan and Superior.
+      - kind: choice
+        prompt: A sea lamprey has a long body like an eel. What kind of animal is it?
+        choices:
+          - An eel
+          - A jawless fish
+          - A worm
+          - A snake
+        answer: A jawless fish
+        explanation: A sea lamprey is a jawless fish. It is not an eel. It has no jaws, only a round, sucking mouth with sharp teeth.
+      - kind: text
+        prompt: What word means a living thing that feeds on another living thing while that living thing stays alive?
+        accept: [parasite, a parasite, parasites]
+        explanation: A sea lamprey is a parasite. The fish it feeds on is its host.
+      - kind: choice
+        prompt: Sea lampreys and overfishing made lake trout numbers crash. Lake trout is a top predator. What can happen when a top predator is lost?
+        choices:
+          - Nothing changes, because it is only one species
+          - Its prey disappear too
+          - The animals it ate can grow out of control, and the whole food web changes
+        answer: The animals it ate can grow out of control, and the whole food web changes
+        explanation: With no top predator eating them, its prey can grow in numbers. That change spreads through the food web.
+      - kind: choice
+        prompt: Why do workers put lampricide into streams instead of the open lake?
+        choices:
+          - Sea lamprey larvae live buried in stream bottoms for several years
+          - Lake trout live only in streams
+          - Adult sea lampreys never leave the lake
+        answer: Sea lamprey larvae live buried in stream bottoms for several years
+        explanation: The larvae stay in streams for years before they swim out to the lake. Adults swim back up streams to spawn, so barriers and traps stop them there.
+      - kind: choice
+        prompt: Your family wants to paddle your canoe on a different lake tomorrow. What should you do first?
+        choices:
+          - Rinse it off in the new lake when you get there
+          - Leave the water inside so it stays cool
+          - Scrub off the mud, but keep the water in the bait bucket
+          - Clean, drain and dry the canoe and gear before you go
+        answer: Clean, drain and dry the canoe and gear before you go
+        explanation: "Clean off plants, animals and mud, drain all the water, and dry everything. Water left inside, even in a bait bucket, can carry tiny larvae to the new lake."
+      - kind: choice
+        prompt: You no longer want your pet goldfish. What is the best thing to do?
+        choices:
+          - Let it go in a pond so it can be free
+          - Find it a new home or take it back to a pet store
+          - Release it into a river where it has more room
+        answer: Find it a new home or take it back to a pet store
+        explanation: Never release aquarium pets into a lake, river or pond. A pet let go in the wild can become an invasive species.
