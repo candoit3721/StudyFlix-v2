@@ -28,8 +28,19 @@ async function newDevice(
   });
   if (fake) await fake.install(context, baseURL ?? '');
   else await disableSync(context);
-  return { context, page: await context.newPage() };
+  const page = await context.newPage();
+  page.on('pageerror', (error) => consoleErrors.push(`${page.url()}: ${error.message}`));
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(`${page.url()}: ${message.text()}`);
+  });
+  return { context, page };
 }
+
+/** Errors logged by pages made with newDevice(). Tests where the service is up expect none. */
+let consoleErrors: string[] = [];
+test.beforeEach(() => {
+  consoleErrors = [];
+});
 
 async function disableSync(context: BrowserContext): Promise<void> {
   await context.addInitScript(() => {
@@ -336,6 +347,7 @@ test.describe('across devices', () => {
     await expect(b.page.locator('[data-last-visit]')).toHaveText('Last visit: today');
     await expect(b.page.locator('[data-title]')).toHaveText('The Six Kingdoms of Life');
     expect(fake.unknown).toEqual([]);
+    expect(consoleErrors).toEqual([]);
     await a.context.close();
     await b.context.close();
   });
@@ -456,6 +468,7 @@ test.describe('across devices', () => {
     await expect(home.getByText('Keep going, Sophia')).toBeVisible();
     await expect(home.locator('[data-last-visit]')).toHaveText('Last visit: today');
     expect(fake.unknown).toEqual([]);
+    expect(consoleErrors).toEqual([]);
     await a.context.close();
     await b.context.close();
   });
