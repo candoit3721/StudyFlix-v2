@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { GENERATORS, generateSet } from '../../src/generators';
 import { sumRange } from '../../src/generators/gauss-sum';
 import { answerText, isCorrect } from '../../src/items/grading';
+import { formatNumber } from '../../src/lib/format';
 import { itemSchema } from '../../src/model/schemas';
 
 describe.each(Object.values(GENERATORS))('generator $id', (generator) => {
@@ -22,7 +23,9 @@ describe.each(Object.values(GENERATORS))('generator $id', (generator) => {
 
   it('grades its own answer as correct', () => {
     for (const { item } of items) {
-      expect(isCorrect(item, answerText(item))).toBe(true);
+      // A learner types only the number; the unit is printed after the input box.
+      const typed = item.kind === 'number' ? formatNumber(item.answer) : answerText(item);
+      expect(isCorrect(item, typed)).toBe(true);
     }
   });
 
@@ -62,6 +65,75 @@ describe('gauss-sum answers', () => {
         const end = item.prompt.match(/… \+ ([\d,]+)\?/)?.[1]?.replace(/,/g, '');
         expect(item.kind).toBe('number');
         if (item.kind === 'number') expect(item.answer).toBe(brute(first ?? 0, Number(end ?? last)));
+      }
+    }
+  });
+});
+
+describe('ratios-rates answers', () => {
+  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+  const num = (text: string | undefined) => Number((text ?? '').replace(/,/g, ''));
+  const IMPERIAL = /\b(miles?|mph|ounces?|pounds?|foot|feet|inch(es)?|gallons?|cups?)\b/i;
+  const modes = ['simplify', 'missing-term', 'unit-rate'] as const;
+  const setOf = (mode: (typeof modes)[number]) => generateSet('ratios-rates', { mode }, 30, mode);
+
+  it('defaults to mixed and draws on every mode', () => {
+    const prompts = generateSet('ratios-rates', {}, 30, 'mixed').map(({ item }) => item.prompt);
+    expect(prompts.some((p) => p.startsWith('Which ratio is'))).toBe(true);
+    expect(prompts.some((p) => p.startsWith('Find the missing number'))).toBe(true);
+    expect(prompts.some((p) => /in 1\s(hour|minute|ticket|kg)\b/.test(p))).toBe(true);
+  });
+
+  it('simplify: exactly one of 4 distinct choices is equivalent and in lowest terms', () => {
+    for (const { item } of setOf('simplify')) {
+      expect(item.kind).toBe('choice');
+      if (item.kind !== 'choice') continue;
+      const [, a, b] = item.prompt.match(/^Which ratio is ([\d,]+)\s:\s([\d,]+) in lowest terms\?$/) ?? [];
+      expect(new Set(item.choices).size).toBe(4);
+      const right = item.choices.filter((choice) => {
+        const [, p, q] = choice.match(/^(\d+)\s:\s(\d+)$/) ?? [];
+        expect(p && q).toBeTruthy();
+        return gcd(num(p), num(q)) === 1 && num(p) * num(b) === num(q) * num(a);
+      });
+      expect(right).toEqual([item.answer]);
+    }
+  });
+
+  it('missing-term: the answer makes the cross products equal', () => {
+    for (const { item } of setOf('missing-term')) {
+      expect(item.kind).toBe('number');
+      if (item.kind !== 'number') continue;
+      expect(Number.isInteger(item.answer) && item.answer > 0).toBe(true);
+      const match = item.prompt.match(/^Find the missing number: (\d+)\s:\s(\d+) = (\d+|\?)\s:\s(\d+|\?)$/);
+      expect(match).not.toBeNull();
+      const terms = (match ?? []).slice(1).filter((t) => t !== undefined);
+      expect(terms.filter((t) => t === '?')).toHaveLength(1);
+      const [a, b, c, d] = terms.map((t) => (t === '?' ? item.answer : num(t)));
+      expect((a ?? 0) * (d ?? 0)).toBe((b ?? 0) * (c ?? 0));
+    }
+  });
+
+  it('unit-rate: answer × count = total, with a unit', () => {
+    for (const { item } of setOf('unit-rate')) {
+      expect(item.kind).toBe('number');
+      if (item.kind !== 'number') continue;
+      expect(item.unit).toBeTruthy();
+      expect(Number.isInteger(item.answer) && item.answer > 0).toBe(true);
+      const total = item.prompt.match(/([\d,]+)\s(?:km|pages|words|dollars|L)\b/)?.[1];
+      const count = item.prompt.match(/(\d+)\s(?:hours|minutes|tickets|kg)\b/)?.[1];
+      expect(total && count).toBeTruthy();
+      expect(item.answer * num(count)).toBe(num(total));
+    }
+  });
+
+  it('uses plain text and metric units everywhere, including choices', () => {
+    const items = [...modes.map(setOf), generateSet('ratios-rates', {}, 30, 'mixed')].flat();
+    for (const { item } of items) {
+      const texts = [item.prompt, item.explanation ?? '', ...(item.kind === 'choice' ? item.choices : [])];
+      if (item.kind === 'number') texts.push(item.unit ?? '');
+      for (const text of texts) {
+        expect(text).not.toMatch(/[$*_`#]/);
+        expect(text).not.toMatch(IMPERIAL);
       }
     }
   });
