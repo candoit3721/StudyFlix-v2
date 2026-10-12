@@ -38,6 +38,7 @@ function simplify(rng: Rng): Item {
   const g = gcd(r1, r2);
   const answer = ratio(r1 / g, r2 / g);
   // Common slips: terms swapped, only one term divided, or stopping before lowest terms.
+  // The proper factors (above 1) of every d in the list above; extend this list if d grows (for example 9).
   const properFactors = [2, 3, 4].filter((p) => p < d && d % p === 0);
   let slip = ratio(r1, r2 / g);
   if (properFactors.length > 0) {
@@ -91,7 +92,11 @@ interface RateContext {
   divide: string;
 }
 
-/** Metric, Canadian contexts with realistic whole-number rates. */
+/**
+ * Metric, Canadian contexts with realistic whole-number rates.
+ * The unit-rate test in tests/unit/generators.test.ts parses the total and count from the prompt
+ * by their unit words, so add any new unit word there too.
+ */
 const RATE_CONTEXTS: readonly RateContext[] = [
   {
     rate: [70, 100],
@@ -146,7 +151,7 @@ const RATE_CONTEXTS: readonly RateContext[] = [
     count: [2, 9],
     unit: 'dollars per kg',
     prompt: (t, c) =>
-      `A grocery store charges ${t}${NB}dollars for a ${c}${NB}kg bag of potatoes. How many dollars is that for 1${NB}kg?`,
+      `A farmers' market charges ${t}${NB}dollars for ${c}${NB}kg of potatoes. How many dollars is that for 1${NB}kg?`,
     divide: 'the cost by the mass',
   },
 ];

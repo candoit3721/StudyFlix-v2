@@ -137,4 +137,10 @@ describe('ratios-rates answers', () => {
       }
     }
   });
+
+  it('never writes "a" in front of a number, which reads wrong as "a 8 kg"', () => {
+    for (const { item } of generateSet('ratios-rates', { mode: 'unit-rate' }, 400, 'articles')) {
+      expect(item.prompt).not.toMatch(/\ba\s\d/i);
+    }
+  });
 });
