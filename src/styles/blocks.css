@@ -158,9 +158,12 @@
 
 /*
  * Laptop and wider: the sheet spans the page column, like the hero above it.
- * A sticky rail keeps progress and objectives in view on the left. The blocks
- * column grows to --read-max (reached at 75rem) and never past it, so lines
- * stay a comfortable length; from 56.25rem it is still about 32rem wide.
+ * The rail on the left holds progress and objectives. The blocks column grows
+ * to --read-max (reached at 75rem) and never past it, so lines stay a
+ * comfortable length; from 56.25rem it is still about 32rem wide.
+ * Only the progress card is sticky. The objectives scroll away beneath it, so
+ * the rail never needs to fit the window or become a scroll box, however many
+ * objectives a lesson has.
  * Screen only: a browser print of the lesson stays one column.
  */
 @media screen and (min-width: 56.25rem) {
@@ -172,14 +175,42 @@
     align-items: start;
   }
 
+  /* Full sheet height, so the progress card can stay pinned down to the foot. */
   .lesson-rail {
-    position: sticky;
-    top: calc(var(--header-height) + 1.5rem);
-    max-height: calc(100vh - var(--header-height) - 3rem);
-    overflow-y: auto;
+    align-self: stretch;
     display: flex;
     flex-direction: column;
     gap: 1.75rem;
+  }
+
+  .lesson-rail .lesson-status {
+    position: sticky;
+    top: calc(var(--header-height) + 1.5rem);
+    z-index: 1;
+    background: none;
+  }
+
+  /*
+   * Behind the card's text: a paper band that hides the objectives as they
+   * scroll up past the pinned card (including the gap under the site header),
+   * then the card's own sunk background on top of it.
+   */
+  .lesson-rail .lesson-status::before,
+  .lesson-rail .lesson-status::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+  }
+
+  .lesson-rail .lesson-status::before {
+    inset: -1.5rem 0 -1rem;
+    background: var(--paper);
+  }
+
+  .lesson-rail .lesson-status::after {
+    inset: 0;
+    border-radius: inherit;
+    background: var(--paper-sunk);
   }
 
   .lesson-rail .objectives {
