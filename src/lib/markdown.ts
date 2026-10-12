@@ -19,6 +19,35 @@ const processor = unified()
   .use(rehypeStringify)
   .freeze();
 
+/** The few fields of a HTML/MathML syntax tree node that `fractionsAsText` needs. */
+interface TreeNode {
+  type: string;
+  tagName?: string;
+  value?: string;
+  children?: TreeNode[];
+}
+
+/**
+ * Writes each MathML fraction as `numerator/denominator`, with brackets around a numerator or
+ * denominator of more than one part (including another fraction). Without it, 5/2 would read "52".
+ */
+function fractionsAsText() {
+  const text = (value: string): TreeNode => ({ type: 'text', value });
+  const isGroup = (node: TreeNode) =>
+    node.tagName === 'mfrac' ||
+    (node.tagName === 'mrow' && (node.children ?? []).filter((c) => c.type === 'element').length > 1);
+  const term = (node: TreeNode) => (isGroup(node) ? [text('('), node, text(')')] : [node]);
+  const walk = (node: TreeNode): void => {
+    for (const child of node.children ?? []) walk(child);
+    const parts = (node.children ?? []).filter((c) => c.type === 'element');
+    if (node.tagName === 'mfrac' && parts.length === 2) {
+      const [top, bottom] = parts as [TreeNode, TreeNode];
+      node.children = [...term(top), text('/'), ...term(bottom)];
+    }
+  };
+  return walk;
+}
+
 /** Same pipeline with MathML-only output, used to derive plain-text labels. */
 const labelProcessor = unified()
   .use(remarkParse)
@@ -26,6 +55,7 @@ const labelProcessor = unified()
   .use(remarkMath)
   .use(remarkRehype)
   .use(rehypeKatex, { output: 'mathml' })
+  .use(fractionsAsText)
   .use(rehypeStringify)
   .freeze();
 
