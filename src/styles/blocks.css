@@ -156,6 +156,52 @@
   color: var(--accent-text);
 }
 
+/*
+ * Laptop and wider: the sheet spans the page column, like the hero above it.
+ * A sticky rail keeps progress and objectives in view on the left. The blocks
+ * column grows to --read-max (reached at 75rem) and never past it, so lines
+ * stay a comfortable length; from 56.25rem it is still about 32rem wide.
+ * Screen only: a browser print of the lesson stays one column.
+ */
+@media screen and (min-width: 56.25rem) {
+  .lesson-sheet {
+    max-width: none;
+    display: grid;
+    grid-template-columns: minmax(14rem, 1fr) minmax(0, var(--read-max));
+    column-gap: clamp(2rem, 1rem + 2vw, 3.5rem);
+    align-items: start;
+  }
+
+  .lesson-rail {
+    position: sticky;
+    top: calc(var(--header-height) + 1.5rem);
+    max-height: calc(100vh - var(--header-height) - 3rem);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .lesson-rail .objectives {
+    margin-top: 0;
+  }
+
+  .lesson-rail .objectives h2 {
+    text-wrap: balance;
+  }
+
+  .lesson-rail .lesson-status-row {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .lesson-main > .block:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
 /* ----------------------------------------------------------------- Blocks */
 
 .block {

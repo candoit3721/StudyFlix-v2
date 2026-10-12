@@ -62,54 +62,58 @@ const requirements = JSON.stringify(lessonRequirements(lesson.blocks));
 
   <div class="lesson-layout wrap">
     <article class="paper lesson-sheet">
-      <sf-lesson-status class="lesson-status" data-lesson={lesson.id} data-requirements={requirements} data-explain-guest>
-        <div class="lesson-status-row">
-          <strong>Your progress</strong>
-          <span data-label>Not started yet</span>
-        </div>
-        <div class="progress" data-bar><span></span></div>
-        <p class="lesson-status-done" data-done hidden>
-          <Icon name="party-popper" size={18} />Lesson complete. Great work!
-        </p>
-      </sf-lesson-status>
+      <div class="lesson-rail">
+        <sf-lesson-status class="lesson-status" data-lesson={lesson.id} data-requirements={requirements} data-explain-guest>
+          <div class="lesson-status-row">
+            <strong>Your progress</strong>
+            <span data-label>Not started yet</span>
+          </div>
+          <div class="progress" data-bar><span></span></div>
+          <p class="lesson-status-done" data-done hidden>
+            <Icon name="party-popper" size={18} />Lesson complete. Great work!
+          </p>
+        </sf-lesson-status>
 
-      <section class="objectives" aria-labelledby="objectives-title">
-        <h2 id="objectives-title">In this lesson you will</h2>
-        <ul>
-          {lesson.objectives.map((objective) => <li><Icon name="target" size={18} />{objective}</li>)}
-        </ul>
-      </section>
+        <section class="objectives" aria-labelledby="objectives-title">
+          <h2 id="objectives-title">In this lesson you will</h2>
+          <ul>
+            {lesson.objectives.map((objective) => <li><Icon name="target" size={18} />{objective}</li>)}
+          </ul>
+        </section>
+      </div>
 
-      {lesson.blocks.map((block) => <Block block={block} lessonId={lesson.id} />)}
+      <div class="lesson-main">
+        {lesson.blocks.map((block) => <Block block={block} lessonId={lesson.id} />)}
 
-      <footer class="lesson-foot">
-        <div class="lesson-print">
-          <a class="button button--ghost" href={`${lesson.url}worksheet/`}>
-            <Icon name="printer" size={18} />Printable worksheet
-          </a>
-          <a class="button button--ghost" href={`${lesson.url}answer-key/`}>
-            <Icon name="key-round" size={18} />Answer key
-          </a>
-        </div>
-        <nav class="lesson-nav" aria-label="Lessons">
-          {
-            prev ? (
-              <a class="lesson-nav-link" href={prev.url}>
-                <Icon name="arrow-left" size={18} />
-                <span><small>Previous</small>{prev.title}</span>
-              </a>
-            ) : <span />
-          }
-          {
-            next && (
-              <a class="lesson-nav-link lesson-nav-next" href={next.url}>
-                <span><small>Next</small>{next.title}</span>
-                <Icon name="arrow-right" size={18} />
-              </a>
-            )
-          }
-        </nav>
-      </footer>
+        <footer class="lesson-foot">
+          <div class="lesson-print">
+            <a class="button button--ghost" href={`${lesson.url}worksheet/`}>
+              <Icon name="printer" size={18} />Printable worksheet
+            </a>
+            <a class="button button--ghost" href={`${lesson.url}answer-key/`}>
+              <Icon name="key-round" size={18} />Answer key
+            </a>
+          </div>
+          <nav class="lesson-nav" aria-label="Lessons">
+            {
+              prev ? (
+                <a class="lesson-nav-link" href={prev.url}>
+                  <Icon name="arrow-left" size={18} />
+                  <span><small>Previous</small>{prev.title}</span>
+                </a>
+              ) : <span />
+            }
+            {
+              next && (
+                <a class="lesson-nav-link lesson-nav-next" href={next.url}>
+                  <span><small>Next</small>{next.title}</span>
+                  <Icon name="arrow-right" size={18} />
+                </a>
+              )
+            }
+          </nav>
+        </footer>
+      </div>
     </article>
   </div>
 </Base>
