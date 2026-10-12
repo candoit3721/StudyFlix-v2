@@ -55,6 +55,7 @@ const AXE_PAGES = [
   '/courses/g6-math/ratios-and-rates/worksheet/',
   '/courses/g6-math/ratios-and-rates/answer-key/',
   '/curricula/ontario-math-2020-g6/',
+  '/account/',
 ];
 
 for (const path of AXE_PAGES) {
