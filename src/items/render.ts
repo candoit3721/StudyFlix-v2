@@ -45,7 +45,7 @@ export function itemHtml(
     const unit = numeric && item.unit ? `<span class="item-unit">${escapeHtml(item.unit)}</span>` : '';
     answer = `<form class="item-answer" novalidate>
 <label class="visually-hidden" for="${inputId}">Your answer</label>
-<input id="${inputId}" name="answer" autocomplete="off" spellcheck="false" ${numeric ? 'inputmode="decimal"' : ''} placeholder="${numeric ? 'Your number' : 'Your answer'}">${unit}
+<span class="item-field"><input id="${inputId}" name="answer" autocomplete="off" spellcheck="false" ${numeric ? 'inputmode="decimal"' : ''} placeholder="${numeric ? 'Your number' : 'Your answer'}">${unit}</span>
 <button type="submit" class="button">Check</button>
 </form>`;
   }

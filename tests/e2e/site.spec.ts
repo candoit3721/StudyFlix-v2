@@ -161,3 +161,20 @@ test('lesson pages use the page width on desktop and stay single-column on phone
     expect((await box('.lesson-status')).y).toBeGreaterThanOrEqual(64);
   }
 });
+
+test('answer boxes stay wide enough to read, with the unit beside the box', async ({ page }) => {
+  await page.goto('/courses/g6-math/ratios-and-rates/');
+  for (let round = 0; round < 6; round++) {
+    for (const field of await page.locator('form.item-answer').all()) {
+      const input = await field.locator('input').boundingBox();
+      expect(input?.width ?? 0, 'answer box width').toBeGreaterThanOrEqual(127);
+      const unit = field.locator('.item-unit');
+      if ((await unit.count()) === 0) continue;
+      const unitBox = await unit.boundingBox();
+      expect(unitBox?.x ?? 0, `${await unit.textContent()} sits right of the box`).toBeGreaterThan(
+        (input?.x ?? 0) + (input?.width ?? 0),
+      );
+    }
+    await page.getByRole('button', { name: 'New set' }).click();
+  }
+});
