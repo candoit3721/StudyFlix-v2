@@ -178,3 +178,126 @@ test('answer boxes stay wide enough to read, with the unit beside the box', asyn
     await page.getByRole('button', { name: 'New set' }).click();
   }
 });
+
+test('accessibility: / after the intro has ended', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.intro')).toBeHidden({ timeout: 2500 });
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+});
+
+/** Records whether the landing intro was switched on at any point while the page loaded. */
+async function watchIntro(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    const w = window as Window & { introPlayed?: boolean };
+    w.introPlayed = false;
+    const root = document.documentElement;
+    const check = () => {
+      if (root.dataset.intro === 'play') w.introPlayed = true;
+    };
+    new MutationObserver(check).observe(root, { attributes: true, attributeFilter: ['data-intro'] });
+  });
+}
+
+const introPlayed = (page: Page) =>
+  page.evaluate(() => (window as Window & { introPlayed?: boolean }).introPlayed);
+
+test('landing intro: a big S covers the picker on a fresh visit, then hides itself', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const intro = page.locator('.intro');
+  await expect(intro).toHaveAttribute('aria-hidden', 'true');
+  await expect(intro).toBeVisible({ timeout: 500 });
+  await expect(intro).toHaveText('S');
+  const size = await intro
+    .locator('.intro-mark')
+    .evaluate((el) => Number.parseFloat(getComputedStyle(el).fontSize));
+  expect(size, 'the S is large').toBeGreaterThanOrEqual(200);
+  // It covers the sticky header too.
+  const box = await intro.boundingBox();
+  expect(box?.y).toBe(0);
+
+  await expect(intro).toBeHidden({ timeout: 2500 });
+  await expect(intro).toHaveCSS('display', 'none');
+  await expect(page.getByRole('heading', { name: "Who's learning today?" })).toBeVisible();
+});
+
+test('landing intro: plays once per tab session', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.intro')).toBeHidden({ timeout: 2500 });
+  await watchIntro(page);
+
+  await page.reload();
+  expect(await introPlayed(page), 'after a reload').toBe(false);
+  await expect(page.locator('.intro')).toBeHidden();
+
+  await chooseLearner(page, 'Sophia');
+  await page.getByRole('link', { name: 'Switch learner' }).click();
+  await expect(page).toHaveURL(/\/$/);
+  expect(await introPlayed(page), 'after "Switch learner"').toBe(false);
+
+  await page.goBack();
+  await page.goBack();
+  await expect(page).toHaveURL(/\/$/);
+  expect(await introPlayed(page), 'after going back').toBe(false);
+  await expect(page.locator('.intro')).toBeHidden();
+});
+
+test('landing intro: never shows under reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await watchIntro(page);
+  await page.goto('/');
+  expect(await introPlayed(page)).toBe(false);
+  await expect(page.locator('.intro')).toBeHidden();
+  await expect(page.locator('.intro')).toHaveCSS('display', 'none');
+});
+
+test('landing intro: a key press skips it at once', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.intro')).toBeVisible({ timeout: 500 });
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.intro')).toBeHidden({ timeout: 250 });
+});
+
+test('profile picker: a profile name turns white with a white tile frame on focus and hover', async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto('/');
+  const option = page.locator('.chooser-option').first();
+  const name = option.locator('.chooser-name');
+  const tile = option.locator('.avatar');
+  await expect(name).toHaveCSS('color', 'rgb(179, 179, 179)');
+  await expect(tile).toHaveCSS('box-shadow', 'none');
+
+  if (!isMobile) {
+    await option.hover();
+    await expect(name).toHaveCSS('color', 'rgb(255, 255, 255)');
+    await expect(tile).toHaveCSS('box-shadow', 'rgb(255, 255, 255) 0px 0px 0px 3px');
+    await page.mouse.move(0, 0);
+    await expect(name).toHaveCSS('color', 'rgb(179, 179, 179)');
+  }
+
+  for (let i = 0; i < 5 && !(await option.evaluate((el) => el === document.activeElement)); i++) {
+    await page.keyboard.press('Tab');
+  }
+  await expect(option).toBeFocused();
+  await expect(name).toHaveCSS('color', 'rgb(255, 255, 255)');
+  await expect(tile).toHaveCSS('box-shadow', 'rgb(255, 255, 255) 0px 0px 0px 3px');
+});
+
+test('theme: dark chrome, red wordmark and a white play button', async ({ page }) => {
+  await page.goto('/learners/sophia/');
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(20, 20, 20)');
+  await expect(page.locator('body')).toHaveCSS('font-family', /^"Inter Variable"/);
+  const wordmark = page.locator('.wordmark');
+  await expect(wordmark).toHaveText('StudyFlix');
+  await expect(wordmark).toHaveCSS('color', 'rgb(229, 9, 20)');
+  await expect(wordmark).toHaveCSS('font-family', /^"Bebas Neue"/);
+  await expect(wordmark).toHaveCSS('text-transform', 'uppercase');
+  const size = await wordmark.evaluate((el) => Number.parseFloat(getComputedStyle(el).fontSize));
+  expect(size, 'red wordmark stays large text').toBeGreaterThanOrEqual(28);
+  const play = page.getByRole('link', { name: 'Start lesson' });
+  await expect(play).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+  await expect(play).toHaveCSS('color', 'rgb(20, 20, 20)');
+});
