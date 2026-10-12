@@ -86,6 +86,20 @@ test('flashcards flip to show the meaning', async ({ page }) => {
   await expect(card).toHaveAttribute('aria-pressed', 'true');
 });
 
+test('flashcard words never break in the middle', async ({ page }) => {
+  await page.goto('/courses/g6-science/vertebrates-and-invertebrates/');
+  const broken = await page.$$eval('.flashcard-front', (faces) =>
+    faces
+      .filter((face) => {
+        const range = document.createRange();
+        range.selectNodeContents(face);
+        return !face.textContent?.trim().includes(' ') && range.getClientRects().length > 1;
+      })
+      .map((face) => face.textContent?.trim()),
+  );
+  expect(broken).toEqual([]);
+});
+
 test('curriculum coverage links expectations to lessons', async ({ page }) => {
   await page.goto('/curricula/ontario-science-2022-g6/');
   await expect(page.getByText('2 of 11')).toBeVisible();
