@@ -75,7 +75,7 @@ blocks:
 
       Zebra mussels also clog the water intake pipes of power plants and water treatment plants. Cleaning the pipes costs a lot of money.
 
-      **How they change the food web.** A zebra mussel is a **filter feeder**. It pulls in water and strains out phytoplankton to eat. One adult can filter about 1 L of water a day. With huge numbers of zebra mussels, much of the phytoplankton is removed. That means less food for zooplankton, and so less food for the small fish that eat zooplankton.
+      **How they change the food web.** A zebra mussel is a **filter feeder**. It pulls in water and strains out phytoplankton to eat. One adult can filter up to about 1 L of water a day. With huge numbers of zebra mussels, much of the phytoplankton is removed. That means less food for zooplankton, and so less food for the small fish that eat zooplankton.
 
       **Clearer is not healthier.** With much of the phytoplankton gone, the water becomes clearer. That might sound good, but clearer water is not the same as healthier water. Food has been removed from the bottom of the food web. More sunlight now reaches the lake bottom too, so more plants and algae can grow there, and that changes the habitat.
 
@@ -100,7 +100,7 @@ blocks:
 
       For a long time, Niagara Falls blocked the way to the upper Great Lakes. Then the **Welland Canal** was built so ships could get around the falls. It gave sea lampreys a way around too. They reached Lake Erie, and from there Lakes Huron, Michigan and Superior.
 
-      **A parasite.** A sea lamprey is a **parasite**: a living thing that feeds on another living thing while it stays alive. The living thing it feeds on is its **host**.
+      **A parasite.** A sea lamprey is a **parasite**: a living thing that feeds on another living thing while that living thing stays alive. The living thing it feeds on is its **host**.
 
       A sea lamprey attaches to a large fish, such as a lake trout, lake whitefish or salmon. It scrapes a hole through the fish's skin and feeds on its blood and body fluids. Many fish die from the attack or the wound. One sea lamprey can kill up to about 18 kg of fish while it lives as a parasite.
 
@@ -163,7 +163,7 @@ blocks:
       - front: Ballast water
         back: Water a ship pumps into tanks to keep it steady, then pumps out at another port.
       - front: Parasite
-        back: A living thing that feeds on another living thing while it stays alive.
+        back: A living thing that feeds on another living thing while that living thing stays alive.
       - front: Host
         back: The living thing that a parasite feeds on.
       - front: Lampricide
@@ -176,63 +176,63 @@ blocks:
       - kind: choice
         prompt: What makes a species **invasive**?
         choices:
-          - It is not native to the place where it lives.
-          - It is a big animal that eats a lot.
-          - People moved it to a new place, and it spreads and causes harm there.
-          - Birds carried it to a new place.
-        answer: People moved it to a new place, and it spreads and causes harm there.
+          - It is not native to the place where it lives
+          - It is a big animal that eats a lot
+          - People moved it to a new place, and it spreads and causes harm there
+          - Birds carried it to a new place
+        answer: People moved it to a new place, and it spreads and causes harm there
         explanation: An invasive species comes from somewhere else, was moved by people, and spreads and causes harm. Not being native is not enough. Tomatoes are not native to Ontario, but they are not invasive.
       - kind: choice
         prompt: Why can an invasive species often spread so quickly in its new home?
         choices:
-          - It is always bigger than the native species.
-          - It often has no natural predators or diseases there to keep its numbers down.
-          - People feed it every day.
-          - Native animals cannot see it.
-        answer: It often has no natural predators or diseases there to keep its numbers down.
+          - It is always bigger than the native species
+          - It often has no natural predators or diseases there to keep its numbers down
+          - People feed it every day
+          - Native animals cannot see it
+        answer: It often has no natural predators or diseases there to keep its numbers down
         explanation: In the place it came from, predators and diseases kept its numbers down. In its new home, those checks are often missing.
       - kind: choice
         prompt: How did zebra mussels first reach the Great Lakes?
         choices:
-          - They blew in on the wind.
-          - They swam up the St. Lawrence River on their own.
-          - Migrating birds carried them on their feet.
-          - Their tiny larvae rode in ships' ballast water.
-        answer: Their tiny larvae rode in ships' ballast water.
+          - They blew in on the wind
+          - They swam up the St. Lawrence River on their own
+          - Migrating birds carried them on their feet
+          - Their tiny larvae rode in ships' ballast water
+        answer: Their tiny larvae rode in ships' ballast water
         explanation: Ocean ships pumped out ballast water carrying zebra mussel larvae. They were first found in Lake St. Clair in 1988.
       - kind: choice
         prompt: How do zebra mussels harm native mussels?
         choices:
-          - They cover them in thick clumps, so the native mussels cannot open to feed or move.
-          - They crack open the native mussels' shells and eat them.
-          - They push the native mussels out onto the beach.
-        answer: They cover them in thick clumps, so the native mussels cannot open to feed or move.
+          - They cover them in thick clumps, so the native mussels cannot open to feed or move
+          - They crack open the native mussels' shells and eat them
+          - They push the native mussels out onto the beach
+        answer: They cover them in thick clumps, so the native mussels cannot open to feed or move
         explanation: Zebra mussels attach to the shells of native mussels. Covered in clumps, many native mussels die.
       - kind: choice
         prompt: Zebra mussels strain huge amounts of phytoplankton out of the water. What does this mean for the zooplankton?
         choices:
-          - They get more food.
-          - Nothing changes for them.
-          - They get less food.
-        answer: They get less food.
+          - They get more food
+          - Nothing changes for them
+          - They get less food
+        answer: They get less food
         explanation: Zooplankton eat phytoplankton. Fewer phytoplankton means less food for zooplankton, and then less food for the small fish that eat zooplankton.
       - kind: choice
         prompt: After zebra mussels arrived, the water in parts of Lake Erie became much clearer. Is the lake healthier now?
         choices:
-          - Yes. Clear water always means a healthy lake.
-          - No. It is clearer because the mussels removed phytoplankton, the food at the bottom of the food web.
-          - Yes. More sunlight reaches the bottom, so nothing has been lost.
-          - No. Clear water is too cold for fish.
-        answer: No. It is clearer because the mussels removed phytoplankton, the food at the bottom of the food web.
+          - Yes, clear water always means a healthy lake
+          - No, it is clearer because the mussels removed phytoplankton, the food at the bottom of the food web
+          - Yes, more sunlight reaches the bottom, so nothing has been lost
+          - No, clear water is too cold for fish
+        answer: No, it is clearer because the mussels removed phytoplankton, the food at the bottom of the food web
         explanation: Clearer is not healthier. Food was taken from the bottom of the food web, and the extra sunlight on the bottom changes the habitat too.
       - kind: choice
         prompt: Niagara Falls blocked the way to the upper Great Lakes. How did sea lampreys get around it?
         choices:
-          - They swam up the falls.
-          - Gulls carried them over the falls.
-          - They came down a river from Hudson Bay.
-          - They went through the Welland Canal, which lets ships go around the falls.
-        answer: They went through the Welland Canal, which lets ships go around the falls.
+          - They swam up the falls
+          - Gulls carried them over the falls
+          - They came down a river from Hudson Bay
+          - They went through the Welland Canal, which lets ships go around the falls
+        answer: They went through the Welland Canal, which lets ships go around the falls
         explanation: The Welland Canal gave ships, and sea lampreys, a way around Niagara Falls into Lake Erie. From there they reached Lakes Huron, Michigan and Superior.
       - kind: choice
         prompt: A sea lamprey has a long body like an eel. What kind of animal is it?
@@ -244,39 +244,39 @@ blocks:
         answer: A jawless fish
         explanation: A sea lamprey is a jawless fish. It is not an eel. It has no jaws, only a round, sucking mouth with sharp teeth.
       - kind: text
-        prompt: What word means a living thing that feeds on another living thing while it stays alive?
+        prompt: What word means a living thing that feeds on another living thing while that living thing stays alive?
         accept: [parasite, a parasite, parasites]
         explanation: A sea lamprey is a parasite. The fish it feeds on is its host.
       - kind: choice
         prompt: Sea lampreys and overfishing made lake trout numbers crash. Lake trout is a top predator. What can happen when a top predator is lost?
         choices:
-          - Nothing changes, because it is only one species.
-          - Its prey have fewer young.
-          - The animals it ate can grow out of control, and the whole food web changes.
-        answer: The animals it ate can grow out of control, and the whole food web changes.
+          - Nothing changes, because it is only one species
+          - Its prey disappear too
+          - The animals it ate can grow out of control, and the whole food web changes
+        answer: The animals it ate can grow out of control, and the whole food web changes
         explanation: With no top predator eating them, its prey can grow in numbers. That change spreads through the food web.
       - kind: choice
         prompt: Why do workers put lampricide into streams instead of the open lake?
         choices:
-          - Sea lamprey larvae live buried in stream bottoms for several years.
-          - Lake trout live only in streams.
-          - Adult sea lampreys never leave the lake.
-        answer: Sea lamprey larvae live buried in stream bottoms for several years.
+          - Sea lamprey larvae live buried in stream bottoms for several years
+          - Lake trout live only in streams
+          - Adult sea lampreys never leave the lake
+        answer: Sea lamprey larvae live buried in stream bottoms for several years
         explanation: The larvae stay in streams for years before they swim out to the lake. Adults swim back up streams to spawn, so barriers and traps stop them there.
       - kind: choice
         prompt: Your family wants to paddle your canoe on a different lake tomorrow. What should you do first?
         choices:
-          - Rinse it off in the new lake when you get there.
-          - Leave the water inside so it stays cool.
-          - Scrub off the mud, but keep the water in the bait bucket.
-          - Clean, drain and dry the canoe and gear before you go.
-        answer: Clean, drain and dry the canoe and gear before you go.
+          - Rinse it off in the new lake when you get there
+          - Leave the water inside so it stays cool
+          - Scrub off the mud, but keep the water in the bait bucket
+          - Clean, drain and dry the canoe and gear before you go
+        answer: Clean, drain and dry the canoe and gear before you go
         explanation: "Clean off plants, animals and mud, drain all the water, and dry everything. Water left inside, even in a bait bucket, can carry tiny larvae to the new lake."
       - kind: choice
         prompt: You no longer want your pet goldfish. What is the best thing to do?
         choices:
-          - Let it go in a pond so it can be free.
-          - Find it a new home or take it back to a pet store.
-          - Release it into a river where it has more room.
-        answer: Find it a new home or take it back to a pet store.
+          - Let it go in a pond so it can be free
+          - Find it a new home or take it back to a pet store
+          - Release it into a river where it has more room
+        answer: Find it a new home or take it back to a pet store
         explanation: Never release aquarium pets into a lake, river or pond. A pet let go in the wild can become an invasive species.
