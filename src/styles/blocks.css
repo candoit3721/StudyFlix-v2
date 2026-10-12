@@ -25,8 +25,13 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(14 16 20 / 0.94) 0%, rgb(14 16 20 / 0.62) 45%, rgb(14 16 20 / 0) 85%),
-    linear-gradient(0deg, var(--bg) 0%, rgb(14 16 20 / 0) 40%);
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg) 94%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 62%, transparent) 45%,
+      transparent 85%
+    ),
+    linear-gradient(0deg, var(--bg) 0%, transparent 40%);
 }
 
 .lesson-hero-body {
@@ -43,7 +48,7 @@
 .lesson-hero p {
   margin: 0;
   max-width: 40rem;
-  color: rgb(244 241 234 / 0.86);
+  color: var(--text);
   font-size: var(--step-1);
 }
 

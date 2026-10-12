@@ -48,7 +48,7 @@ const queue = lessons.map((lesson) => ({
           </div>
           <h1 data-title>{first.title}</h1>
           <p data-summary>{first.summary}</p>
-          <a class="button" data-link href={first.url}>
+          <a class="button button--play" data-link href={first.url}>
             <Icon name="play" size={18} strokeWidth={2.5} />
             <span data-cta>Start lesson</span>
           </a>
@@ -109,8 +109,13 @@ const queue = lessons.map((lesson) => ({
 
   .hero-shade {
     background:
-      linear-gradient(90deg, rgb(14 16 20 / 0.92) 0%, rgb(14 16 20 / 0.6) 45%, rgb(14 16 20 / 0) 80%),
-      linear-gradient(0deg, var(--bg) 0%, rgb(14 16 20 / 0) 35%);
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--bg) 92%, transparent) 0%,
+        color-mix(in srgb, var(--bg) 60%, transparent) 45%,
+        transparent 80%
+      ),
+      linear-gradient(0deg, var(--bg) 0%, transparent 35%);
   }
 
   .hero-body {
@@ -142,7 +147,7 @@ const queue = lessons.map((lesson) => ({
   .hero [data-summary] {
     margin: 0;
     max-width: 38rem;
-    color: rgb(244 241 234 / 0.86);
+    color: var(--text);
     font-size: var(--step-1);
   }
 
