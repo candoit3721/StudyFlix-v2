@@ -721,8 +721,9 @@ h3 {
   height: 52px;
   margin-bottom: 1rem;
   border-radius: var(--radius-m);
-  background: var(--accent);
-  color: var(--accent-ink);
+  /* Family chrome, not a learner's: brand red rather than the learner accent. */
+  background: var(--brand);
+  color: var(--brand-ink);
 }
 
 .account-card h1 {
