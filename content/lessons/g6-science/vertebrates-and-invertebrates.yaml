@@ -32,14 +32,16 @@ blocks:
       | Class | Key traits | Ontario examples |
       |---|---|---|
       | Fish | Live in water and breathe with gills. Most have scales and fins. | Walleye (pickerel), northern pike, brook trout |
-      | Amphibians | Moist skin with no scales. Lay eggs without shells in water. Most hatch as tadpoles with gills, then grow into adults that live on land and in water. | Spring peeper, American toad, spotted salamander |
+      | Amphibians | Moist skin with no scales. Most lay eggs without shells in water. Most hatch as larvae with gills, then grow into adults that live on land and in water. | Spring peeper, American toad, spotted salamander |
       | Reptiles | Dry skin covered in scales. Breathe with lungs. Most lay eggs with leathery shells on land. | Snapping turtle, painted turtle, common five-lined skink |
       | Birds | Feathers, a beak and wings. Lay eggs with hard shells. Breathe with lungs. | Common loon, black-capped chickadee, blue jay |
       | Mammals | Hair or fur. Mothers feed their young milk. Most give birth to live young. Breathe with lungs. | White-tailed deer, beaver, little brown bat |
 
       Fish, amphibians and reptiles have a body temperature that changes with their surroundings. Birds and mammals keep a steady, warm body temperature.
 
-      The big change from a tadpole into an adult frog or salamander is called **metamorphosis**.
+      A young amphibian with gills is called a **larva** (more than one are **larvae**). A young frog or toad is called a **tadpole**.
+
+      The big change from a larva into an adult frog or salamander is called **metamorphosis**.
 
       Scientists split fish into a few smaller classes, but in Grade 6 we keep them together as one group.
 
@@ -82,7 +84,7 @@ blocks:
   - type: example
     id: classify-spring-peeper
     title: Classify a spring peeper
-    problem: A spring peeper is a tiny frog that sings in Ontario wetlands in early spring. It has a backbone, and its skin is moist with no scales. It hatched in a pond as a tadpole with gills. Is it a vertebrate or an invertebrate, and which class is it in?
+    problem: A spring peeper is a tiny frog that sings in Ontario wetlands in early spring. It has a backbone. Its skin is moist, with no scales, feathers or fur. As an adult it has four legs and no fins, and it lives on land and in water. It hatched in a pond as a tadpole with gills. Is it a vertebrate or an invertebrate, and which class is it in?
     steps:
       - "Backbone first: the spring peeper has a backbone, so it is a **vertebrate**."
       - "Look at its body covering: it has no feathers and no fur, so it is not a bird or a mammal."
@@ -107,7 +109,7 @@ blocks:
       - front: Bird
         back: A vertebrate with feathers, a beak and wings.
       - front: Mammal
-        back: A vertebrate with hair or fur that feeds its young milk.
+        back: A vertebrate that has hair or fur and feeds its young milk.
       - front: Arthropod
         back: An invertebrate with jointed legs and a hard exoskeleton.
       - front: Mollusc
@@ -138,6 +140,7 @@ blocks:
       - kind: text
         prompt: What word means an animal **without** a backbone?
         accept: [invertebrate, invertebrates, an invertebrate]
+        explanation: In- means not, so an invertebrate is an animal that does not have a backbone.
       - kind: choice
         prompt: A walleye lives in Lake Erie, breathes with gills and has fins. Which class is it in?
         choices: [Amphibians, Fish, Reptiles, Mammals]
@@ -164,7 +167,7 @@ blocks:
         answer: Mammals
         explanation: Bats have fur and feed their young milk, so they are mammals. Flying does not make an animal a bird.
       - kind: choice
-        prompt: A slug has a soft body and no outer shell. Which invertebrate group is it in?
+        prompt: A slug has a soft body. It is a close relative of the snail, but it has no outer shell. Which invertebrate group is it in?
         choices: [Worms, Cnidarians, Arthropods, Molluscs]
         answer: Molluscs
         explanation: Slugs are molluscs, like snails. Most molluscs have a shell, but a slug has no outer shell.
