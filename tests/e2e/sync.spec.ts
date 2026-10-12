@@ -298,6 +298,7 @@ test.describe('last visit', () => {
     await expect(page.locator('[data-cta]')).toHaveText('Continue lesson');
     await expect(page.locator('[data-link]')).toHaveAttribute('href', SIX_KINGDOMS);
     await expectNoSidewaysScroll(page);
+    await expectNoSeriousAxeViolations(page);
 
     // A finished lesson opened last does not win: the first lesson still in progress does.
     await page.goto(SIX_KINGDOMS);

@@ -615,12 +615,16 @@ h3 {
 
 .account-form {
   display: grid;
-  gap: 1rem;
   margin-top: 1.5rem;
 }
 
+/* Margins, not a grid gap: the empty alert below the fields must take no space. */
+.account-form .field + .field {
+  margin-top: 1rem;
+}
+
 .account-form .button {
-  margin-top: 0.25rem;
+  margin-top: 1.25rem;
   justify-self: start;
   min-width: 8rem;
 }
@@ -661,6 +665,7 @@ h3 {
 }
 
 .account-view .form-error:not(:empty) {
+  margin-top: 1rem;
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius-s);
   border-left: 4px solid var(--bad-on-dark);
