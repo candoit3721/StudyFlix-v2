@@ -1,0 +1,192 @@
+title: Vertebrates and Invertebrates
+summary: Sort animals by whether they have a backbone, then meet the five vertebrate classes and the main invertebrate groups through Ontario animals.
+icon: bone
+minutes: 30
+expectations: [B2]
+objectives:
+  - Explain the difference between a vertebrate and an invertebrate.
+  - Sort a vertebrate into one of the five classes using its traits.
+  - Sort an invertebrate into one of six common groups using its traits.
+  - Tell insects, arachnids and crustaceans apart.
+blocks:
+  - type: explainer
+    id: backbone-or-not
+    title: Backbone or not?
+    markdown: |
+      Gently run your fingers down the middle of your back. Those bumps are your **backbone**, also called your spine. It is made of many small bones called **vertebrae**.
+
+      An animal with a backbone is a **vertebrate**. You are a vertebrate, and so are moose, loons and walleye.
+
+      An animal without a backbone is an **invertebrate**. Earthworms, snails, spiders and butterflies are all invertebrates.
+
+      Invertebrates are often small, but there are a lot of them. More than 9 out of 10 known animal species are invertebrates.
+
+      So the first question to ask about any animal is: **does it have a backbone?**
+
+  - type: explainer
+    id: five-classes
+    title: The five vertebrate classes
+    markdown: |
+      Scientists sort vertebrates into five **classes**. The animals in a class share a set of **traits**.
+
+      | Class | Key traits | Ontario examples |
+      |---|---|---|
+      | Fish | Live in water and breathe with gills. Most have scales and fins. | Walleye (pickerel), northern pike, brook trout |
+      | Amphibians | Moist skin with no scales. Most lay eggs without shells in water. Most hatch as larvae with gills, then grow into adults that live on land and in water. | Spring peeper, American toad, spotted salamander |
+      | Reptiles | Dry skin covered in scales. Breathe with lungs. Most lay eggs with leathery shells on land. | Snapping turtle, painted turtle, common five-lined skink |
+      | Birds | Feathers, a beak and wings. Lay eggs with hard shells. Breathe with lungs. | Common loon, black-capped chickadee, blue jay |
+      | Mammals | Hair or fur. Mothers feed their young milk. Most give birth to live young. Breathe with lungs. | White-tailed deer, beaver, little brown bat |
+
+      Fish, amphibians and reptiles have a body temperature that changes with their surroundings. Birds and mammals keep a steady, warm body temperature.
+
+      A young amphibian with gills is called a **larva** (more than one are **larvae**). A young frog or toad is called a **tadpole**.
+
+      The big change from a larva into an adult frog or salamander is called **metamorphosis**.
+
+      Scientists split fish into a few smaller classes, but in Grade 6 we keep them together as one group.
+
+      The common loon is the bird on the Canadian one-dollar coin, the loonie. The common five-lined skink is Ontario's only lizard.
+
+      Watch out for these tricky animals:
+
+      - A **bat** flies, but it has fur and feeds its young milk. It is a mammal, not a bird.
+      - A **whale** lives in water, but it breathes air with lungs and feeds its young milk. It is a mammal, not a fish.
+      - A **salamander** looks like a lizard, but its skin is moist with no scales. It is an amphibian, not a reptile.
+      - A **turtle** swims a lot, but it has dry, scaly skin and lays its eggs on land. It is a reptile, not an amphibian.
+
+  - type: explainer
+    id: invertebrate-groups
+    title: Common invertebrate groups
+    markdown: |
+      Invertebrates come in many shapes. Here are six common groups.
+
+      | Group | Key traits | Examples |
+      |---|---|---|
+      | Sponges | Simple animals with a body full of pores. They stay attached to one spot. | Ocean sponges, freshwater sponges in some Ontario lakes |
+      | Cnidarians | Soft body with stinging tentacles around the mouth. | Jellyfish, sea anemone, hydra in pond water |
+      | Worms | Soft, long body with no legs. An earthworm or a leech has a body made of segments. | Leech, earthworm |
+      | Molluscs | Soft body. Most are protected by a shell. | Snail, slug, clam, freshwater mussel, octopus |
+      | Echinoderms | Spiny skin. Body parts arranged around a centre, often as 5 arms. Live only in the ocean. | Sea star, sea urchin, sand dollar |
+      | Arthropods | Jointed legs, a hard outer skeleton and a body in segments. The largest group of animals. | Insects, spiders, crayfish, centipedes, millipedes |
+
+      An arthropod's hard outer skeleton is called an **exoskeleton**. It protects the soft body inside, a bit like a suit of armour.
+
+      A slug is a mollusc even though it has no outer shell. An earthworm is **not** an arthropod: it has no legs and no exoskeleton.
+
+      You will meet three kinds of arthropods most often:
+
+      - **Insects** have 6 legs and 3 body parts: head, thorax and abdomen. Most have antennae, and many have wings. Examples are the monarch butterfly, honeybee, ladybug and dragonfly.
+      - **Arachnids** have 8 legs, 2 body parts and no antennae. Spiders and ticks, such as the black-legged tick, are arachnids.
+      - **Crustaceans** have a hard shell and two pairs of antennae. Most live in water, like the crayfish in Ontario lakes and streams.
+
+      A spider is **not** an insect. Count its legs: 8 legs means it is an arachnid.
+
+  - type: example
+    id: classify-spring-peeper
+    title: Classify a spring peeper
+    problem: A spring peeper is a tiny frog that sings in Ontario wetlands in early spring. It has a backbone. Its skin is moist, with no scales, feathers or fur. As an adult it has four legs and no fins, and it lives on land and in water. It hatched in a pond as a tadpole with gills. Is it a vertebrate or an invertebrate, and which class is it in?
+    steps:
+      - "Backbone first: the spring peeper has a backbone, so it is a **vertebrate**."
+      - "Look at its body covering: it has no feathers and no fur, so it is not a bird or a mammal."
+      - "Look at its skin: it is moist with no scales, so it is not a reptile. It has no fins and lives on land as an adult, so it is not a fish."
+      - "Look at how it grew: it hatched in water as a tadpole with gills and changed into a frog. That metamorphosis is a trait of amphibians."
+    answer: The spring peeper is a vertebrate in the **amphibian** class.
+
+  - type: flashcards
+    id: key-words
+    title: Key words
+    cards:
+      - front: Vertebrate
+        back: An animal with a backbone.
+      - front: Invertebrate
+        back: An animal without a backbone.
+      - front: Fish
+        back: A vertebrate that lives in water and breathes with gills.
+      - front: Amphibian
+        back: A vertebrate with moist skin and no scales, such as a frog or salamander.
+      - front: Reptile
+        back: A vertebrate with dry skin covered in scales, such as a turtle or snake.
+      - front: Bird
+        back: A vertebrate with feathers, a beak and wings.
+      - front: Mammal
+        back: A vertebrate that has hair or fur and feeds its young milk.
+      - front: Arthropod
+        back: An invertebrate with jointed legs and a hard exoskeleton.
+      - front: Mollusc
+        back: An invertebrate with a soft body, most often protected by a shell.
+      - front: Insect
+        back: An arthropod with 6 legs and 3 body parts.
+      - front: Arachnid
+        back: An arthropod with 8 legs and 2 body parts, such as a spider.
+      - front: Exoskeleton
+        back: A hard skeleton on the outside of an animal's body.
+      - front: Metamorphosis
+        back: A big change in body shape as a young animal grows up, like a tadpole turning into a frog.
+
+  - type: quiz
+    id: sort
+    title: Sort these animals
+    items:
+      - kind: choice
+        prompt: Which of these animals is an **invertebrate**?
+        choices: [Black bear, Earthworm, Brook trout, Blue jay]
+        answer: Earthworm
+        explanation: An earthworm has no backbone. A black bear, a brook trout and a blue jay all have backbones.
+      - kind: choice
+        prompt: Which of these animals is a **vertebrate**?
+        choices: [Crayfish, Honeybee, Painted turtle, Snail]
+        answer: Painted turtle
+        explanation: A painted turtle is a reptile, and every reptile has a backbone. Crayfish, honeybees and snails are invertebrates.
+      - kind: text
+        prompt: What word means an animal **without** a backbone?
+        accept: [invertebrate, invertebrates, an invertebrate]
+        explanation: In- means not, so an invertebrate is an animal that does not have a backbone.
+      - kind: choice
+        prompt: A walleye lives in Lake Erie, breathes with gills and has fins. Which class is it in?
+        choices: [Amphibians, Fish, Reptiles, Mammals]
+        answer: Fish
+        explanation: Living in water, breathing with gills and having fins are traits of fish.
+      - kind: choice
+        prompt: A spotted salamander looks a bit like a lizard, but its skin is moist with no scales. Which class is it in?
+        choices: [Reptiles, Fish, Amphibians]
+        answer: Amphibians
+        explanation: Moist skin with no scales is a trait of amphibians. Lizards are reptiles with dry, scaly skin.
+      - kind: choice
+        prompt: A snapping turtle spends most of its time in water, but it has dry, scaly skin and lays eggs with leathery shells on land. Which class is it in?
+        choices: [Amphibians, Reptiles, Fish, Birds]
+        answer: Reptiles
+        explanation: Dry, scaly skin and leathery eggs laid on land are reptile traits, even for a turtle that swims.
+      - kind: choice
+        prompt: A common loon has feathers and a beak, and it lays eggs with hard shells. Which class is it in?
+        choices: [Birds, Mammals, Reptiles]
+        answer: Birds
+        explanation: Feathers, a beak and eggs with hard shells are traits of birds.
+      - kind: choice
+        prompt: A little brown bat flies at night, but it has fur and feeds its young milk. Which class is it in?
+        choices: [Birds, Mammals, Reptiles]
+        answer: Mammals
+        explanation: Bats have fur and feed their young milk, so they are mammals. Flying does not make an animal a bird.
+      - kind: choice
+        prompt: A slug has a soft body. It is a close relative of the snail, but it has no outer shell. Which invertebrate group is it in?
+        choices: [Worms, Cnidarians, Arthropods, Molluscs]
+        answer: Molluscs
+        explanation: Slugs are molluscs, like snails. Most molluscs have a shell, but a slug has no outer shell.
+      - kind: choice
+        prompt: A sea star has spiny skin and 5 arms around a centre, and it lives in the ocean. Which invertebrate group is it in?
+        choices: [Cnidarians, Molluscs, Sponges, Echinoderms]
+        answer: Echinoderms
+        explanation: Spiny skin, body parts arranged around a centre and life in the ocean are traits of echinoderms.
+      - kind: choice
+        prompt: A spider has 8 legs and 2 body parts. Which arthropod group is it in?
+        choices: [Insects, Arachnids, Crustaceans]
+        answer: Arachnids
+        explanation: Insects have 6 legs and 3 body parts. With 8 legs and 2 body parts, a spider is an arachnid, **not** an insect.
+      - kind: number
+        prompt: How many legs does an insect have?
+        answer: 6
+        explanation: "Insects have 6 legs and 3 body parts: head, thorax and abdomen."
+      - kind: choice
+        prompt: A crayfish lives in Ontario streams. It has jointed legs, a hard shell and two pairs of antennae. Which arthropod group is it in?
+        choices: [Insects, Arachnids, Crustaceans]
+        answer: Crustaceans
+        explanation: A hard shell, two pairs of antennae and life in water are traits of crustaceans.
