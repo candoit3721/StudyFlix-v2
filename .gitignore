@@ -32,3 +32,6 @@ factory/jobs/
 factory/board.json
 .claude/worktrees/
 .claude/settings.local.json
+
+# software factory runtime state
+factory/.board.lock

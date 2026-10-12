@@ -16,4 +16,4 @@ npm run verify    # lint, types, unit tests, build, browser tests
 New material and features are added through the software factory (`/factory:new <request>`, `/factory:next`).
 See `AGENTS.md` for how everything fits together, and `factory/` for the factory profile and backlog.
 
-To set up the factory on a new machine or a fresh clone, follow "Reinstall" in `/Users/henryw/project/workdir/Software-Factory/docs/INSTALL.md`.
+On a new machine or a fresh clone, run `npx -y github:candoit3721/software-factory` once in this folder to install the factory (see https://github.com/candoit3721/software-factory).
