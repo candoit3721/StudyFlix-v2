@@ -613,22 +613,6 @@ h3 {
   margin-top: 1.5rem;
 }
 
-.account-form {
-  display: grid;
-  margin-top: 1.5rem;
-}
-
-/* Margins, not a grid gap: the empty alert below the fields must take no space. */
-.account-form .field + .field {
-  margin-top: 1rem;
-}
-
-.account-form .button {
-  margin-top: 1.25rem;
-  justify-self: start;
-  min-width: 8rem;
-}
-
 .field {
   display: grid;
   gap: 0.35rem;
@@ -656,6 +640,22 @@ h3 {
 .field input:focus-visible {
   outline-offset: 1px;
   border-color: var(--accent);
+}
+
+.account-form {
+  display: grid;
+  margin-top: 1.5rem;
+}
+
+/* Margins, not a grid gap: the empty alert below the fields must take no space. */
+.account-form .field + .field {
+  margin-top: 1rem;
+}
+
+.account-form .button {
+  margin-top: 1.25rem;
+  justify-self: start;
+  min-width: 8rem;
 }
 
 .account-view .form-error {
