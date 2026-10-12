@@ -1,0 +1,9 @@
+title: Grade 6 Math
+subject: math
+curriculum: ontario-math-2020-g6
+summary: The Ontario Grade 6 math curriculum, one skill at a time, starting with ratios and rates.
+units:
+  - id: number
+    title: Number
+    lessons:
+      - ratios-and-rates
