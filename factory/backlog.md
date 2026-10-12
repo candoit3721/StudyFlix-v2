@@ -1,6 +1,6 @@
 # StudyFlix backlog
 
-`/software-factory:factory next` takes the first unchecked item.
+`/factory:next` takes the first unchecked item.
 Merged items are checked off automatically.
 
 - [x] Add a Grade 6 science lesson "Vertebrates and Invertebrates" to the Biodiversity unit: the five vertebrate classes with Ontario animals, common invertebrate groups, flashcards and a sorting quiz (expectation B2). (001-grade-6-vertebrates-and-invertebrates-le)
