@@ -162,7 +162,7 @@
   margin-top: clamp(2.25rem, 2rem + 1.5vw, 3.25rem);
   padding-top: clamp(2.25rem, 2rem + 1.5vw, 3.25rem);
   border-top: 1px solid var(--paper-line);
-  scroll-margin-top: 80px;
+  scroll-margin-top: calc(var(--header-height) + 1rem);
 }
 
 .block-head {
