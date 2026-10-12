@@ -1,12 +1,12 @@
 {
   "enabledPlugins": {
-    "factory@software-factory-local": true
+    "factory@software-factory": true
   },
   "extraKnownMarketplaces": {
-    "software-factory-local": {
+    "software-factory": {
       "source": {
-        "source": "directory",
-        "path": "/Users/henryw/project/workdir/Software-Factory"
+        "source": "github",
+        "repo": "candoit3721/software-factory"
       }
     }
   }
