@@ -1,0 +1,536 @@
+/*
+ * StudyFlix design system. Pages use these tokens and component classes only;
+ * new colours, sizes or one-off component styles belong here, not in pages.
+ */
+
+:root {
+  /* App chrome (dark) */
+  --bg: #0e1014;
+  --bg-raised: #161920;
+  --bg-elev: #1e222b;
+  --line: #2a2f3a;
+  --text: #f4f1ea;
+  --text-muted: #a5aab6;
+  --text-faint: #8a909d;
+
+  /* Reading surface (light) */
+  --paper: #fbf8f2;
+  --paper-sunk: #f2ede2;
+  --paper-line: #e2dbcc;
+  --ink: #1c1e23;
+  --ink-muted: #565b68;
+
+  /* Learner accent, overridden per learner page */
+  --accent: #ff7a59;
+  --accent-ink: #1a0f0b;
+
+  /* Feedback */
+  --ok: #1f9d68;
+  --ok-soft: #e1f5ec;
+  --bad: #d64545;
+  --bad-soft: #fbe6e6;
+  --ok-on-dark: #43d39a;
+
+  /* Type */
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-body: "Nunito Variable", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --step-4: clamp(2.25rem, 1.6rem + 3vw, 3.75rem);
+
+  /* Space and shape */
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --radius-s: 8px;
+  --radius-m: 14px;
+  --radius-l: 22px;
+  --shadow: 0 10px 30px rgb(0 0 0 / 0.35);
+  --page-max: 1280px;
+  --read-max: 46rem;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.icon {
+  flex: none;
+}
+
+/* ---------------------------------------------------------------- Header */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(rgb(14 16 20 / 0.96), rgb(14 16 20 / 0.82));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgb(255 255 255 / 0.05);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 64px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.wordmark span {
+  color: var(--accent);
+}
+
+.learner-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.85rem 0.3rem 0.3rem;
+  border-radius: 999px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: var(--step--1);
+}
+
+.learner-pill[hidden] {
+  display: none;
+}
+
+/* --------------------------------------------------------------- Avatars */
+
+.avatar {
+  --size: 48px;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: var(--avatar-bg, var(--accent));
+  color: var(--accent-ink);
+}
+
+.avatar--s {
+  --size: 32px;
+}
+
+.avatar--xl {
+  --size: clamp(104px, 18vw, 148px);
+  border-radius: 28%;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+/* --------------------------------------------------------------- Buttons */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.55rem 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    transform 0.15s ease;
+}
+
+.button:hover {
+  filter: brightness(1.08);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  cursor: default;
+  filter: grayscale(0.4) opacity(0.6);
+}
+
+.button--ghost {
+  background: rgb(255 255 255 / 0.1);
+  color: var(--text);
+  border: 1px solid rgb(255 255 255 / 0.16);
+}
+
+.paper .button--ghost {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper-line);
+}
+
+/* ---------------------------------------------------------------- Chips */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  background: rgb(255 255 255 / 0.08);
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.paper .chip {
+  background: var(--paper-sunk);
+  color: var(--ink-muted);
+}
+
+/* ---------------------------------------------------------- Lesson cards */
+
+.row {
+  margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+}
+
+.row-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.row-head h2 {
+  font-size: var(--step-2);
+}
+
+.row-head a {
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.row-head a:hover {
+  color: var(--text);
+}
+
+.unit-label {
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 0.6rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: 1rem;
+}
+
+.lesson-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.lesson-card:hover {
+  transform: translateY(-3px);
+  border-color: rgb(255 255 255 / 0.22);
+  box-shadow: var(--shadow);
+}
+
+.lesson-card .card-art {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+.lesson-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem 1rem;
+  flex: 1;
+}
+
+.lesson-card h3 {
+  font-size: var(--step-1);
+}
+
+.lesson-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.lesson-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  color: var(--text-faint);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.badge-done {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: rgb(14 16 20 / 0.82);
+  color: var(--ok-on-dark);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.badge-done[hidden] {
+  display: none;
+}
+
+/* ------------------------------------------------------------ Progress */
+
+.progress {
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.1);
+  overflow: hidden;
+}
+
+.progress > span {
+  display: block;
+  height: 100%;
+  width: var(--value, 0%);
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.paper .progress {
+  background: var(--paper-line);
+}
+
+/* -------------------------------------------------------------- Paper */
+
+.paper {
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: light;
+  --accent-text: color-mix(in srgb, var(--accent) 62%, var(--ink));
+}
+
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 0.9em;
+}
+
+.prose li + li {
+  margin-top: 0.3em;
+}
+
+.prose strong {
+  font-weight: 800;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.prose th {
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border-bottom-width: 2px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.katex-display {
+  margin: 0.8em 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2em 0;
+}
+
+.katex {
+  font-size: 1.08em;
+}
+
+/* ------------------------------------------------------------ Hero art */
+
+/* Large hero art: no accent dot, and no clipped focal icon on narrow screens. */
+.hero-art .art-dot,
+.lesson-hero-art .art-dot {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .hero-art .art-focus,
+  .lesson-hero-art .art-focus {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------- Footer */
+
+.site-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 0 2rem;
+  border-top: 1px solid var(--line);
+  color: var(--text-faint);
+  font-size: var(--step--1);
+}
+
+.site-footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.site-footer a {
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,119 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Block from '../../../../blocks/Block.astro';
+import Icon from '../../../../components/Icon.astro';
+import Base from '../../../../layouts/Base.astro';
+import { cardArt } from '../../../../lib/art';
+import { getCatalog } from '../../../../lib/content';
+import type { ResolvedCourse, ResolvedLesson } from '../../../../model/catalog';
+import { lessonRequirements } from '../../../../model/requirements';
+import '../../../../styles/blocks.css';
+
+export const getStaticPaths = (async () => {
+  const { courses } = await getCatalog();
+  return courses.flatMap((course) =>
+    course.lessons.map((lesson) => ({
+      params: { course: course.id, lesson: lesson.slug },
+      props: { course, lesson },
+    })),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  course: ResolvedCourse;
+  lesson: ResolvedLesson;
+}
+
+const { course, lesson } = Astro.props;
+const { lessons } = await getCatalog();
+const unit = course.units.find((u) => u.id === lesson.unitId);
+const prev = lesson.prevId ? lessons.get(lesson.prevId) : undefined;
+const next = lesson.nextId ? lessons.get(lesson.nextId) : undefined;
+const requirements = JSON.stringify(lessonRequirements(lesson.blocks));
+---
+
+<Base title={lesson.title} description={lesson.summary}>
+  <header class="lesson-hero">
+    <div class="lesson-hero-art">
+      <Fragment set:html={cardArt({ seed: lesson.id, subject: lesson.subject, icon: lesson.icon, width: 1280, height: 400 })} />
+    </div>
+    <div class="wrap lesson-hero-body">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href={course.url}>{course.title}</a>
+        <Icon name="chevron-right" size={14} />
+        <span>{unit?.title}</span>
+      </nav>
+      <h1>{lesson.title}</h1>
+      <p>{lesson.summary}</p>
+      <div class="lesson-meta">
+        <span class="chip"><Icon name="clock" size={14} />{lesson.minutes} min</span>
+        <span class="chip">Lesson {lesson.number} of {course.lessons.length}</span>
+        {
+          course.curriculum &&
+            lesson.expectations.map((code) => (
+              <a class="chip" href={`/curricula/${course.curriculum}/#${code}`} title="Curriculum expectation">
+                {code}
+              </a>
+            ))
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="lesson-layout wrap">
+    <article class="paper lesson-sheet">
+      <sf-lesson-status class="lesson-status" data-lesson={lesson.id} data-requirements={requirements} data-explain-guest>
+        <div class="lesson-status-row">
+          <strong>Your progress</strong>
+          <span data-label>Not started yet</span>
+        </div>
+        <div class="progress" data-bar><span></span></div>
+        <p class="lesson-status-done" data-done hidden>
+          <Icon name="party-popper" size={18} />Lesson complete. Great work!
+        </p>
+      </sf-lesson-status>
+
+      <section class="objectives" aria-labelledby="objectives-title">
+        <h2 id="objectives-title">In this lesson you will</h2>
+        <ul>
+          {lesson.objectives.map((objective) => <li><Icon name="target" size={18} />{objective}</li>)}
+        </ul>
+      </section>
+
+      {lesson.blocks.map((block) => <Block block={block} lessonId={lesson.id} />)}
+
+      <footer class="lesson-foot">
+        <div class="lesson-print">
+          <a class="button button--ghost" href={`${lesson.url}worksheet/`}>
+            <Icon name="printer" size={18} />Printable worksheet
+          </a>
+          <a class="button button--ghost" href={`${lesson.url}answer-key/`}>
+            <Icon name="key-round" size={18} />Answer key
+          </a>
+        </div>
+        <nav class="lesson-nav" aria-label="Lessons">
+          {
+            prev ? (
+              <a class="lesson-nav-link" href={prev.url}>
+                <Icon name="arrow-left" size={18} />
+                <span><small>Previous</small>{prev.title}</span>
+              </a>
+            ) : <span />
+          }
+          {
+            next && (
+              <a class="lesson-nav-link lesson-nav-next" href={next.url}>
+                <span><small>Next</small>{next.title}</span>
+                <Icon name="arrow-right" size={18} />
+              </a>
+            )
+          }
+        </nav>
+      </footer>
+    </article>
+  </div>
+</Base>
+
+<script>
+  import '../../../../components/status-client';
+</script>

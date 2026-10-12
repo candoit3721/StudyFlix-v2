@@ -1,0 +1,12 @@
+---
+import { renderMarkdown } from '../../lib/markdown';
+import type { BlockOf } from '../../model/schemas';
+
+interface Props {
+  block: BlockOf<'explainer'>;
+}
+
+const { block } = Astro.props;
+---
+
+<div class="prose" set:html={renderMarkdown(block.markdown)} />

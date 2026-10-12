@@ -1,0 +1,64 @@
+---
+import { renderInline, renderMarkdown } from '../../lib/markdown';
+import type { BlockOf } from '../../model/schemas';
+
+interface Props {
+  block: BlockOf<'example'>;
+}
+
+const { block } = Astro.props;
+---
+
+<sf-steps class="example">
+  <div class="example-problem prose" set:html={renderMarkdown(block.problem)} />
+  <ol class="example-steps">
+    {block.steps.map((step) => <li class="prose" set:html={renderInline(step)} />)}
+  </ol>
+  <div class="example-answer prose" data-answer set:html={renderMarkdown(block.answer)} />
+  <button type="button" class="button button--ghost" data-next hidden>Show the first step</button>
+</sf-steps>
+
+<script>
+  /** <sf-steps>: reveals a worked example one step at a time. Without JS, everything shows. */
+  class SfSteps extends HTMLElement {
+    private shown = 0;
+
+    connectedCallback(): void {
+      this.steps.forEach((step) => (step.hidden = true));
+      this.answer.hidden = true;
+      this.button.hidden = false;
+      this.button.addEventListener('click', () => this.next());
+    }
+
+    private get steps(): HTMLElement[] {
+      return [...this.querySelectorAll<HTMLElement>('.example-steps > li')];
+    }
+
+    private get answer(): HTMLElement {
+      return this.querySelector<HTMLElement>('[data-answer]')!;
+    }
+
+    private get button(): HTMLButtonElement {
+      return this.querySelector<HTMLButtonElement>('[data-next]')!;
+    }
+
+    private next(): void {
+      const steps = this.steps;
+      if (this.shown < steps.length) {
+        steps[this.shown]!.hidden = false;
+        this.shown += 1;
+      } else {
+        this.answer.hidden = false;
+      }
+      if (this.shown < steps.length) this.button.textContent = 'Show the next step';
+      else if (this.answer.hidden) this.button.textContent = 'Show the answer';
+      else {
+        this.button.hidden = true;
+        this.answer.setAttribute('tabindex', '-1');
+        this.answer.focus();
+      }
+    }
+  }
+
+  if (!customElements.get('sf-steps')) customElements.define('sf-steps', SfSteps);
+</script>

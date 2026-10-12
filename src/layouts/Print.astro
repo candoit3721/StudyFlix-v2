@@ -1,0 +1,39 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/nunito';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import '../styles/blocks.css';
+import '../styles/print.css';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title: string;
+  backUrl: string;
+}
+
+const { title, backUrl } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-CA" class="print-doc">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} · StudyFlix</title>
+  </head>
+  <body class="paper">
+    <div class="print-toolbar">
+      <a class="button button--ghost" href={backUrl}><Icon name="arrow-left" size={18} />Back to lesson</a>
+      <button type="button" class="button" data-print><Icon name="printer" size={18} />Print</button>
+    </div>
+    <main class="sheet">
+      <slot />
+    </main>
+    <script>
+      document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+name: Ontario Science and Technology, Grade 6
+jurisdiction: Ontario
+subject: science
+grade: 6
+source: The Ontario Curriculum, Grades 1-8, Science and Technology (2022), Grade 6 overall expectations
+strands:
+  - code: A
+    title: STEM Skills and Connections
+    expectations:
+      - code: A1
+        text: use a scientific research process, a scientific experimentation process, and an engineering design process to conduct investigations, following appropriate health and safety procedures
+      - code: A2
+        text: use coding in investigations and to model concepts, and assess the impact of coding and of emerging technologies on everyday life and in STEM-related fields
+      - code: A3
+        text: demonstrate an understanding of the practical applications of science and technology, and of contributions to science and technology from people with diverse lived experiences
+  - code: B
+    title: "Life Systems: Biodiversity"
+    expectations:
+      - code: B1
+        text: assess the importance of biodiversity, and describe ways of protecting biodiversity
+      - code: B2
+        text: demonstrate an understanding of biodiversity, its contributions to the stability of natural systems, and its benefits to humans
+  - code: C
+    title: "Matter and Energy: Electrical Phenomena, Energy, and Devices"
+    expectations:
+      - code: C1
+        text: evaluate the impact of the use and generation of electrical energy on society and the environment, and suggest ways to use electrical energy responsibly
+      - code: C2
+        text: demonstrate an understanding of the principles of electrical energy and its transformation into and from other forms of energy
+  - code: D
+    title: "Structures and Mechanisms: Flight"
+    expectations:
+      - code: D1
+        text: assess the environmental impacts of flying machines
+      - code: D2
+        text: demonstrate an understanding of the ways in which properties of air can be applied to the principles of flight and flying machines
+  - code: E
+    title: "Earth and Space Systems: Space"
+    expectations:
+      - code: E1
+        text: assess the impact of space exploration on humans, society, and the environment
+      - code: E2
+        text: demonstrate an understanding of the solar system, the phenomena that result from the movement of different bodies within it, and the technologies used in space exploration

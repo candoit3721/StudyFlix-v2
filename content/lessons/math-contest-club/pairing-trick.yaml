@@ -1,0 +1,57 @@
+title: The Pairing Trick
+summary: Add 1 to 100 in seconds the way young Carl Friedrich Gauss did, then use it on any 1 to n sum.
+icon: sigma
+minutes: 20
+objectives:
+  - Add 1 + 2 + ... + n by pairing the first and last numbers.
+  - Use the rule n × (n + 1) ÷ 2.
+blocks:
+  - type: explainer
+    id: the-story
+    title: A teacher's long task
+    markdown: |
+      The story goes that a teacher asked a class to add every whole number from 1 to 100, hoping for a quiet hour. A boy named **Carl Friedrich Gauss** had the answer in moments.
+
+      His idea: write the sum forwards and backwards, then add the two rows.
+
+      $$
+      \begin{array}{rcrcrcccr}
+        1 & + & 2 & + & 3 & + & \dots & + & 100 \\
+        100 & + & 99 & + & 98 & + & \dots & + & 1
+      \end{array}
+      $$
+
+      Each column adds to **101**, and there are **100** columns, so the two rows together make $100 \times 101 = 10{,}100$. That is two copies of the sum, so one copy is half of that.
+
+  - type: example
+    id: one-to-hundred
+    title: Add 1 to 100
+    problem: What is $1 + 2 + 3 + \dots + 100$?
+    steps:
+      - Pair the first and last numbers. $1 + 100 = 101$, $2 + 99 = 101$, and so on.
+      - There are 100 numbers, so there are $100 \div 2 = 50$ pairs.
+      - Multiply. $50 \times 101 = 5050$.
+    answer: $1 + 2 + \dots + 100 = 5050$
+
+  - type: quiz
+    id: check
+    title: Check the rule
+    items:
+      - kind: number
+        prompt: What is $1 + 2 + 3 + \dots + 10$?
+        answer: 55
+        explanation: $10 \times 11 \div 2 = 55$
+      - kind: choice
+        prompt: Which rule gives $1 + 2 + \dots + n$?
+        choices: ["$n \\times (n + 1) \\div 2$", "$n \\times n$", "$(n + 1) \\div 2$"]
+        answer: "$n \\times (n + 1) \\div 2$"
+      - kind: number
+        prompt: When you pair up $1 + 2 + \dots + 20$, what does each pair add to?
+        answer: 21
+
+  - type: practice
+    id: practice
+    title: Practise the trick
+    generator: gauss-sum
+    params: { mode: one-to-n, max: 200 }
+    count: 6

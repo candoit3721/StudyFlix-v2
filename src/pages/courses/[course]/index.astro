@@ -1,0 +1,63 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Icon from '../../../components/Icon.astro';
+import LessonCard from '../../../components/LessonCard.astro';
+import Base from '../../../layouts/Base.astro';
+import { cardArt } from '../../../lib/art';
+import { getCatalog } from '../../../lib/content';
+import { SUBJECTS } from '../../../lib/subjects';
+import type { ResolvedCourse } from '../../../model/catalog';
+import '../../../styles/blocks.css';
+
+export const getStaticPaths = (async () => {
+  const { courses } = await getCatalog();
+  return courses.map((course) => ({ params: { course: course.id }, props: { course } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  course: ResolvedCourse;
+}
+
+const { course } = Astro.props;
+const { curricula } = await getCatalog();
+const curriculum = curricula.find((c) => c.id === course.curriculum);
+const minutes = course.lessons.reduce((total, lesson) => total + lesson.minutes, 0);
+---
+
+<Base title={course.title} description={course.summary}>
+  <header class="lesson-hero">
+    <div class="lesson-hero-art">
+      <Fragment set:html={cardArt({ seed: course.id, subject: course.subject, icon: course.lessons[0]?.icon ?? 'book-open', width: 1280, height: 400 })} />
+    </div>
+    <div class="wrap lesson-hero-body">
+      <p class="crumbs">{SUBJECTS[course.subject].label}</p>
+      <h1>{course.title}</h1>
+      <p>{course.summary}</p>
+      <div class="lesson-meta">
+        <span class="chip"><Icon name="list-checks" size={14} />{course.lessons.length} lessons</span>
+        <span class="chip"><Icon name="clock" size={14} />{minutes} min</span>
+        {
+          curriculum && (
+            <a class="chip" href={curriculum.url}><Icon name="map" size={14} />{curriculum.name}</a>
+          )
+        }
+      </div>
+    </div>
+  </header>
+  <div class="wrap">
+    {
+      course.units.map((unit) => (
+        <section class="row">
+          <div class="row-head">
+            <h2>{unit.title}</h2>
+          </div>
+          <div class="card-grid">
+            {unit.lessons.map((lesson) => (
+              <LessonCard lesson={lesson} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</Base>

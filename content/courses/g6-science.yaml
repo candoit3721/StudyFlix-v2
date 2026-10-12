@@ -1,0 +1,10 @@
+title: Grade 6 Science
+subject: science
+curriculum: ontario-science-2022-g6
+summary: The four Grade 6 strands of the Ontario science curriculum, starting with the living world.
+units:
+  - id: biodiversity
+    title: Biodiversity
+    lessons:
+      - what-is-biodiversity
+      - six-kingdoms

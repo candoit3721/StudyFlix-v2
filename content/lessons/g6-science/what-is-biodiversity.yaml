@@ -1,0 +1,69 @@
+title: What Is Biodiversity?
+summary: Variety within a species, between species and across ecosystems, and why natural systems need all three.
+icon: sprout
+minutes: 20
+expectations: [B1, B2]
+objectives:
+  - Define biodiversity at three levels - within a species, between species and across ecosystems.
+  - Explain how biodiversity keeps a natural community stable.
+  - Name ways people benefit from biodiversity.
+blocks:
+  - type: explainer
+    id: three-levels
+    title: Variety at three levels
+    markdown: |
+      **Biodiversity** is the variety of life in a place. Scientists look for it at three levels:
+
+      1. **Within a species.** Not every white-tailed deer is the same. Differences in size, coat and behaviour mean some deer survive a hard winter even when others do not.
+      2. **Between species.** Algonquin Provincial Park is home to moose, loons, beavers, black spruce, sphagnum moss and thousands of insects. Each **species** is a group of organisms that can reproduce together.
+      3. **Across ecosystems.** Ontario has boreal forest in the north, Carolinian forest in the south, wetlands, lakes and the Great Lakes shoreline. Each **ecosystem** offers different **habitats**.
+
+  - type: explainer
+    id: why-it-matters
+    title: Why variety keeps nature stable
+    markdown: |
+      In a **natural community**, species are linked by **interrelationships**: who eats whom, who pollinates whom, who shelters whom.
+
+      When there are many species, the community has back-up plans. If one food source disappears, animals can switch to another. When there are only a few species, losing one can make the whole community collapse.
+
+      People depend on biodiversity too. It gives us food, medicines, clean water, fertile soil and materials like wood.
+
+  - type: flashcards
+    id: key-words
+    title: Key words
+    cards:
+      - front: Biodiversity
+        back: The variety of life in a place, within species, between species and across ecosystems.
+      - front: Species
+        back: A group of organisms that can reproduce with each other and have offspring that can also reproduce.
+      - front: Ecosystem
+        back: All the living things in an area together with the non-living things around them, such as water, soil and sunlight.
+      - front: Habitat
+        back: The place where an organism lives and finds its food, water and shelter.
+      - front: Natural community
+        back: All the different species living and interacting in the same area.
+
+  - type: quiz
+    id: check
+    title: Check your understanding
+    items:
+      - kind: choice
+        prompt: Two white-tailed deer have different coat colours. Which level of biodiversity is this?
+        choices: [Within a species, Between species, Across ecosystems]
+        answer: Within a species
+        explanation: Both animals belong to the same species, so the difference is variety within a species.
+      - kind: choice
+        prompt: Which community is most likely to stay stable if one plant species disappears?
+        choices:
+          - A meadow with 3 plant species
+          - A meadow with 40 plant species
+          - The two meadows would be equally stable
+        answer: A meadow with 40 plant species
+        explanation: With many species, animals that ate the lost plant can switch to other food sources.
+      - kind: text
+        prompt: What word means the place where an organism lives and finds its food, water and shelter?
+        accept: [habitat]
+      - kind: choice
+        prompt: Which of these is a benefit people get from biodiversity?
+        choices: [Medicines made from plants, Faster internet, Taller buildings]
+        answer: Medicines made from plants

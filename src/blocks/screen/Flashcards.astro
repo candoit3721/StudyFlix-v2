@@ -1,0 +1,32 @@
+---
+import { renderInline } from '../../lib/markdown';
+import type { BlockOf } from '../../model/schemas';
+
+interface Props {
+  block: BlockOf<'flashcards'>;
+}
+
+const { block } = Astro.props;
+---
+
+<p class="block-hint">Say the meaning out loud, then tap a card to check.</p>
+<ul class="flashcards">
+  {
+    block.cards.map((card) => (
+      <li>
+        <button type="button" class="flashcard" aria-pressed="false">
+          <span class="flashcard-face flashcard-front" set:html={renderInline(card.front)} />
+          <span class="flashcard-face flashcard-back" set:html={renderInline(card.back)} />
+        </button>
+      </li>
+    ))
+  }
+</ul>
+
+<script>
+  for (const card of document.querySelectorAll<HTMLButtonElement>('.flashcard')) {
+    card.addEventListener('click', () => {
+      card.setAttribute('aria-pressed', String(card.getAttribute('aria-pressed') !== 'true'));
+    });
+  }
+</script>

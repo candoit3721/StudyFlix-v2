@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from 'astro';
+import PrintBlock from '../../../../blocks/PrintBlock.astro';
+import Print from '../../../../layouts/Print.astro';
+import { getCatalog } from '../../../../lib/content';
+import type { ResolvedCourse, ResolvedLesson } from '../../../../model/catalog';
+
+export const getStaticPaths = (async () => {
+  const { courses } = await getCatalog();
+  return courses.flatMap((course) =>
+    course.lessons.map((lesson) => ({
+      params: { course: course.id, lesson: lesson.slug },
+      props: { course, lesson },
+    })),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  course: ResolvedCourse;
+  lesson: ResolvedLesson;
+}
+
+const { course, lesson } = Astro.props;
+---
+
+<Print title={`${lesson.title} worksheet`} backUrl={lesson.url}>
+  <header class="sheet-head">
+    <div class="sheet-fields">
+      <span>Name <i></i></span>
+      <span>Date <i></i></span>
+    </div>
+    <p class="sheet-course">{course.title} · Lesson {lesson.number}</p>
+    <h1>{lesson.title}</h1>
+    <ul class="sheet-objectives">
+      {lesson.objectives.map((objective) => <li>{objective}</li>)}
+    </ul>
+  </header>
+  {lesson.blocks.map((block) => <PrintBlock block={block} lessonId={lesson.id} />)}
+</Print>

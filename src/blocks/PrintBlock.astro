@@ -1,0 +1,89 @@
+---
+import Icon from '../components/Icon.astro';
+import { generateSet } from '../generators';
+import { escapeHtml } from '../items/render';
+import { renderInline, renderMarkdown } from '../lib/markdown';
+import type { Block } from '../model/schemas';
+import { BLOCK_META } from './meta';
+
+interface Props {
+  block: Block;
+  lessonId: string;
+}
+
+const { block, lessonId } = Astro.props;
+const meta = BLOCK_META[block.type];
+const letters = 'ABCDEF';
+const practice =
+  block.type === 'practice' ? generateSet(block.generator, block.params, block.count, lessonId) : [];
+---
+
+<section class={`print-block print-block--${block.type}`}>
+  <h2><Icon name={meta.icon} size={18} strokeWidth={2.5} />{block.title ?? meta.label}</h2>
+
+  {block.type === 'explainer' && <div class="prose" set:html={renderMarkdown(block.markdown)} />}
+
+  {
+    block.type === 'example' && (
+      <div class="example">
+        <div class="example-problem prose" set:html={renderMarkdown(block.problem)} />
+        <ol class="example-steps">
+          {block.steps.map((step) => <li class="prose" set:html={renderInline(step)} />)}
+        </ol>
+        <div class="example-answer prose" set:html={renderMarkdown(block.answer)} />
+      </div>
+    )
+  }
+
+  {
+    block.type === 'flashcards' && (
+      <table class="print-terms">
+        <tbody>
+          {block.cards.map((card) => (
+            <tr>
+              <th scope="row" set:html={renderInline(card.front)} />
+              <td set:html={renderInline(card.back)} />
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+
+  {
+    block.type === 'quiz' && (
+      <ol class="print-items">
+        {block.items.map((item) => (
+          <li>
+            <div class="print-prompt" set:html={renderInline(item.prompt)} />
+            {item.kind === 'choice' ? (
+              <ul class="print-choices">
+                {item.choices.map((choice, i) => (
+                  <li>
+                    <span class="print-bubble">{letters[i]}</span>
+                    <span set:html={renderInline(choice)} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div class="print-line">{item.kind === 'number' && item.unit ? <span>{item.unit}</span> : null}</div>
+            )}
+          </li>
+        ))}
+      </ol>
+    )
+  }
+
+  {
+    block.type === 'practice' && (
+      <ol class="print-items print-items--grid">
+        {practice.map(({ item }) => (
+          <li>
+            <div class="print-prompt" set:html={escapeHtml(item.prompt)} />
+            <div class="print-line" />
+          </li>
+        ))}
+      </ol>
+    )
+  }
+</section>

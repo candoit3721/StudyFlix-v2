@@ -1,0 +1,169 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Icon from '../../components/Icon.astro';
+import Base from '../../layouts/Base.astro';
+import { getCatalog } from '../../lib/content';
+import type { ResolvedCurriculum } from '../../model/catalog';
+
+export const getStaticPaths = (async () => {
+  const { curricula } = await getCatalog();
+  return curricula.map((curriculum) => ({ params: { curriculum: curriculum.id }, props: { curriculum } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  curriculum: ResolvedCurriculum;
+}
+
+const { curriculum } = Astro.props;
+const { courses } = await getCatalog();
+const lessons = courses.filter((c) => c.curriculum === curriculum.id).flatMap((c) => c.lessons);
+const coveredBy = (code: string) => lessons.filter((lesson) => lesson.expectations.includes(code));
+const codes = curriculum.strands.flatMap((s) => s.expectations.map((e) => e.code));
+const covered = codes.filter((code) => coveredBy(code).length > 0).length;
+---
+
+<Base title={curriculum.name}>
+  <div class="wrap coverage">
+    <header>
+      <p class="unit-label">Curriculum coverage</p>
+      <h1>{curriculum.name}</h1>
+      <p class="coverage-summary">
+        <strong>{covered} of {codes.length}</strong> expectations have at least one lesson.
+      </p>
+      <div class="progress coverage-bar"><span style={`--value: ${Math.round((covered / codes.length) * 100)}%`}></span></div>
+      <p class="coverage-source">Source: {curriculum.source}</p>
+    </header>
+
+    {
+      curriculum.strands.map((strand) => (
+        <section class="row">
+          <div class="row-head">
+            <h2>
+              {strand.code}. {strand.title}
+            </h2>
+          </div>
+          <ul class="expectations">
+            {strand.expectations.map((expectation) => {
+              const lessonsFor = coveredBy(expectation.code);
+              return (
+                <li id={expectation.code} class:list={['expectation', lessonsFor.length === 0 && 'is-gap']}>
+                  <span class="expectation-code">{expectation.code}</span>
+                  <div>
+                    <p>{expectation.text}</p>
+                    {lessonsFor.length > 0 ? (
+                      <ul class="expectation-lessons">
+                        {lessonsFor.map((lesson) => (
+                          <li>
+                            <a class="chip" href={lesson.url}>
+                              <Icon name={lesson.icon} size={14} />
+                              {lesson.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p class="expectation-gap">No lessons yet</p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .coverage {
+    padding-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  }
+
+  h1 {
+    font-size: var(--step-3);
+    max-width: 30ch;
+  }
+
+  .coverage-summary {
+    margin: 0.75rem 0 0.6rem;
+    color: var(--text-muted);
+  }
+
+  .coverage-summary strong {
+    color: var(--text);
+  }
+
+  .coverage-bar {
+    max-width: 28rem;
+  }
+
+  .coverage-source {
+    margin: 0.75rem 0 0;
+    color: var(--text-faint);
+    font-size: var(--step--1);
+  }
+
+  .expectations {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .expectation {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border-radius: var(--radius-m);
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    scroll-margin-top: 80px;
+  }
+
+  .expectation:target {
+    border-color: var(--accent);
+  }
+
+  .expectation p {
+    margin: 0;
+  }
+
+  .expectation-code {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-s);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 800;
+  }
+
+  .is-gap .expectation-code {
+    background: var(--bg-elev);
+    color: var(--text-muted);
+  }
+
+  .expectation-lessons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .expectation-lessons a:hover {
+    color: var(--text);
+  }
+
+  .expectation-gap {
+    margin-top: 0.4rem !important;
+    color: var(--text-faint);
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+</style>

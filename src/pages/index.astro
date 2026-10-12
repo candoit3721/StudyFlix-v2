@@ -1,0 +1,84 @@
+---
+import Avatar from '../components/Avatar.astro';
+import Base from '../layouts/Base.astro';
+import { getCatalog } from '../lib/content';
+
+const { learners } = await getCatalog();
+---
+
+<Base title="StudyFlix">
+  <section class="chooser wrap">
+    <h1>Who's learning today?</h1>
+    <ul class="chooser-list">
+      {
+        learners.map((learner) => (
+          <li>
+            <a class="chooser-option" href={learner.url} style={`--accent: ${learner.accent}`}>
+              <Avatar avatar={learner.avatar} accent={learner.accent} size="xl" />
+              <span class="chooser-name">{learner.name}</span>
+              <span class="chooser-tagline">{learner.tagline}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .chooser {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px - 7rem);
+    padding-block: 3rem;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    margin-bottom: clamp(2rem, 1.5rem + 2vw, 3.25rem);
+  }
+
+  .chooser-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(1.25rem, 1rem + 2vw, 2.75rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chooser-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    text-decoration: none;
+    border-radius: var(--radius-l);
+    padding: 0.5rem;
+  }
+
+  .chooser-option:hover :global(.avatar),
+  .chooser-option:focus-visible :global(.avatar) {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 0 0 4px var(--bg), 0 0 0 7px var(--accent), var(--shadow);
+  }
+
+  .chooser-option:focus-visible {
+    outline: none;
+  }
+
+  .chooser-name {
+    margin-top: 0.6rem;
+    font-weight: 800;
+    font-size: var(--step-1);
+  }
+
+  .chooser-tagline {
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+</style>

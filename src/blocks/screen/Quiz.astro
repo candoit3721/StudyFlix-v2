@@ -1,0 +1,40 @@
+---
+import { itemHtml } from '../../items/render';
+import { plainText, renderInline, renderMarkdown } from '../../lib/markdown';
+import { itemKey } from '../../model/requirements';
+import type { BlockOf } from '../../model/schemas';
+
+interface Props {
+  block: BlockOf<'quiz'>;
+  lessonId: string;
+}
+
+const { block, lessonId } = Astro.props;
+const html = block.items
+  .map((item, i) =>
+    itemHtml(
+      {
+        key: itemKey(item),
+        item,
+        promptHtml: renderInline(item.prompt),
+        choicesHtml: item.kind === 'choice' ? item.choices.map(renderInline) : undefined,
+        choicesLabel:
+          item.kind === 'choice'
+            ? item.choices.map((choice) => (choice.includes('$') ? plainText(choice) : ''))
+            : undefined,
+        explanationHtml: item.explanation ? renderMarkdown(item.explanation) : undefined,
+      },
+      i,
+    ),
+  )
+  .join('');
+---
+
+<sf-items data-lesson={lessonId} data-block={block.id} data-mode="quiz">
+  <ol class="items" set:html={html} />
+  <p class="items-score" data-score aria-live="polite"></p>
+</sf-items>
+
+<script>
+  import '../../items/client';
+</script>

@@ -1,0 +1,99 @@
+---
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/nunito';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import { getCatalog } from '../lib/content';
+import { iconSvg } from '../lib/icons';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Set on a learner's own pages; other pages use the learner chosen in this browser. */
+  learner?: string;
+}
+
+const {
+  title,
+  description = 'StudyFlix: lessons, practice and printable worksheets for our family.',
+  learner,
+} = Astro.props;
+const catalog = await getCatalog();
+const learners = Object.fromEntries(
+  catalog.learners.map((l) => [
+    l.id,
+    {
+      name: l.name,
+      url: l.url,
+      accent: l.accent,
+      avatar: iconSvg(l.avatar, { size: 18, strokeWidth: 2.25 }),
+    },
+  ]),
+);
+const pageTitle = title === 'StudyFlix' ? title : `${title} · StudyFlix`;
+---
+
+<!doctype html>
+<html lang="en-CA" data-learner={learner}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0e1014" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+    <script is:inline type="application/json" id="sf-learners" set:html={JSON.stringify(learners)} />
+    <script is:inline>
+      // Apply the learner's accent before first paint to avoid a colour flash.
+      (() => {
+        const root = document.documentElement;
+        let id = root.dataset.learner;
+        try {
+          id = id || localStorage.getItem('studyflix:v2:learner') || '';
+        } catch {}
+        const learners = JSON.parse(document.getElementById('sf-learners').textContent);
+        const learner = learners[id];
+        if (learner) {
+          root.dataset.activeLearner = id;
+          root.style.setProperty('--accent', learner.accent);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="wordmark" href="/">Study<span>Flix</span></a>
+        <a class="learner-pill" href="/" data-learner-pill hidden>
+          <span class="avatar avatar--s"></span>
+          <span data-name></span>
+        </a>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>StudyFlix · made for our family</span>
+        <a href="/">Switch learner</a>
+      </div>
+    </footer>
+    <script>
+      import { setCurrentLearner } from '../lib/progress';
+
+      const root = document.documentElement;
+      if (root.dataset.learner) setCurrentLearner(root.dataset.learner);
+      const learners = JSON.parse(document.getElementById('sf-learners')?.textContent ?? '{}');
+      const learner = learners[root.dataset.activeLearner ?? ''];
+      const pill = document.querySelector<HTMLAnchorElement>('[data-learner-pill]');
+      if (pill && learner) {
+        pill.href = learner.url;
+        pill.querySelector('.avatar')!.innerHTML = learner.avatar;
+        pill.querySelector('[data-name]')!.textContent = learner.name;
+        pill.hidden = false;
+      }
+    </script>
+  </body>
+</html>

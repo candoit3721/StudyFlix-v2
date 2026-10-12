@@ -1,0 +1,54 @@
+---
+import { generateSet } from '../generators';
+import { answerText } from '../items/grading';
+import { escapeHtml } from '../items/render';
+import { renderInline, renderMarkdown } from '../lib/markdown';
+import type { Block, Item } from '../model/schemas';
+import { BLOCK_META } from './meta';
+
+interface Props {
+  block: Block;
+  lessonId: string;
+}
+
+const { block, lessonId } = Astro.props;
+const letters = 'ABCDEF';
+
+let entries: { prompt: string; answer: string; explanation?: string }[] = [];
+const markdownAnswer = (item: Item) =>
+  item.kind === 'choice'
+    ? `${letters[item.choices.indexOf(item.answer)]}. ${renderInline(item.answer)}`
+    : escapeHtml(answerText(item));
+
+if (block.type === 'quiz') {
+  entries = block.items.map((item) => ({
+    prompt: renderInline(item.prompt),
+    answer: markdownAnswer(item),
+    explanation: item.explanation ? renderMarkdown(item.explanation) : undefined,
+  }));
+}
+if (block.type === 'practice') {
+  entries = generateSet(block.generator, block.params, block.count, lessonId).map(({ item }) => ({
+    prompt: escapeHtml(item.prompt),
+    answer: escapeHtml(answerText(item)),
+    explanation: item.explanation ? `<p>${escapeHtml(item.explanation)}</p>` : undefined,
+  }));
+}
+---
+
+{
+  entries.length > 0 && (
+    <section class="print-block">
+      <h2>{block.title ?? BLOCK_META[block.type].label}</h2>
+      <ol class="key-items">
+        {entries.map((entry) => (
+          <li>
+            <div class="key-prompt" set:html={entry.prompt} />
+            <div class="key-answer" set:html={entry.answer} />
+            {entry.explanation && <div class="key-explanation" set:html={entry.explanation} />}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}

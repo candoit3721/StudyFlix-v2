@@ -1,0 +1,66 @@
+title: The Six Kingdoms of Life
+summary: Sort living things into six kingdoms using what you can observe about their cells and how they get food.
+icon: microscope
+minutes: 25
+expectations: [B2]
+objectives:
+  - Name the six kingdoms of living things.
+  - Classify an organism using its cells and how it gets its food.
+blocks:
+  - type: explainer
+    id: why-classify
+    title: Why scientists classify
+    markdown: |
+      There are millions of species on Earth. To study them, scientists put organisms with shared **characteristics** into groups. This is called **classification**.
+
+      In Grade 6 we use six **kingdoms**. Two questions sort most organisms:
+
+      - **How many cells does it have, and do the cells have a nucleus?**
+      - **How does it get its food?** Does it make food from sunlight, eat other organisms, or absorb food from what it grows on?
+
+  - type: explainer
+    id: the-six
+    title: Meet the six kingdoms
+    markdown: |
+      | Kingdom | Cells | How it gets food | Ontario example |
+      |---|---|---|---|
+      | Animals | Many cells, with a nucleus | Eats other organisms | Common loon |
+      | Plants | Many cells, with a nucleus | Makes food from sunlight | Sugar maple |
+      | Fungi | Mostly many cells, with a nucleus | Absorbs food from what it grows on | Oyster mushroom |
+      | Protists | Mostly one cell, with a nucleus | Varies: some make food, some eat | Amoeba in pond water |
+      | Eubacteria | One cell, no nucleus | Varies | Bacteria that turn milk into yogurt |
+      | Archaebacteria | One cell, no nucleus | Varies | Microbes in hot springs and salt lakes |
+
+  - type: example
+    id: classify-mushroom
+    title: Classify an oyster mushroom
+    problem: An oyster mushroom grows on a dead tree. It is made of many cells with a nucleus, and it cannot make food from sunlight. Which kingdom does it belong to?
+    steps:
+      - "Count the cells: many cells with a nucleus. That rules out eubacteria and archaebacteria."
+      - "How does it get food? It cannot use sunlight, so it is not a plant."
+      - "It absorbs food from the dead tree it grows on. That is how fungi feed."
+    answer: The oyster mushroom belongs to the **fungi** kingdom.
+
+  - type: quiz
+    id: check
+    title: Sort these organisms
+    items:
+      - kind: choice
+        prompt: A sugar maple makes its own food from sunlight. Which kingdom is it in?
+        choices: [Plants, Fungi, Protists]
+        answer: Plants
+      - kind: choice
+        prompt: Which kingdom contains living things made of one cell with **no** nucleus that live in hot springs?
+        choices: [Archaebacteria, Protists, Fungi]
+        answer: Archaebacteria
+      - kind: choice
+        prompt: An amoeba is a single cell with a nucleus that lives in pond water. Which kingdom is it in?
+        choices: [Protists, Eubacteria, Animals]
+        answer: Protists
+        explanation: It has a nucleus, so it is not a bacterium, and it is a single cell, so it is not an animal.
+      - kind: number
+        prompt: How many kingdoms of living things do we use in Grade 6?
+        answer: 6
+      - kind: text
+        prompt: What is the name for sorting living things into groups by their shared characteristics?
+        accept: [classification, classifying]

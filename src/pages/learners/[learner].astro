@@ -1,0 +1,206 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Avatar from '../../components/Avatar.astro';
+import Icon from '../../components/Icon.astro';
+import LessonCard from '../../components/LessonCard.astro';
+import Base from '../../layouts/Base.astro';
+import { cardArt } from '../../lib/art';
+import { getCatalog } from '../../lib/content';
+import type { ResolvedLearner } from '../../model/catalog';
+import { lessonRequirements } from '../../model/requirements';
+
+export const getStaticPaths = (async () => {
+  const { learners } = await getCatalog();
+  return learners.map((learner) => ({ params: { learner: learner.id }, props: { learner } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  learner: ResolvedLearner;
+}
+
+const { learner } = Astro.props;
+const lessons = learner.courses.flatMap((course) => course.lessons);
+const first = lessons[0];
+const queue = lessons.map((lesson) => ({
+  id: lesson.id,
+  title: lesson.title,
+  summary: lesson.summary,
+  url: lesson.url,
+  course: lesson.courseId,
+  requirements: lessonRequirements(lesson.blocks),
+}));
+---
+
+<Base title={learner.name} learner={learner.id}>
+  {
+    first && (
+      <sf-continue class="hero" data-learner={learner.id} data-name={learner.name} data-queue={JSON.stringify(queue)}>
+        {learner.courses.map((course, i) => (
+          <div class="hero-art" data-course={course.id} hidden={i !== 0}>
+            <Fragment set:html={cardArt({ seed: course.id, subject: course.subject, icon: course.lessons[0]?.icon ?? 'book-open', width: 1280, height: 520 })} />
+          </div>
+        ))}
+        <div class="hero-shade" />
+        <div class="wrap hero-body">
+          <div class="hero-who">
+            <Avatar avatar={learner.avatar} accent={learner.accent} size="s" />
+            <span data-eyebrow>Start here, {learner.name}</span>
+          </div>
+          <h1 data-title>{first.title}</h1>
+          <p data-summary>{first.summary}</p>
+          <a class="button" data-link href={first.url}>
+            <Icon name="play" size={18} strokeWidth={2.5} />
+            <span data-cta>Start lesson</span>
+          </a>
+        </div>
+      </sf-continue>
+    )
+  }
+
+  <div class="wrap">
+    {
+      learner.courses.map((course) => (
+        <section class="row" aria-labelledby={`course-${course.id}`}>
+          <div class="row-head">
+            <h2 id={`course-${course.id}`}>{course.title}</h2>
+            <a href={course.url}>Course overview</a>
+          </div>
+          {course.units.map((unit) => (
+            <div class="unit">
+              <p class="unit-label">{unit.title}</p>
+              <div class="card-grid">
+                {unit.lessons.map((lesson) => (
+                  <LessonCard lesson={lesson} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    display: block;
+    min-height: clamp(340px, 52vh, 500px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero-art,
+  .hero-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .hero-art :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-art[hidden] {
+    display: none;
+  }
+
+  .hero-shade {
+    background:
+      linear-gradient(90deg, rgb(14 16 20 / 0.92) 0%, rgb(14 16 20 / 0.6) 45%, rgb(14 16 20 / 0) 80%),
+      linear-gradient(0deg, var(--bg) 0%, rgb(14 16 20 / 0) 35%);
+  }
+
+  .hero-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.9rem;
+    min-height: inherit;
+    padding-block: 3rem 2.5rem;
+  }
+
+  .hero-who {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 800;
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .hero h1 {
+    font-size: var(--step-4);
+    max-width: 16ch;
+  }
+
+  .hero p {
+    margin: 0;
+    max-width: 38rem;
+    color: rgb(244 241 234 / 0.86);
+    font-size: var(--step-1);
+  }
+
+  .hero .button {
+    margin-top: 0.4rem;
+    min-height: 48px;
+    padding-inline: 1.4rem;
+  }
+
+  .unit + .unit {
+    margin-top: 1.5rem;
+  }
+</style>
+
+<script>
+  import '../../components/status-client';
+  import { lessonStatus, type LessonRequirements } from '../../lib/progress';
+
+  interface QueuedLesson {
+    id: string;
+    title: string;
+    summary: string;
+    url: string;
+    course: string;
+    requirements: LessonRequirements;
+  }
+
+  /** <sf-continue>: points the hero at the lesson to do next. */
+  class SfContinue extends HTMLElement {
+    connectedCallback(): void {
+      const learner = this.dataset.learner ?? '';
+      const queue = JSON.parse(this.dataset.queue ?? '[]') as QueuedLesson[];
+      const statuses = queue.map((lesson) => ({ lesson, status: lessonStatus(learner, lesson.id, lesson.requirements) }));
+      const inProgress = statuses.find((s) => s.status.started && !s.status.complete);
+      const next = inProgress ?? statuses.find((s) => !s.status.complete);
+      const anyStarted = statuses.some((s) => s.status.started);
+      const set = (selector: string, text: string) => {
+        const el = this.querySelector<HTMLElement>(selector);
+        if (el) el.textContent = text;
+      };
+
+      if (!next) {
+        set('[data-eyebrow]', 'Everything finished');
+        set('[data-title]', 'You completed every lesson!');
+        set('[data-summary]', 'Pick any lesson below to practise again.');
+        this.querySelector<HTMLElement>('[data-link]')?.setAttribute('hidden', '');
+        return;
+      }
+      const name = this.dataset.name ?? '';
+      set('[data-eyebrow]', inProgress ? `Keep going, ${name}` : anyStarted ? `Up next, ${name}` : `Start here, ${name}`);
+      set('[data-title]', next.lesson.title);
+      set('[data-summary]', next.lesson.summary);
+      set('[data-cta]', inProgress ? 'Continue lesson' : 'Start lesson');
+      this.querySelector<HTMLAnchorElement>('[data-link]')?.setAttribute('href', next.lesson.url);
+      for (const art of this.querySelectorAll<HTMLElement>('[data-course]')) {
+        art.hidden = art.dataset.course !== next.lesson.course;
+      }
+    }
+  }
+
+  if (!customElements.get('sf-continue')) customElements.define('sf-continue', SfContinue);
+</script>

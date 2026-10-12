@@ -1,0 +1,16 @@
+---
+import { iconSvg } from '../lib/icons';
+
+interface Props {
+  avatar: string;
+  accent: string;
+  size?: 's' | 'm' | 'xl';
+}
+
+const { avatar, accent, size = 'm' } = Astro.props;
+const iconSize = { s: 18, m: 26, xl: 64 }[size];
+---
+
+<span class:list={['avatar', size !== 'm' && `avatar--${size}`]} style={`--avatar-bg: ${accent}`}>
+  <Fragment set:html={iconSvg(avatar, { size: iconSize, strokeWidth: size === 'xl' ? 1.75 : 2.25 })} />
+</span>

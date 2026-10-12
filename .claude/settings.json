@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "software-factory-local": {
+      "source": { "source": "directory", "path": "/Users/henryw/project/workdir/Software-Factory" }
+    }
+  },
+  "enabledPlugins": {
+    "software-factory@software-factory-local": true
+  }
+}

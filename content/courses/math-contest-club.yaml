@@ -1,0 +1,9 @@
+title: Math Contest Club
+subject: math
+summary: Clever shortcuts and puzzles in the style of the Waterloo Gauss contest.
+units:
+  - id: gauss-sums
+    title: Gauss Sums
+    lessons:
+      - pairing-trick
+      - any-range

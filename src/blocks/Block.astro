@@ -1,0 +1,24 @@
+---
+import type { Block as BlockData } from '../model/schemas';
+import BlockFrame from './BlockFrame.astro';
+import Example from './screen/Example.astro';
+import Explainer from './screen/Explainer.astro';
+import Flashcards from './screen/Flashcards.astro';
+import Practice from './screen/Practice.astro';
+import Quiz from './screen/Quiz.astro';
+
+interface Props {
+  block: BlockData;
+  lessonId: string;
+}
+
+const { block, lessonId } = Astro.props;
+---
+
+<BlockFrame block={block}>
+  {block.type === 'explainer' && <Explainer block={block} />}
+  {block.type === 'example' && <Example block={block} />}
+  {block.type === 'flashcards' && <Flashcards block={block} />}
+  {block.type === 'quiz' && <Quiz block={block} lessonId={lessonId} />}
+  {block.type === 'practice' && <Practice block={block} lessonId={lessonId} />}
+</BlockFrame>

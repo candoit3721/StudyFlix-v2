@@ -1,0 +1,47 @@
+title: Sums That Start Anywhere
+summary: Add a run of numbers from any start to any end with the fencepost rule and one pairing step.
+icon: ruler
+minutes: 25
+objectives:
+  - Count the numbers from a to b with the fencepost rule, b − a + 1.
+  - Find a + (a + 1) + ... + b as count × (first + last) ÷ 2.
+blocks:
+  - type: explainer
+    id: fencepost
+    title: The fencepost rule
+    markdown: |
+      A fence 10 metres long with a post every metre needs **11** posts, not 10. Counting a run of whole numbers has the same trap.
+
+      How many numbers are there from 5 to 12? Not $12 - 5 = 7$. Count them: 5, 6, 7, 8, 9, 10, 11, 12 makes **8**.
+
+      **Fencepost rule:** from $a$ to $b$ there are $b - a + 1$ numbers.
+
+  - type: example
+    id: five-to-twelve
+    title: Add 5 to 12
+    problem: What is $5 + 6 + 7 + \dots + 12$?
+    steps:
+      - Count the numbers. $12 - 5 + 1 = 8$.
+      - Pair first and last. $5 + 12 = 17$, and every pair adds to 17.
+      - There are $8 \div 2 = 4$ pairs, so the sum is $4 \times 17 = 68$.
+    answer: $5 + 6 + \dots + 12 = 68$
+
+  - type: quiz
+    id: check
+    title: Check the steps
+    items:
+      - kind: number
+        prompt: How many whole numbers are there from 20 to 50, including both?
+        answer: 31
+        explanation: $50 - 20 + 1 = 31$
+      - kind: number
+        prompt: What is $11 + 12 + \dots + 20$?
+        answer: 155
+        explanation: There are 10 numbers and each pair adds to 31, so $10 \times 31 \div 2 = 155$.
+
+  - type: practice
+    id: practice
+    title: Practise any range
+    generator: gauss-sum
+    params: { mode: range, max: 500 }
+    count: 6

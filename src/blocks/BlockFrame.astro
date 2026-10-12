@@ -1,0 +1,20 @@
+---
+import Icon from '../components/Icon.astro';
+import type { Block } from '../model/schemas';
+import { BLOCK_META } from './meta';
+
+interface Props {
+  block: Block;
+}
+
+const { block } = Astro.props;
+const meta = BLOCK_META[block.type];
+---
+
+<section class={`block block--${block.type}`} id={block.id} aria-labelledby={`${block.id}-title`}>
+  <header class="block-head">
+    <span class="block-kind"><Icon name={meta.icon} size={16} strokeWidth={2.5} />{meta.label}</span>
+    <h2 id={`${block.id}-title`}>{block.title ?? meta.label}</h2>
+  </header>
+  <slot />
+</section>

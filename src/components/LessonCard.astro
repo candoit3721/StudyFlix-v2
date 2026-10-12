@@ -1,0 +1,52 @@
+---
+import { cardArt } from '../lib/art';
+import type { ResolvedLesson } from '../model/catalog';
+import { lessonRequirements } from '../model/requirements';
+import Icon from './Icon.astro';
+
+interface Props {
+  lesson: ResolvedLesson;
+}
+
+const { lesson } = Astro.props;
+const requirements = JSON.stringify(lessonRequirements(lesson.blocks));
+---
+
+<sf-lesson-status data-lesson={lesson.id} data-requirements={requirements}>
+  <a class="lesson-card" href={lesson.url}>
+    <Fragment set:html={cardArt({ seed: lesson.id, subject: lesson.subject, icon: lesson.icon })} />
+    <span class="badge-done" data-done hidden><Icon name="check" size={14} strokeWidth={3} />Done</span>
+    <div class="lesson-card-body">
+      <h3>{lesson.title}</h3>
+      <p>{lesson.summary}</p>
+      <div class="lesson-card-meta">
+        <span>Lesson {lesson.number} · {lesson.minutes} min</span>
+        <span data-label></span>
+      </div>
+      <div class="progress" data-bar hidden><span></span></div>
+    </div>
+  </a>
+</sf-lesson-status>
+
+<style>
+  sf-lesson-status {
+    display: block;
+  }
+
+  sf-lesson-status,
+  .lesson-card {
+    height: 100%;
+  }
+
+  .progress {
+    margin-top: 0.6rem;
+  }
+
+  .progress[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  import './status-client';
+</script>

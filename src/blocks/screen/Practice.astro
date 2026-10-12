@@ -1,0 +1,36 @@
+---
+import Icon from '../../components/Icon.astro';
+import { generateSet } from '../../generators';
+import { plainItemHtml } from '../../items/render';
+import type { BlockOf } from '../../model/schemas';
+
+interface Props {
+  block: BlockOf<'practice'>;
+  lessonId: string;
+}
+
+const { block, lessonId } = Astro.props;
+// Seeded by lesson id: the first set on screen matches the printed worksheet.
+const items = generateSet(block.generator, block.params, block.count, lessonId);
+---
+
+<sf-items
+  data-lesson={lessonId}
+  data-block={block.id}
+  data-mode="practice"
+  data-generator={block.generator}
+  data-params={JSON.stringify(block.params)}
+  data-count={block.count}
+>
+  <ol class="items" set:html={items.map(({ key, item }, i) => plainItemHtml(key, item, i)).join('')} />
+  <div class="items-foot">
+    <p class="items-score" data-score aria-live="polite"></p>
+    <button type="button" class="button button--ghost" data-action="new-set">
+      <Icon name="shuffle" size={18} />New set
+    </button>
+  </div>
+</sf-items>
+
+<script>
+  import '../../items/client';
+</script>
