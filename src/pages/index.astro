@@ -22,8 +22,22 @@ const { learners } = await getCatalog();
         ))
       }
     </ul>
+    <p class="chooser-note" data-sync-note hidden>
+      Progress is saved on this device only. A parent can sign in so it follows every learner to every
+      device. <a href="/account/">Family sign-in</a>
+    </p>
   </section>
 </Base>
+
+<script>
+  import { onSyncState } from '../lib/sync/engine';
+
+  // Shown only once the engine has confirmed there is no session, so a signed-in device never flashes it.
+  const note = document.querySelector<HTMLElement>('[data-sync-note]');
+  onSyncState((state) => {
+    if (note) note.hidden = state.status !== 'signed-out';
+  });
+</script>
 
 <style>
   .chooser {

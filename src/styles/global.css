@@ -30,6 +30,7 @@
   --bad: #b83232;
   --bad-soft: #fbe6e6;
   --ok-on-dark: #43d39a;
+  --bad-on-dark: #ff8f85;
 
   /* Type */
   --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
@@ -234,6 +235,10 @@ h3 {
 
 .button:active {
   transform: translateY(1px);
+}
+
+.button[hidden] {
+  display: none;
 }
 
 .button:disabled {
@@ -525,6 +530,172 @@ h3 {
 
 .site-footer a {
   color: var(--text-muted);
+}
+
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+/* ------------------------------------------------------- Progress sync */
+
+/* Under the profile chooser: shown only on a signed-out device when sync is set up. */
+.chooser-note {
+  max-width: 34rem;
+  margin: clamp(2rem, 1.5rem + 2vw, 3rem) auto 0;
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  line-height: 1.5;
+}
+
+.chooser-note a {
+  color: var(--text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Learner home hero: "Last visit: today". */
+.hero-visit {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+/* Family sign-in page */
+.account {
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(2rem, 1rem + 5vw, 4.5rem);
+}
+
+.account-card {
+  width: 100%;
+  max-width: 30rem;
+  padding: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  border-radius: var(--radius-l);
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.account-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-m);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.account-card h1 {
+  font-size: var(--step-3);
+}
+
+.account-view p {
+  margin: 0.75rem 0 0;
+  color: var(--text-muted);
+}
+
+.account-view p strong {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.account-view [data-signed-in]:focus {
+  outline: none;
+}
+
+.account-view .button {
+  margin-top: 1.5rem;
+}
+
+.account-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.account-form .button {
+  margin-top: 0.25rem;
+  justify-self: start;
+  min-width: 8rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-weight: 800;
+  font-size: var(--step--1);
+}
+
+.field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.field input:hover {
+  border-color: var(--text-faint);
+}
+
+.field input:focus-visible {
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.account-view .form-error {
+  margin: 0;
+  color: var(--bad-on-dark);
+  font-weight: 700;
+}
+
+.account-view .form-error:not(:empty) {
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-s);
+  border-left: 4px solid var(--bad-on-dark);
+  background: rgb(255 143 133 / 0.1);
+}
+
+/* The sync status line, with a dot for its state. */
+.account-view .sync-status {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-s);
+  background: var(--bg-elev);
+  color: var(--text);
+}
+
+.sync-status::before {
+  content: "";
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--ok-on-dark);
+  transform: translateY(-0.05rem);
+}
+
+.sync-status[data-phase="syncing"]::before,
+.sync-status[data-phase="pending"]::before {
+  background: var(--text-faint);
+}
+
+.sync-status[data-phase="error"]::before {
+  background: var(--bad-on-dark);
 }
 
 @media (prefers-reduced-motion: reduce) {
