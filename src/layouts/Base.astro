@@ -1,6 +1,7 @@
 ---
-import '@fontsource-variable/fraunces';
-import '@fontsource-variable/nunito';
+import '@fontsource/bebas-neue';
+import '@fontsource-variable/inter';
+import brandFont from '@fontsource/bebas-neue/files/bebas-neue-latin-400-normal.woff2?url';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import { getCatalog } from '../lib/content';
@@ -39,8 +40,10 @@ const pageTitle = title === 'StudyFlix' ? title : `${title} · StudyFlix`;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0e1014" />
+    <meta name="theme-color" content="#141414" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- The wordmark (and the landing intro S) should not flash in a fallback face. -->
+    <link rel="preload" href={brandFont} as="font" type="font/woff2" crossorigin />
     <title>{pageTitle}</title>
     <script is:inline type="application/json" id="sf-learners" set:html={JSON.stringify(learners)} />
     <script is:inline>
@@ -59,12 +62,13 @@ const pageTitle = title === 'StudyFlix' ? title : `${title} · StudyFlix`;
         }
       })();
     </script>
+    <slot name="head" />
   </head>
   <body>
     <a class="visually-hidden" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap">
-        <a class="wordmark" href="/">Study<span>Flix</span></a>
+        <a class="wordmark" href="/">StudyFlix</a>
         <a class="learner-pill" href="/" data-learner-pill hidden>
           <span class="avatar avatar--s"></span>
           <span data-name></span>
