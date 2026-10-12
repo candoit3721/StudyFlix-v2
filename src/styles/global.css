@@ -49,6 +49,7 @@
   --shadow: 0 10px 30px rgb(0 0 0 / 0.35);
   --page-max: 1280px;
   --read-max: 46rem;
+  --header-height: 64px;
 
   color-scheme: dark;
 }
@@ -148,7 +149,7 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  height: 64px;
+  height: var(--header-height);
 }
 
 .wordmark {
