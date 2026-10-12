@@ -112,11 +112,11 @@ test('lesson pages use the page width on desktop and stay single-column on phone
   }
 
   if (width >= 900) {
-    // The progress rail stays in view, below the sticky header, while the learner works through the quiz.
+    // The progress card stays in view, below the sticky header, while the learner works through the quiz.
     await page.goto('/courses/g6-science/six-kingdoms/');
     await page.locator('#check').scrollIntoViewIfNeeded();
     const status = page.locator('.lesson-status');
-    await expect(status).toBeInViewport();
+    await expect(status).toBeInViewport({ ratio: 1 });
     expect((await box('.lesson-status')).y).toBeGreaterThanOrEqual(64);
 
     // A common laptop window (the width a parent reported) gets the wide layout too.
@@ -128,5 +128,18 @@ test('lesson pages use the page width on desktop and stay single-column on phone
     expect(Math.abs(sheet.x - h1.x), 'sheet lines up with the hero at 1090px').toBeLessThanOrEqual(1);
     expect(rail.x + rail.width, 'rail sits left of the content at 1090px').toBeLessThanOrEqual(main.x);
     expect(main.width).toBeGreaterThanOrEqual(640);
+
+    // The lesson with the longest objectives, at that laptop size: the rail must never become a scroll box
+    // (keyboard users could not reach it, axe scrollable-region-focusable), and the progress card still
+    // stays fully in view, below the header, all the way down to the foot of the lesson.
+    await page.goto('/courses/g6-science/invasive-species-in-the-great-lakes/');
+    const railOverflow = await page.locator('.lesson-rail').evaluate((el) => getComputedStyle(el).overflowY);
+    expect(railOverflow, 'rail is not a scroll container').toBe('visible');
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+    await page.locator('.lesson-foot').scrollIntoViewIfNeeded();
+    await expect(status).toBeInViewport({ ratio: 1 });
+    expect((await box('.lesson-status')).y).toBeGreaterThanOrEqual(64);
   }
 });
