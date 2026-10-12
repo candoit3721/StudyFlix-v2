@@ -2,7 +2,7 @@
 
 A family learning portal.
 Learners pick their profile, work through lessons (read, flip flashcards, try worked examples, answer quizzes, practise generated questions) and print worksheets with answer keys.
-Progress lives in the browser (localStorage).
+Progress is saved in the browser (localStorage) and, once a parent signs a device in to the family account, synced across devices through Supabase (see `docs/supabase-sync.md`).
 The site is fully static and built with Astro.
 
 **The core rule: study material is data, never code.**
@@ -14,7 +14,7 @@ Code changes are only for new kinds of activity (block types), new question gene
 | Command | What it does |
 |---|---|
 | `npm run validate` | Checks every content file against the schemas and cross-references (about 1 second). Run after every content edit. |
-| `npm test` | Unit tests: content, generators, grading, catalog, card art. |
+| `npm test` | Unit tests: content, generators, grading, catalog, card art, progress sync and the database migration. |
 | `npm run lint` | Biome lint and format check. `npm run format` fixes formatting. |
 | `npm run check` | TypeScript and Astro type check. |
 | `npm run build` | Static build into `dist/`. Fails on any content problem. |
@@ -36,11 +36,14 @@ src/
   blocks/                one component per block type: screen/, PrintBlock.astro, PrintKey.astro
   generators/            practice question generators (pure, seeded, answers computed)
   items/                 shared item rendering, grading and the <sf-items> client
-  lib/                   markdown+KaTeX, icons (Lucide), card art, progress storage, rng
+  lib/                   markdown+KaTeX, icons (Lucide), card art, progress cache, rng
+  lib/sync/              progress sync with Supabase: config, pure model, outbox, engine
   pages/                 routes; pages never contain study material
   styles/                design tokens and component styles (global.css, blocks.css, print.css)
-tests/unit/              Vitest, including the fast content validator
-tests/e2e/               Playwright
+supabase/migrations/     database schema for progress sync (tables, view, Row Level Security)
+docs/                    supabase-sync.md: how progress sync works and its one-time setup
+tests/unit/              Vitest, including the fast content validator and the PGlite migration test
+tests/e2e/               Playwright, with an in-memory fake Supabase backend for sync journeys
 factory/                 software factory profile, reviewer lenses and backlog
 .claude/skills/          recipes: add-lesson, add-course, add-learner, add-generator, add-block-type
 ```
@@ -97,6 +100,8 @@ The schema comments are the reference.
 - Client interactivity uses small custom elements (`<sf-items>`, `<sf-steps>`, `<sf-lesson-status>`, `<sf-continue>`).
   No UI framework.
 - Wrap every `localStorage` access in try/catch (see `src/lib/progress.ts`).
+- Pages read progress synchronously from `src/lib/progress.ts`; only `src/lib/sync/engine.ts` talks to Supabase, and it loads `@supabase/supabase-js` lazily.
+  Never commit a `.env` file or a real Supabase URL or key (see `docs/supabase-sync.md`).
 - Progress keys must stay stable: block `id`s and quiz prompts identify progress.
   Changing a block id or a prompt resets that progress, which is acceptable but should be deliberate.
 - Generators are pure and seeded, compute their answers, and use plain-text prompts.
