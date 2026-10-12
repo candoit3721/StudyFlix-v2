@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, test } from '@playwright/test';
+import { answerItem, chooseLearner } from './helpers';
 
 /** Every page reachable from the home page, found by following links. */
 async function crawl(page: Page): Promise<string[]> {
@@ -47,6 +48,7 @@ const AXE_PAGES = [
   '/courses/g6-science/six-kingdoms/',
   '/courses/math-contest-club/pairing-trick/',
   '/courses/math-contest-club/pairing-trick/worksheet/',
+  '/courses/math-contest-club/pairing-trick/answer-key/',
   '/curricula/ontario-science-2022-g6/',
 ];
 
@@ -58,3 +60,17 @@ for (const path of AXE_PAGES) {
     expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
   });
 }
+
+test('accessibility: quiz feedback states (correct, wrong, revealed, complete)', async ({ page }) => {
+  await chooseLearner(page, 'Sophia');
+  await page.goto('/courses/g6-science/six-kingdoms/');
+  const items = page.locator('#check li.item');
+  await answerItem(items.nth(0), true);
+  await answerItem(items.nth(1), false);
+  await answerItem(items.nth(3), false);
+  await answerItem(items.nth(3), false);
+  await expect(items.nth(3)).toHaveAttribute('data-state', 'revealed');
+  const results = await new AxeBuilder({ page }).include('#check').withTags(['wcag2a', 'wcag2aa']).analyze();
+  const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
+});
