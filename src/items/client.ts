@@ -25,7 +25,20 @@ class SfItems extends HTMLElement {
     this.addEventListener('submit', this.onSubmit);
     this.restore();
     this.updateScore();
+    window.addEventListener('studyflix:progress', this.refresh);
+    window.addEventListener('storage', this.refresh);
   }
+
+  disconnectedCallback(): void {
+    window.removeEventListener('studyflix:progress', this.refresh);
+    window.removeEventListener('storage', this.refresh);
+  }
+
+  /** Progress changed (an answer here, another tab, or a sync from another device). */
+  private refresh = (): void => {
+    this.restore();
+    this.updateScore();
+  };
 
   private get lessonId(): string {
     return this.dataset.lesson ?? '';
@@ -70,8 +83,6 @@ class SfItems extends HTMLElement {
     const learner = getCurrentLearner();
     const wrongSoFar = this.wrong.get(key) ?? 0;
 
-    if (learner && !this.isPractice) recordItem(learner, this.lessonId, `${this.blockId}:${key}`, correct);
-
     if (correct) {
       choice?.classList.add('is-correct');
       this.lock(li, 'correct', 'Correct!');
@@ -90,6 +101,9 @@ class SfItems extends HTMLElement {
       this.feedback(li, 'Not quite. Try again.');
       li.querySelector<HTMLInputElement>('input')?.select();
     }
+    // Record after the item shows its state: recording fires `studyflix:progress`, and restore()
+    // must see this item as already answered so it keeps "Correct!" rather than "You already got this one."
+    if (learner && !this.isPractice) recordItem(learner, this.lessonId, `${this.blockId}:${key}`, correct);
     this.updateScore();
   }
 
@@ -115,12 +129,16 @@ class SfItems extends HTMLElement {
     if (el) el.textContent = message;
   }
 
-  /** Show quiz items this learner already answered correctly. */
+  /**
+   * Show quiz items this learner already answered correctly. Items the learner has touched on this
+   * page (any `data-state`) are left alone, so their feedback is never overwritten.
+   */
   private restore(): void {
     const learner = getCurrentLearner();
     if (!learner || this.isPractice) return;
     const progress = getLessonProgress(learner, this.lessonId);
     for (const li of this.querySelectorAll<HTMLLIElement>('li.item')) {
+      if (li.dataset.state) continue;
       if (!progress.items[`${this.blockId}:${li.dataset.key}`]?.correct) continue;
       const item = JSON.parse(li.dataset.item ?? '{}') as Item;
       const input = li.querySelector<HTMLInputElement>('input');
