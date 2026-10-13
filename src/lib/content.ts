@@ -21,7 +21,7 @@ export function getCatalog(): Promise<Catalog> {
         lessons: plain(lessons),
         learners: plain(learners),
       },
-      { iconExists },
+      { iconExists, base: import.meta.env.BASE_URL },
     );
   })();
   return catalog;

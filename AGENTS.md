@@ -19,7 +19,8 @@ Code changes are only for new kinds of activity (block types), new question gene
 | `npm run check` | TypeScript and Astro type check. |
 | `npm run build` | Static build into `dist/`. Fails on any content problem. |
 | `npm run test:e2e` | Playwright on desktop and phone: learner journeys, print, every-page crawl, axe accessibility. Needs a build first. |
-| `npm run verify` | All of the above, in order. This is the merge gate. |
+| `npm run test:e2e:other-base` | Builds `dist-other-base/` with the other base path (`/StudyFlix-v2/` or `/`) and runs the whole Playwright suite against it (see `docs/deploy.md`). |
+| `npm run verify` | All of the above, in order, so both a root build and a subpath build are tested. This is the merge gate. |
 | `npm run dev` | Dev server. Agents start it with `npx astro dev --background` and stop it with `npx astro dev stop`. |
 
 ## Repository map
@@ -36,7 +37,7 @@ src/
   blocks/                one component per block type: screen/, PrintBlock.astro, PrintKey.astro
   generators/            practice question generators (pure, seeded, answers computed)
   items/                 shared item rendering, grading and the <sf-items> client
-  lib/                   markdown+KaTeX, icons (Lucide), card art, progress cache, rng
+  lib/                   markdown+KaTeX, icons (Lucide), card art, progress cache, rng, base-path URLs (paths.ts)
   lib/sync/              progress sync with Supabase: config, pure model, outbox, engine
   pages/                 routes; pages never contain study material
   styles/                design tokens and component styles (global.css, blocks.css, print.css)
@@ -47,6 +48,8 @@ tests/unit/              Vitest, including the fast content validator and the PG
 tests/e2e/               Playwright, with an in-memory fake Supabase backend for sync journeys
 factory/                 software factory profile, reviewer lenses and backlog
 .claude/skills/          recipes: add-lesson, add-course, add-learner, add-generator, add-block-type
+docs/deploy.md           the base path (SITE_BASE): GitHub Pages subpath or domain root
+scripts/site-base.mjs    the base path for builds and tests; scripts/e2e-other-base.mjs is verify's second e2e pass
 ```
 
 ## Content model
@@ -100,6 +103,8 @@ The schema comments are the reference.
   Add new tokens or component classes there instead of one-off values in pages.
 - Client interactivity uses small custom elements (`<sf-items>`, `<sf-steps>`, `<sf-lesson-status>`, `<sf-continue>`).
   No UI framework.
+- Never hard-code a root-relative URL (`href="/..."`): use a catalog `url` or `withBase()` from `src/lib/paths.ts`, so the site works at a domain root and under a subpath (`docs/deploy.md`).
+  In e2e tests, use `site('/...')` from `tests/e2e/helpers.ts`.
 - Wrap every `localStorage` access in try/catch (see `src/lib/progress.ts`).
 - Pages read progress synchronously from `src/lib/progress.ts`; only `src/lib/sync/engine.ts` talks to Supabase, and it loads `@supabase/supabase-js` lazily.
   The family project's URL and publishable key are public and live in `docs/supabase-sync.md` and `.env.example`.

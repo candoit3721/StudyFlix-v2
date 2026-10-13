@@ -1,44 +1,117 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, test } from '@playwright/test';
-import { answerItem, chooseLearner } from './helpers';
+import { answerItem, BASE, chooseLearner, site } from './helpers';
 
-/** Every page reachable from the home page, found by following links. */
-async function crawl(page: Page): Promise<string[]> {
-  const seen = new Set<string>(['/']);
-  const queue = ['/'];
-  while (queue.length > 0) {
-    const path = queue.shift() as string;
-    await page.goto(path);
-    const hrefs = await page
-      .locator('a[href^="/"]')
-      .evaluateAll((links) => links.map((a) => new URL((a as HTMLAnchorElement).href).pathname));
-    for (const href of hrefs) {
-      if (!seen.has(href)) {
-        seen.add(href);
-        queue.push(href);
-      }
-    }
-  }
-  return [...seen].sort();
+interface PageLinks {
+  /** Every `<a href>`, resolved. */
+  anchors: string[];
+  /** Every `link[href]`, `script[src]` and `img[src]`, resolved, with what referenced it. */
+  resources: { tag: string; url: string }[];
 }
 
-test('every page loads cleanly: no errors, no broken links, no sideways scrolling', async ({ page }) => {
-  test.setTimeout(120_000);
+const pageLinks = (page: Page): Promise<PageLinks> =>
+  page.evaluate(() => ({
+    anchors: [...document.querySelectorAll<HTMLAnchorElement>('a[href]')].map((a) => a.href),
+    resources: [
+      ...[...document.querySelectorAll<HTMLLinkElement>('link[href]')].map((l) => ({
+        tag: `link[rel=${l.rel}]`,
+        url: l.href,
+      })),
+      ...[...document.querySelectorAll<HTMLScriptElement>('script[src]')].map((s) => ({
+        tag: 'script',
+        url: s.src,
+      })),
+      ...[...document.querySelectorAll<HTMLImageElement>('img[src]')].map((i) => ({
+        tag: 'img',
+        url: i.src,
+      })),
+    ],
+  }));
+
+test('every page loads cleanly: no errors, no broken links, nothing outside the base, no sideways scrolling', async ({
+  page,
+  baseURL,
+}) => {
+  test.setTimeout(180_000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(`${page.url()}: ${error.message}`));
   page.on('console', (message) => {
     if (message.type() === 'error') errors.push(`${page.url()}: ${message.text()}`);
   });
 
-  const paths = await crawl(page);
-  expect(paths.length).toBeGreaterThan(10);
-  for (const path of paths) {
+  const { origin } = new URL(baseURL ?? '');
+  const sameOrigin = (url: string) => new URL(url).origin === origin;
+  const underBase = (url: string) => new URL(url).pathname.startsWith(BASE);
+
+  // Every same-origin request that fails: broken CSS, JS, fonts, dynamic imports or pages.
+  const failed: string[] = [];
+  page.on('response', (response) => {
+    if (sameOrigin(response.url()) && response.status() >= 400) {
+      failed.push(`${page.url()}: ${response.status()} ${response.url()}`);
+    }
+  });
+
+  const outside: string[] = [];
+  const linkedResources = new Map<string, string>();
+  // Pathnames, starting at the base (the learner chooser).
+  const seen = new Set<string>([BASE]);
+  const queue = [BASE];
+  while (queue.length > 0) {
+    const path = queue.shift() as string;
     const response = await page.goto(path);
     expect(response?.status(), path).toBe(200);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, `${path} scrolls sideways by ${overflow}px`).toBeLessThanOrEqual(0);
+
+    const { anchors, resources } = await pageLinks(page);
+    for (const href of anchors.filter(sameOrigin)) {
+      if (!underBase(href)) {
+        outside.push(`${path}: <a href="${href}">`);
+        continue;
+      }
+      const target = new URL(href).pathname;
+      if (!seen.has(target)) {
+        seen.add(target);
+        queue.push(target);
+      }
+    }
+    for (const { tag, url } of resources.filter((r) => sameOrigin(r.url))) {
+      if (!underBase(url)) outside.push(`${path}: ${tag} ${url}`);
+      else if (tag.startsWith('link') && !linkedResources.has(url)) linkedResources.set(url, path);
+    }
   }
+
+  expect(seen.size).toBeGreaterThan(10);
+  expect(outside, 'same-origin URLs outside the base').toEqual([]);
+  // Favicons and font preloads are not always fetched by the browser, so fetch each one once.
+  for (const [url, path] of linkedResources) {
+    const response = await page.request.get(url);
+    expect(response.status(), `${url} (linked from ${path})`).toBe(200);
+  }
+  expect(failed, 'failed same-origin requests').toEqual([]);
   expect(errors).toEqual([]);
+});
+
+test('a missing page shows the styled 404 page, which leads back to the learner chooser', async ({
+  page,
+}) => {
+  // GitHub Pages serves 404.html for a missing path at any depth, so check a deep one too.
+  for (const path of ['/courses/no-such-course/no-such-lesson/', '/no-such-page/']) {
+    const response = await page.goto(site(path));
+    expect(response?.status(), path).toBe(404);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('This page wandered off.');
+    // The site stylesheet and brand font are applied, not browser defaults.
+    await expect(page.locator('.wordmark')).toHaveCSS('font-family', /^"Bebas Neue"/);
+    const back = page.getByRole('link', { name: 'Back to StudyFlix' });
+    // A red .button, not a default underlined link.
+    await expect(back).toHaveCSS('background-color', 'rgb(229, 9, 20)');
+    await expect(back).toHaveCSS('text-decoration-line', 'none');
+    await expect(back).toHaveAttribute('href', BASE);
+  }
+
+  await page.getByRole('link', { name: 'Back to StudyFlix' }).click();
+  await expect(page).toHaveURL(site('/'));
+  await expect(page.getByRole('heading', { name: "Who's learning today?" })).toBeVisible();
 });
 
 const AXE_PAGES = [
@@ -60,7 +133,7 @@ const AXE_PAGES = [
 
 for (const path of AXE_PAGES) {
   test(`accessibility: ${path}`, async ({ page }) => {
-    await page.goto(path);
+    await page.goto(site(path));
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
     const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
     expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)).toEqual([]);
@@ -69,7 +142,7 @@ for (const path of AXE_PAGES) {
 
 test('accessibility: quiz feedback states (correct, wrong, revealed, complete)', async ({ page }) => {
   await chooseLearner(page, 'Sophia');
-  await page.goto('/courses/g6-science/six-kingdoms/');
+  await page.goto(site('/courses/g6-science/six-kingdoms/'));
   const items = page.locator('#check li.item');
   await answerItem(items.nth(0), true);
   await answerItem(items.nth(1), false);
@@ -83,7 +156,7 @@ test('accessibility: quiz feedback states (correct, wrong, revealed, complete)',
 
 test('a number answer with a unit comes back without the unit repeated in the box', async ({ page }) => {
   await chooseLearner(page, 'Sophia');
-  await page.goto('/courses/g6-math/ratios-and-rates/');
+  await page.goto(site('/courses/g6-math/ratios-and-rates/'));
   const item = page.locator('#check li.item').filter({ hasText: 'What is its speed?' });
   await answerItem(item, true);
   await expect(item).toHaveAttribute('data-state', 'correct');
@@ -103,7 +176,7 @@ test('lesson pages use the page width on desktop and stay single-column on phone
   };
 
   for (const path of ['/courses/g6-science/six-kingdoms/', '/courses/math-contest-club/pairing-trick/']) {
-    await page.goto(path);
+    await page.goto(site(path));
     const [sheet, h1, rail, main] = await Promise.all(
       ['.lesson-sheet', '.lesson-hero h1', '.lesson-rail', '.lesson-main'].map(box),
     );
@@ -132,7 +205,7 @@ test('lesson pages use the page width on desktop and stay single-column on phone
 
   if (width >= 900) {
     // The progress card stays in view, below the sticky header, while the learner works through the quiz.
-    await page.goto('/courses/g6-science/six-kingdoms/');
+    await page.goto(site('/courses/g6-science/six-kingdoms/'));
     await page.locator('#check').scrollIntoViewIfNeeded();
     const status = page.locator('.lesson-status');
     await expect(status).toBeInViewport({ ratio: 1 });
@@ -140,7 +213,7 @@ test('lesson pages use the page width on desktop and stay single-column on phone
 
     // A common laptop window (the width a parent reported) gets the wide layout too.
     await page.setViewportSize({ width: 1090, height: 720 });
-    await page.goto('/courses/g6-science/what-is-biodiversity/');
+    await page.goto(site('/courses/g6-science/what-is-biodiversity/'));
     const [sheet, h1, rail, main] = await Promise.all(
       ['.lesson-sheet', '.lesson-hero h1', '.lesson-rail', '.lesson-main'].map(box),
     );
@@ -151,7 +224,7 @@ test('lesson pages use the page width on desktop and stay single-column on phone
     // The lesson with the longest objectives, at that laptop size: the rail must never become a scroll box
     // (keyboard users could not reach it, axe scrollable-region-focusable), and the progress card still
     // stays fully in view, below the header, all the way down to the foot of the lesson.
-    await page.goto('/courses/g6-science/invasive-species-in-the-great-lakes/');
+    await page.goto(site('/courses/g6-science/invasive-species-in-the-great-lakes/'));
     const railOverflow = await page.locator('.lesson-rail').evaluate((el) => getComputedStyle(el).overflowY);
     expect(railOverflow, 'rail is not a scroll container').toBe('visible');
     const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
@@ -164,7 +237,7 @@ test('lesson pages use the page width on desktop and stay single-column on phone
 });
 
 test('answer boxes stay wide enough to read, with the unit beside the box', async ({ page }) => {
-  await page.goto('/courses/g6-math/ratios-and-rates/');
+  await page.goto(site('/courses/g6-math/ratios-and-rates/'));
   for (let round = 0; round < 6; round++) {
     for (const field of await page.locator('form.item-answer').all()) {
       const input = await field.locator('input').boundingBox();
@@ -181,7 +254,7 @@ test('answer boxes stay wide enough to read, with the unit beside the box', asyn
 });
 
 test('accessibility: / after the intro has ended', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(site('/'));
   await expect(page.locator('.intro')).toBeHidden({ timeout: 2500 });
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   const serious = results.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
@@ -205,7 +278,7 @@ const introPlayed = (page: Page) =>
   page.evaluate(() => (window as Window & { introPlayed?: boolean }).introPlayed);
 
 test('landing intro: a big S covers the picker on a fresh visit, then hides itself', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.goto(site('/'), { waitUntil: 'domcontentloaded' });
   const intro = page.locator('.intro');
   await expect(intro).toHaveAttribute('aria-hidden', 'true');
   await expect(intro).toBeVisible({ timeout: 500 });
@@ -224,7 +297,7 @@ test('landing intro: a big S covers the picker on a fresh visit, then hides itse
 });
 
 test('landing intro: plays once per tab session', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(site('/'));
   await expect(page.locator('.intro')).toBeHidden({ timeout: 2500 });
   await watchIntro(page);
 
@@ -234,12 +307,12 @@ test('landing intro: plays once per tab session', async ({ page }) => {
 
   await chooseLearner(page, 'Sophia');
   await page.getByRole('link', { name: 'Switch learner' }).click();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(site('/'));
   expect(await introPlayed(page), 'after "Switch learner"').toBe(false);
 
   await page.goBack();
   await page.goBack();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(site('/'));
   expect(await introPlayed(page), 'after going back').toBe(false);
   await expect(page.locator('.intro')).toBeHidden();
 });
@@ -247,14 +320,14 @@ test('landing intro: plays once per tab session', async ({ page }) => {
 test('landing intro: never shows under reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await watchIntro(page);
-  await page.goto('/');
+  await page.goto(site('/'));
   expect(await introPlayed(page)).toBe(false);
   await expect(page.locator('.intro')).toBeHidden();
   await expect(page.locator('.intro')).toHaveCSS('display', 'none');
 });
 
 test('landing intro: a key press skips it at once', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.goto(site('/'), { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.intro')).toBeVisible({ timeout: 500 });
   await page.keyboard.press('Tab');
   await expect(page.locator('.intro')).toBeHidden({ timeout: 250 });
@@ -264,7 +337,7 @@ test('profile picker: a profile name turns white with a white tile frame on focu
   page,
   isMobile,
 }) => {
-  await page.goto('/');
+  await page.goto(site('/'));
   const option = page.locator('.chooser-option').first();
   const name = option.locator('.chooser-name');
   const tile = option.locator('.avatar');
@@ -288,7 +361,7 @@ test('profile picker: a profile name turns white with a white tile frame on focu
 });
 
 test('theme: dark chrome, red wordmark and a white play button', async ({ page }) => {
-  await page.goto('/learners/sophia/');
+  await page.goto(site('/learners/sophia/'));
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(20, 20, 20)');
   await expect(page.locator('body')).toHaveCSS('font-family', /^"Inter Variable"/);
   const wordmark = page.locator('.wordmark');

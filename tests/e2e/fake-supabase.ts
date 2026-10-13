@@ -64,13 +64,16 @@ export class FakeSupabase {
   private tokens = new Map<string, string>();
   private counter = 0;
 
-  /** Route the fake on this context and point the site at it (before any page script runs). */
+  /**
+   * Route the fake on this context and point the site at it (before any page script runs). The fake
+   * lives at the origin root, whatever the site's base path.
+   */
   async install(context: BrowserContext, baseURL: string): Promise<void> {
     await context.addInitScript(
       (config) => {
         (globalThis as { __STUDYFLIX_SYNC__?: unknown }).__STUDYFLIX_SYNC__ = config;
       },
-      { url: `${baseURL}${PREFIX}`, key: 'test-key' },
+      { url: `${new URL(baseURL).origin}${PREFIX}`, key: 'test-key' },
     );
     await context.route(`**${PREFIX}/**`, (route) => this.handle(route));
   }

@@ -61,7 +61,7 @@ const iconExists = (name: string) => ['sprout', 'rocket'].includes(name);
 
 function problemsOf(raw: RawContent): string[] {
   try {
-    buildCatalog(raw, { iconExists });
+    buildCatalog(raw, { iconExists, base: '/' });
     return [];
   } catch (error) {
     if (error instanceof CatalogError) return error.problems;
@@ -71,12 +71,22 @@ function problemsOf(raw: RawContent): string[] {
 
 describe('buildCatalog', () => {
   it('resolves a valid fixture with ordering and navigation', () => {
-    const catalog = buildCatalog(fixture(), { iconExists });
+    const catalog = buildCatalog(fixture(), { iconExists, base: '/' });
     const one = catalog.lessons.get('sci/one');
     expect(one?.url).toBe('/courses/sci/one/');
     expect(one?.nextId).toBe('sci/two');
     expect(catalog.lessons.get('sci/two')?.number).toBe(2);
     expect(catalog.learners[0]?.courses[0]?.id).toBe('sci');
+  });
+
+  it('puts every url under a subpath base', () => {
+    const catalog = buildCatalog(fixture(), { iconExists, base: '/StudyFlix-v2/' });
+    expect(catalog.learners[0]?.url).toBe('/StudyFlix-v2/learners/kid/');
+    expect(catalog.courses[0]?.url).toBe('/StudyFlix-v2/courses/sci/');
+    expect(catalog.lessons.get('sci/one')?.url).toBe('/StudyFlix-v2/courses/sci/one/');
+    expect(catalog.curricula[0]?.url).toBe('/StudyFlix-v2/curricula/cur/');
+    // Learners reach courses and lessons through the same resolved objects.
+    expect(catalog.learners[0]?.courses[0]?.lessons[1]?.url).toBe('/StudyFlix-v2/courses/sci/two/');
   });
 
   it('reports a lesson listed in a unit but missing on disk', () => {
