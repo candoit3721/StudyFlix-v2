@@ -42,3 +42,6 @@ factory/deploy.log
 
 # Supabase CLI link state (project ref, versions), written by `supabase link`
 supabase/.temp/
+
+# Production data snapshot for local previews (scripts/db-snapshot.sh): private, never commit
+supabase/.snapshot/

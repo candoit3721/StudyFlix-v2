@@ -3,7 +3,9 @@ base_branch: main
 max_rounds: 2
 setup: npm ci --prefer-offline --no-audit --no-fund
 verify: npm run verify
-preview: npm run build && npx astro preview --port $FACTORY_PORT --ignore-lock
+preview: bash scripts/preview-local.sh
+preview_timeout: 900
+preview_exclusive: true
 deploy: git push origin main
 deploy_wait: github-actions
 smoke: https://candoit3721.github.io/StudyFlix-v2/
