@@ -6,7 +6,15 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!dist", "!.astro", "!factory/jobs", "!test-results", "!playwright-report"]
+    "includes": [
+      "**",
+      "!dist",
+      "!dist-other-base",
+      "!.astro",
+      "!factory/jobs",
+      "!test-results",
+      "!playwright-report"
+    ]
   },
   "formatter": {
     "enabled": true,
