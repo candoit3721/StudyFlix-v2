@@ -1,5 +1,11 @@
 /**
- * Learner progress, stored in this browser only (localStorage).
+ * Learner progress and last visits, cached in this browser (localStorage).
+ *
+ * This cache is the synchronous source for every page: reads never wait for the network. When a
+ * parent has signed this device in to the family account, each answer and visit is also queued in
+ * the sync outbox, and the sync engine (src/lib/sync/engine.ts) sends it to Supabase and rebuilds
+ * this cache from the server, so progress follows each learner from device to device.
+ * Signed out, or with sync not configured, everything still works and stays on this device.
  *
  * Keys are stable content ids, never positions:
  *   quiz item     -> `<blockId>:<hash of prompt>`
@@ -7,32 +13,26 @@
  * so reordering a lesson or editing other items never loses progress.
  * Every access is wrapped: storage can be missing (private mode) or full.
  */
+import {
+  addToItem,
+  addToPractice,
+  type LessonProgress,
+  lessonOf,
+  type ProgressByLearner,
+  type ProgressStore,
+  type Visit,
+  type Visits,
+} from './sync/model';
+import { enqueueEvent, enqueueVisit, randomId } from './sync/outbox';
+
+export type { Attempt, LessonProgress, PracticeStats } from './sync/model';
 
 const STORE_KEY = 'studyflix:v2:progress';
 const LEARNER_KEY = 'studyflix:v2:learner';
+const VISITS_KEY = 'studyflix:v2:visits';
 const VERSION = 1;
 
-export interface Attempt {
-  correct: boolean;
-  attempts: number;
-  at: number;
-}
-
-export interface PracticeStats {
-  answered: number;
-  correct: number;
-  at: number;
-}
-
-export interface LessonProgress {
-  items: Record<string, Attempt>;
-  practice: Record<string, PracticeStats>;
-}
-
-interface Store {
-  version: number;
-  learners: Record<string, { lessons: Record<string, LessonProgress> }>;
-}
+type Store = ProgressStore;
 
 function read(): Store {
   try {
@@ -45,23 +45,40 @@ function read(): Store {
   return { version: VERSION, learners: {} };
 }
 
-function write(store: Store): void {
+function save(store: Store): void {
   try {
     localStorage.setItem(STORE_KEY, JSON.stringify(store));
   } catch {
     // Storage full or blocked: progress is best-effort.
   }
+}
+
+function changed(): void {
   window.dispatchEvent(new CustomEvent('studyflix:progress'));
 }
 
-function lessonOf(store: Store, learner: string, lessonId: string): LessonProgress {
-  store.learners[learner] ??= { lessons: {} };
-  const forLearner = store.learners[learner];
-  forLearner.lessons[lessonId] ??= { items: {}, practice: {} };
-  const lesson = forLearner.lessons[lessonId];
-  lesson.items ??= {};
-  lesson.practice ??= {};
-  return lesson;
+function write(store: Store): void {
+  save(store);
+  changed();
+}
+
+function readVisits(): Visits {
+  try {
+    const raw = localStorage.getItem(VISITS_KEY);
+    const parsed = raw ? (JSON.parse(raw) as Visits) : undefined;
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+  } catch {
+    // Unavailable or corrupt storage: no visits yet.
+  }
+  return {};
+}
+
+function saveVisits(visits: Visits): void {
+  try {
+    localStorage.setItem(VISITS_KEY, JSON.stringify(visits));
+  } catch {
+    // Storage full or blocked: the last visit is best-effort.
+  }
 }
 
 export function getCurrentLearner(): string | null {
@@ -87,27 +104,66 @@ export function getLessonProgress(learner: string, lessonId: string): LessonProg
 
 export function recordItem(learner: string, lessonId: string, key: string, correct: boolean): void {
   const store = read();
-  const items = lessonOf(store, learner, lessonId).items;
-  const previous = items[key];
+  const items = lessonOf(store.learners, learner, lessonId).items;
+  const at = Date.now();
   // Once correct, an item stays correct; retries after a mistake still count.
-  items[key] = {
-    correct: correct || Boolean(previous?.correct),
-    attempts: (previous?.attempts ?? 0) + 1,
-    at: Date.now(),
-  };
+  items[key] = addToItem(items[key], 1, correct ? 1 : 0, at);
   write(store);
+  enqueueEvent({
+    id: randomId(),
+    learner,
+    lesson: lessonId,
+    kind: 'item',
+    key,
+    answered: 1,
+    correct: correct ? 1 : 0,
+    at,
+  });
 }
 
 export function recordPractice(learner: string, lessonId: string, blockId: string, correct: boolean): void {
   const store = read();
-  const practice = lessonOf(store, learner, lessonId).practice;
-  const previous = practice[blockId] ?? { answered: 0, correct: 0, at: 0 };
-  practice[blockId] = {
-    answered: previous.answered + 1,
-    correct: previous.correct + (correct ? 1 : 0),
-    at: Date.now(),
-  };
+  const practice = lessonOf(store.learners, learner, lessonId).practice;
+  const at = Date.now();
+  practice[blockId] = addToPractice(practice[blockId], 1, correct ? 1 : 0, at);
   write(store);
+  enqueueEvent({
+    id: randomId(),
+    learner,
+    lesson: lessonId,
+    kind: 'practice',
+    key: blockId,
+    answered: 1,
+    correct: correct ? 1 : 0,
+    at,
+  });
+}
+
+/** Remember the lesson a learner just opened; the learner home shows it and continues from it. */
+export function recordVisit(learner: string, lessonId: string): void {
+  const visit: Visit = { lesson: lessonId, at: Date.now() };
+  const visits = readVisits();
+  visits[learner] = visit;
+  saveVisits(visits);
+  changed();
+  enqueueVisit(learner, visit);
+}
+
+export function getLastVisit(learner: string): Visit | null {
+  const visit = readVisits()[learner];
+  return visit && typeof visit.lesson === 'string' && typeof visit.at === 'number' ? visit : null;
+}
+
+/** Everything cached on this device, for the sync engine. */
+export function getCachedProgress(): { learners: ProgressByLearner; visits: Visits } {
+  return { learners: read().learners, visits: readVisits() };
+}
+
+/** Replace the cached progress and visits after a pull from the sync service. */
+export function replaceCache(learners: ProgressByLearner, visits: Visits): void {
+  save({ version: VERSION, learners });
+  saveVisits(visits);
+  changed();
 }
 
 export interface LessonRequirements {

@@ -1,0 +1,98 @@
+---
+import Icon from '../components/Icon.astro';
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Family sign-in" description="Sign this device in to the family account so progress follows every learner.">
+  <section class="account wrap">
+    <div class="account-card">
+      <span class="account-icon"><Icon name="cloud" size={26} strokeWidth={2.25} /></span>
+      <h1>Family sign-in</h1>
+
+      <div class="account-view" data-view="off" hidden>
+        <p>Syncing is not set up for this copy of StudyFlix. Progress is saved in this browser only.</p>
+      </div>
+
+      <div class="account-view" data-view="signed-out" hidden>
+        <p>Sign in once on each device. Then every learner's progress and last visit follow them from device to device.</p>
+        <form class="account-form" data-sign-in>
+          <div class="field">
+            <label for="account-email">Email</label>
+            <input id="account-email" name="email" type="email" autocomplete="username" spellcheck="false" required />
+          </div>
+          <div class="field">
+            <label for="account-password">Password</label>
+            <input id="account-password" name="password" type="password" autocomplete="current-password" required />
+          </div>
+          <p class="form-error" role="alert" data-error></p>
+          <button class="button" type="submit" data-submit>Sign in</button>
+        </form>
+      </div>
+
+      <div class="account-view" data-view="signed-in" hidden>
+        <p tabindex="-1" data-signed-in>This device is signed in as <strong data-email></strong>.</p>
+        <p class="sync-status" role="status" data-sync-status></p>
+        <button class="button button--ghost" type="button" data-sign-out>Sign out of this device</button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { onSyncState, signIn, signOut, syncStatusText } from '../lib/sync/engine';
+
+  const MESSAGES = {
+    credentials: 'That email and password do not match the family account.',
+    network: 'Could not reach the sync service. Check the internet connection and try again.',
+  };
+
+  const form = document.querySelector<HTMLFormElement>('[data-sign-in]');
+  const email = document.querySelector<HTMLInputElement>('#account-email');
+  const password = document.querySelector<HTMLInputElement>('#account-password');
+  const error = document.querySelector<HTMLElement>('[data-error]');
+  const submit = document.querySelector<HTMLButtonElement>('[data-submit]');
+  const signedIn = document.querySelector<HTMLElement>('[data-signed-in]');
+  const status = document.querySelector<HTMLElement>('[data-sync-status]');
+  const signOutButton = document.querySelector<HTMLButtonElement>('[data-sign-out]');
+
+  onSyncState((state) => {
+    for (const view of document.querySelectorAll<HTMLElement>('[data-view]')) {
+      view.hidden = view.dataset.view !== state.status;
+    }
+    if (state.status !== 'signed-in') return;
+    const who = document.querySelector<HTMLElement>('[data-email]');
+    if (who) who.textContent = state.email ?? 'the family account';
+    if (status) {
+      status.textContent = syncStatusText(state);
+      status.dataset.phase = state.phase === 'idle' && state.pending > 0 ? 'pending' : state.phase;
+    }
+  });
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!email || !password || !submit || !error) return;
+    submit.disabled = true;
+    submit.textContent = 'Signing in...';
+    error.textContent = '';
+    const result = await signIn(email.value.trim(), password.value);
+    submit.disabled = false;
+    submit.textContent = 'Sign in';
+    if (result === 'ok') {
+      form.reset();
+      signedIn?.focus();
+      return;
+    }
+    error.textContent = MESSAGES[result];
+    if (result === 'credentials') {
+      password.focus();
+      password.select();
+    }
+  });
+
+  signOutButton?.addEventListener('click', async () => {
+    signOutButton.disabled = true;
+    await signOut();
+    signOutButton.disabled = false;
+    email?.focus();
+  });
+</script>

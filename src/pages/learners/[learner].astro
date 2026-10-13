@@ -52,6 +52,7 @@ const queue = lessons.map((lesson) => ({
             <Icon name="play" size={18} strokeWidth={2.5} />
             <span data-cta>Start lesson</span>
           </a>
+          <p class="hero-visit" data-last-visit hidden></p>
         </div>
       </sf-continue>
     )
@@ -143,7 +144,7 @@ const queue = lessons.map((lesson) => ({
     max-width: 16ch;
   }
 
-  .hero p {
+  .hero [data-summary] {
     margin: 0;
     max-width: 38rem;
     color: var(--text);
@@ -163,7 +164,8 @@ const queue = lessons.map((lesson) => ({
 
 <script>
   import '../../components/status-client';
-  import { lessonStatus, type LessonRequirements } from '../../lib/progress';
+  import { getLastVisit, lessonStatus, type LessonRequirements } from '../../lib/progress';
+  import { lastVisitText } from '../../lib/sync/model';
 
   interface QueuedLesson {
     id: string;
@@ -174,13 +176,28 @@ const queue = lessons.map((lesson) => ({
     requirements: LessonRequirements;
   }
 
-  /** <sf-continue>: points the hero at the lesson to do next. */
+  /** <sf-continue>: points the hero at the lesson to do next, and shows the learner's last visit. */
   class SfContinue extends HTMLElement {
     connectedCallback(): void {
+      this.update();
+      window.addEventListener('studyflix:progress', this.update);
+      window.addEventListener('storage', this.update);
+    }
+
+    disconnectedCallback(): void {
+      window.removeEventListener('studyflix:progress', this.update);
+      window.removeEventListener('storage', this.update);
+    }
+
+    private update = (): void => {
       const learner = this.dataset.learner ?? '';
       const queue = JSON.parse(this.dataset.queue ?? '[]') as QueuedLesson[];
       const statuses = queue.map((lesson) => ({ lesson, status: lessonStatus(learner, lesson.id, lesson.requirements) }));
-      const inProgress = statuses.find((s) => s.status.started && !s.status.complete);
+      const lastVisit = getLastVisit(learner);
+      const isOpen = (s: (typeof statuses)[number]) => s.status.started && !s.status.complete;
+      // The lesson opened last wins if it is still in progress; then the first one in progress.
+      const visited = statuses.find((s) => s.lesson.id === lastVisit?.lesson);
+      const inProgress = visited && isOpen(visited) ? visited : statuses.find(isOpen);
       const next = inProgress ?? statuses.find((s) => !s.status.complete);
       const anyStarted = statuses.some((s) => s.status.started);
       const set = (selector: string, text: string) => {
@@ -188,23 +205,31 @@ const queue = lessons.map((lesson) => ({
         if (el) el.textContent = text;
       };
 
+      const visit = this.querySelector<HTMLElement>('[data-last-visit]');
+      if (visit) {
+        visit.hidden = !lastVisit;
+        visit.textContent = lastVisit ? lastVisitText(lastVisit.at) : '';
+      }
+
+      const link = this.querySelector<HTMLAnchorElement>('[data-link]');
       if (!next) {
         set('[data-eyebrow]', 'Everything finished');
         set('[data-title]', 'You completed every lesson!');
         set('[data-summary]', 'Pick any lesson below to practise again.');
-        this.querySelector<HTMLElement>('[data-link]')?.setAttribute('hidden', '');
+        link?.setAttribute('hidden', '');
         return;
       }
+      link?.removeAttribute('hidden');
       const name = this.dataset.name ?? '';
       set('[data-eyebrow]', inProgress ? `Keep going, ${name}` : anyStarted ? `Up next, ${name}` : `Start here, ${name}`);
       set('[data-title]', next.lesson.title);
       set('[data-summary]', next.lesson.summary);
       set('[data-cta]', inProgress ? 'Continue lesson' : 'Start lesson');
-      this.querySelector<HTMLAnchorElement>('[data-link]')?.setAttribute('href', next.lesson.url);
+      link?.setAttribute('href', next.lesson.url);
       for (const art of this.querySelectorAll<HTMLElement>('[data-course]')) {
         art.hidden = art.dataset.course !== next.lesson.course;
       }
-    }
+    };
   }
 
   if (!customElements.get('sf-continue')) customElements.define('sf-continue', SfContinue);

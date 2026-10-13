@@ -120,4 +120,10 @@ const requirements = JSON.stringify(lessonRequirements(lesson.blocks));
 
 <script>
   import '../../../../components/status-client';
+  import { getCurrentLearner, recordVisit } from '../../../../lib/progress';
+
+  // Remember this lesson as the learner's last visit (their home page continues from it).
+  const lessonId = document.querySelector<HTMLElement>('sf-lesson-status')?.dataset.lesson;
+  const learner = getCurrentLearner();
+  if (learner && lessonId) recordVisit(learner, lessonId);
 </script>
