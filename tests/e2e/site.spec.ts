@@ -55,6 +55,11 @@ const AXE_PAGES = [
   '/courses/g6-math/ratios-and-rates/worksheet/',
   '/courses/g6-math/ratios-and-rates/answer-key/',
   '/curricula/ontario-math-2020-g6/',
+  '/learners/olivia/',
+  '/courses/g3-money/',
+  '/courses/g3-money/coins-and-change/',
+  '/courses/g3-money/coins-and-change/worksheet/',
+  '/courses/g3-money/coins-and-change/answer-key/',
   '/account/',
 ];
 
