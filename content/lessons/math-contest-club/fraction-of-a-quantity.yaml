@@ -1,0 +1,137 @@
+title: Fraction of a Quantity
+summary: Find 3/4 of 28 in two quick steps, work backwards to the whole, and chain fractions the way contest problems do.
+icon: chart-pie
+minutes: 35
+objectives:
+  - Find a fraction of a number by dividing by the denominator, then multiplying by the numerator.
+  - Find the whole when you know what a fraction of it is.
+  - Find a fraction of a fraction of a number by working from the inside out.
+  - Solve contest-style word problems about fractions of a quantity.
+blocks:
+  - type: explainer
+    id: split-and-take
+    title: Split, then take
+    markdown: |
+      A fraction such as $\frac{3}{4}$ tells you two things.
+
+      The bottom number is the **denominator**. It says how many equal parts to split into. The top number is the **numerator**. It says how many of those parts to take.
+
+      So $\frac{3}{4}$ of 20 means: split 20 into 4 equal parts, then take 3 of them.
+
+      Split: $20 \div 4 = 5$, so each part is 5. Take: $5 \times 3 = 15$. So $\frac{3}{4}$ of 20 is **15**.
+
+      **Rule:** divide by the denominator, then multiply by the numerator.
+
+      You will also see $\frac{3}{4}$ written as 3/4, with a slash. The practice questions use the slash, and both forms mean the same thing.
+
+  - type: example
+    id: three-quarters-of-28
+    title: Find 3/4 of 28
+    problem: What is $\frac{3}{4}$ of 28?
+    steps:
+      - Split 28 into 4 equal parts. $28 \div 4 = 7$, so one part is 7.
+      - Take 3 of the parts. $7 \times 3 = 21$.
+    answer: $\frac{3}{4}$ of 28 = **21**
+
+  - type: practice
+    id: practice-part
+    title: Practise finding a part
+    generator: fraction-of-a-quantity
+    params: { mode: part }
+    count: 5
+
+  - type: explainer
+    id: find-the-whole
+    title: Work backwards to the whole
+    markdown: |
+      Sometimes a contest problem gives you the part and asks for the whole.
+
+      Say $\frac{2}{5}$ of a number is 12. The number is split into 5 equal parts, and 2 of those parts make 12.
+
+      If 2 parts make 12, then 1 part is $12 \div 2 = 6$.
+
+      The whole is all 5 parts: $6 \times 5 = 30$. So the number is **30**.
+
+      **Rule:** divide by the numerator to find one part, then multiply by the denominator to find the whole.
+
+      Check by going forwards. $\frac{2}{5}$ of 30 is $30 \div 5 = 6$, then $6 \times 2 = 12$. It matches.
+
+  - type: example
+    id: two-fifths-is-12
+    title: 2/5 of a number is 12
+    problem: $\frac{2}{5}$ of a number is 12. What is the number?
+    steps:
+      - 2 parts make 12, so one part is $12 \div 2 = 6$.
+      - The whole is 5 parts. $6 \times 5 = 30$.
+      - Check by going forwards. $30 \div 5 \times 2 = 12$.
+    answer: The number is **30**.
+
+  - type: practice
+    id: practice-whole
+    title: Practise finding the whole
+    generator: fraction-of-a-quantity
+    params: { mode: whole }
+    count: 5
+
+  - type: explainer
+    id: fraction-of-a-fraction
+    title: A fraction of a fraction
+    markdown: |
+      Contest problems like to stack fractions. For example: what is $\frac{2}{3}$ of $\frac{3}{4}$ of 48?
+
+      Work from the inside out. The inner fraction is the one right next to the number, so find $\frac{3}{4}$ of 48 first.
+
+      Then find the outer fraction, $\frac{2}{3}$, of that result.
+
+      Each step uses the same two moves you already know: split, then take.
+
+  - type: example
+    id: two-thirds-of-three-quarters
+    title: Find 2/3 of 3/4 of 48
+    problem: What is $\frac{2}{3}$ of $\frac{3}{4}$ of 48?
+    steps:
+      - Inside first, $\frac{3}{4}$ of 48. $48 \div 4 = 12$, and $12 \times 3 = 36$.
+      - Then the outside, $\frac{2}{3}$ of 36. $36 \div 3 = 12$, and $12 \times 2 = 24$.
+    answer: $\frac{2}{3}$ of $\frac{3}{4}$ of 48 = **24**
+
+  - type: practice
+    id: practice-chain
+    title: Practise stacked fractions
+    generator: fraction-of-a-quantity
+    params: { mode: chain }
+    count: 4
+
+  - type: quiz
+    id: contest-problems
+    title: Contest problems
+    items:
+      - kind: number
+        prompt: What is $\frac{2}{3}$ of 18?
+        answer: 12
+        explanation: Split 18 into 3 equal parts, $18 \div 3 = 6$. Take 2 of them, $6 \times 2 = 12$.
+      - kind: choice
+        prompt: Which calculation gives $\frac{3}{5}$ of 40?
+        choices: ['$40 \div 3 \times 5$', '$40 \div 5 \times 3$', '$40 \div 5 + 3$']
+        answer: '$40 \div 5 \times 3$'
+        explanation: Divide by the denominator, 5, then multiply by the numerator, 3. $40 \div 5 \times 3 = 24$. The calculation $40 \div 3 \times 5$ swaps the two numbers, and $40 \div 5 + 3 = 11$ adds instead of multiplying.
+      - kind: number
+        prompt: A class has 30 students. $\frac{2}{5}$ of them ride the bus. How many students ride the bus?
+        answer: 12
+        explanation: $30 \div 5 = 6$, so each part is 6 students. Take 2 parts, $6 \times 2 = 12$.
+      - kind: number
+        prompt: $\frac{3}{7}$ of a number is 21. What is the number?
+        answer: 49
+        explanation: 3 parts make 21, so 1 part is $21 \div 3 = 7$. The whole is 7 parts, $7 \times 7 = 49$.
+      - kind: number
+        prompt: What is $\frac{1}{2}$ of $\frac{2}{3}$ of 60?
+        answer: 20
+        explanation: Inside first, $\frac{2}{3}$ of 60 is $60 \div 3 \times 2 = 40$. Then half of 40 is 20.
+      - kind: number
+        prompt: Maya has 36 stickers. She gives $\frac{1}{4}$ of them to her brother. Then she gives $\frac{1}{3}$ of the stickers she has left to a friend. How many stickers does Maya have now?
+        answer: 18
+        explanation: Her brother gets $36 \div 4 = 9$, so she has $36 - 9 = 27$ left. Her friend gets $27 \div 3 = 9$, so she has $27 - 9 = 18$ now.
+      - kind: choice
+        prompt: 'Which is greater: $\frac{3}{4}$ of 20 or $\frac{2}{3}$ of 21?'
+        choices: ['$\frac{3}{4}$ of 20', '$\frac{2}{3}$ of 21', 'They are equal']
+        answer: '$\frac{3}{4}$ of 20'
+        explanation: $\frac{3}{4}$ of 20 is $20 \div 4 \times 3 = 15$, and $\frac{2}{3}$ of 21 is $21 \div 3 \times 2 = 14$. 15 is greater than 14.
