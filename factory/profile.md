@@ -3,6 +3,7 @@ base_branch: main
 max_rounds: 2
 setup: npm ci --prefer-offline --no-audit --no-fund
 verify: npm run verify
+preview: npm run build && npx astro preview --port $FACTORY_PORT --ignore-lock
 reviewers: [pedagogy, experience, code]
 model_pedagogy: opus
 model_experience: sonnet
