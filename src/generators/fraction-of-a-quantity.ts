@@ -66,8 +66,10 @@ function part(rng: Rng): Item {
 }
 
 function whole(rng: Rng): Item {
-  const f = properFraction(rng, 10);
+  // Drawn in the opposite order to `part`: practice blocks share the lesson seed, so the same
+  // order would make each whole question the mirror of a part question, with its answer on show.
   const k = rng.int(2, 12);
+  const f = properFraction(rng, 10);
   const known = f.num * k;
   const answer = f.den * k;
   const rebuild = `The whole is ${formatNumber(f.den)} parts: ${formatNumber(k)} × ${formatNumber(f.den)} = ${formatNumber(answer)}.`;

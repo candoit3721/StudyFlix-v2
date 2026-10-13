@@ -318,6 +318,19 @@ describe('fraction-of-a-quantity answers', () => {
     }
   });
 
+  it('does not mirror part questions in whole questions drawn from the same seed', () => {
+    // Practice blocks in one lesson share a seed. A mirrored set would show each whole answer
+    // as the number in a part question.
+    for (let seed = 0; seed < 20; seed++) {
+      const parts = new Set(numberItems('part', 5, `s${seed}`).map((i) => parse('part', i.prompt).join(' ')));
+      const mirrored = numberItems('whole', 5, `s${seed}`).filter((item) => {
+        const [a, b] = parse('whole', item.prompt);
+        return parts.has([a, b, item.answer].join(' '));
+      });
+      expect(mirrored.length).toBeLessThan(5);
+    }
+  });
+
   it('gives whole-number answers above 0, with no tolerance and no unit', () => {
     for (const mode of modes) {
       for (const item of numberItems(mode)) {
