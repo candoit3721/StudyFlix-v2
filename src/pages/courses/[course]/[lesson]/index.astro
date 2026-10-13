@@ -25,7 +25,8 @@ interface Props {
 }
 
 const { course, lesson } = Astro.props;
-const { lessons } = await getCatalog();
+const { lessons, curricula } = await getCatalog();
+const curriculum = curricula.find((c) => c.id === course.curriculum);
 const unit = course.units.find((u) => u.id === lesson.unitId);
 const prev = lesson.prevId ? lessons.get(lesson.prevId) : undefined;
 const next = lesson.nextId ? lessons.get(lesson.nextId) : undefined;
@@ -49,9 +50,9 @@ const requirements = JSON.stringify(lessonRequirements(lesson.blocks));
         <span class="chip"><Icon name="clock" size={14} />{lesson.minutes} min</span>
         <span class="chip">Lesson {lesson.number} of {course.lessons.length}</span>
         {
-          course.curriculum &&
+          curriculum &&
             lesson.expectations.map((code) => (
-              <a class="chip" href={`/curricula/${course.curriculum}/#${code}`} title="Curriculum expectation">
+              <a class="chip" href={`${curriculum.url}#${code}`} title="Curriculum expectation">
                 {code}
               </a>
             ))

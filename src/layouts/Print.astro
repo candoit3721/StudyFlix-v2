@@ -5,6 +5,7 @@ import '../styles/global.css';
 import '../styles/blocks.css';
 import '../styles/print.css';
 import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/paths';
 
 interface Props {
   title: string;
@@ -20,7 +21,7 @@ const { title, backUrl } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <title>{title} · StudyFlix</title>
   </head>
   <body class="paper">

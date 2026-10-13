@@ -6,6 +6,7 @@
  * practice -> generator) and fails with every problem listed at once.
  */
 import { GENERATORS, generateSet } from '../generators';
+import { joinBase } from '../lib/paths';
 import type { SubjectId } from '../lib/subjects';
 import type { Block, Course, Curriculum, Learner, Lesson } from './schemas';
 
@@ -92,6 +93,8 @@ export class CatalogError extends Error {
 
 export interface CatalogOptions {
   iconExists: (name: string) => boolean;
+  /** The site's base path (`/` or `/StudyFlix-v2/`); every resolved `url` starts with it. */
+  base: string;
 }
 
 /** Lessons the learner must answer to finish: every quiz item and every practice block. */
@@ -120,7 +123,7 @@ export function buildCatalog(raw: RawContent, options: CatalogOptions): Catalog 
         }
       }
     }
-    return { ...data, id, url: `/curricula/${id}/` };
+    return { ...data, id, url: joinBase(options.base, `/curricula/${id}/`) };
   });
 
   const courses: ResolvedCourse[] = raw.courses.map(({ id: courseId, data: course }) => {
@@ -166,7 +169,7 @@ export function buildCatalog(raw: RawContent, options: CatalogOptions): Catalog 
           unitId: unit.id,
           subject: course.subject,
           number: ordered.length + 1,
-          url: `/courses/${courseId}/${slug}/`,
+          url: joinBase(options.base, `/courses/${courseId}/${slug}/`),
         };
         checkLesson(lesson, expectationCodes, Boolean(curriculum), options, problems);
         lessons.push(lesson);
@@ -181,7 +184,13 @@ export function buildCatalog(raw: RawContent, options: CatalogOptions): Catalog 
     });
 
     const { units: _units, ...rest } = course;
-    return { ...rest, id: courseId, url: `/courses/${courseId}/`, units, lessons: ordered };
+    return {
+      ...rest,
+      id: courseId,
+      url: joinBase(options.base, `/courses/${courseId}/`),
+      units,
+      lessons: ordered,
+    };
   });
 
   for (const { id } of raw.lessons) {
@@ -214,7 +223,7 @@ export function buildCatalog(raw: RawContent, options: CatalogOptions): Catalog 
         usedCourses.add(courseId);
       }
     }
-    return { ...data, id, url: `/learners/${id}/`, courses: resolved };
+    return { ...data, id, url: joinBase(options.base, `/learners/${id}/`), courses: resolved };
   });
   for (const course of courses) {
     if (!usedCourses.has(course.id)) {
