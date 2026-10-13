@@ -1,8 +1,21 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { normalizeBase } from '../../scripts/site-base.mjs';
+
+/** The base the site under test was built with: `/`, or a subpath such as `/StudyFlix-v2/`. */
+export const BASE = normalizeBase(process.env.SITE_BASE);
+
+/**
+ * An in-site path (starting with `/`) as an absolute path under the base. Use it for every `goto`,
+ * expected `href` and URL: with a subpath `baseURL`, `page.goto('/x')` would drop the base.
+ */
+export function site(path: string): string {
+  if (!path.startsWith('/')) throw new Error(`site: path "${path}" must start with "/"`);
+  return BASE + path.slice(1);
+}
 
 /** Choose a learner the way a child does: from the "Who's learning today?" screen. */
 export async function chooseLearner(page: Page, name: string): Promise<void> {
-  await page.goto('/');
+  await page.goto(site('/'));
   await page.getByRole('link', { name: new RegExp(name) }).click();
   await expect(page.locator('[data-learner-pill]')).toContainText(name);
 }
