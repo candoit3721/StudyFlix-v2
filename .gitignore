@@ -35,3 +35,7 @@ factory/board.json
 
 # software factory runtime state
 factory/.board.lock
+
+# software factory runtime state
+factory/.deploy.lock
+factory/deploy.log
