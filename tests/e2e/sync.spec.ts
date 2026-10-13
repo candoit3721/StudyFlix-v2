@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { type Browser, type BrowserContext, expect, type Page, test } from '@playwright/test';
+import { buildSyncConfig } from './build-env';
 import { FAKE_EMAIL, FAKE_PASSWORD, FakeSupabase } from './fake-supabase';
 import { answerItem, chooseLearner } from './helpers';
 
@@ -135,11 +136,10 @@ test.describe('sync not configured', () => {
 });
 
 test('without the test override, the build config decides', async ({ page }) => {
-  // `npm run verify` builds with no config; CI builds with the real project, or with empty values
-  // while the repository variables are not set yet (which must also mean "not configured").
-  const configured = Boolean(
-    process.env.PUBLIC_SUPABASE_URL?.trim() && process.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim(),
-  );
+  // `npm run verify` builds with no config, or with the family project when a local .env exists; CI
+  // builds with the family project, or with empty values while the repository variables are not set
+  // yet (which must also mean "not configured").
+  const configured = buildSyncConfig() !== null;
   await page.goto('/account/');
   if (configured) {
     await expect(page.getByLabel('Email')).toBeVisible();
@@ -152,10 +152,13 @@ test('without the test override, the build config decides', async ({ page }) => 
 
 test.describe('sync configured, signed out', () => {
   test('no request leaves the site while signed out', async ({ page, baseURL }) => {
-    // The build's own config (CI sets the real project): nothing may reach it before sign-in.
-    const configured = process.env.PUBLIC_SUPABASE_URL ? new URL(process.env.PUBLIC_SUPABASE_URL).host : null;
+    // The build's own config (CI and a local .env use the family project): nothing may reach it before
+    // sign-in. Requests to it are recorded and then aborted, so a failure never touches the real project.
+    const config = buildSyncConfig();
+    const configured = config ? new URL(config.url).host : null;
     const requests: URL[] = [];
     page.on('request', (request) => requests.push(new URL(request.url())));
+    if (configured) await page.route(`https://${configured}/**`, (route) => route.abort());
 
     await chooseLearner(page, 'Sophia');
     await page.goto(SIX_KINGDOMS);
