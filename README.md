@@ -5,7 +5,7 @@ A family learning portal: pick who is learning, work through lessons, practise w
 - **All study material is YAML** in `content/`, checked against a strict schema.
 - **Lessons are built from a fixed set of blocks**: explainer, worked example, flashcards, quiz and practice.
 - **Every lesson is also a printable worksheet and answer key.**
-- **Progress stays in the browser.**
+- **Progress is saved in the browser and can sync across the family's devices** with a simple family sign-in (see `docs/supabase-sync.md`).
 
 ```bash
 npm install

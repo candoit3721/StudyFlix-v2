@@ -41,7 +41,8 @@ export const choiceItemSchema = z
 export const numberItemSchema = z.strictObject({
   kind: z.literal('number'),
   prompt: markdown,
-  answer: z.number().finite(),
+  // Zod 4 numbers reject Infinity and NaN, so no `.finite()` (deprecated) is needed.
+  answer: z.number(),
   /** Accepted absolute difference from `answer`. */
   tolerance: z.number().nonnegative().default(0),
   /** Shown after the input box, for example "km" or "$". */

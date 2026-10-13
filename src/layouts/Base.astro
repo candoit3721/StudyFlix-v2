@@ -81,11 +81,15 @@ const pageTitle = title === 'StudyFlix' ? title : `${title} · StudyFlix`;
     <footer class="site-footer">
       <div class="wrap">
         <span>StudyFlix · made for our family</span>
-        <a href="/">Switch learner</a>
+        <span class="site-footer-links">
+          <a href="/account/" data-sync-link hidden>Family sign-in</a>
+          <a href="/">Switch learner</a>
+        </span>
       </div>
     </footer>
     <script>
       import { setCurrentLearner } from '../lib/progress';
+      import { onSyncState, startSync } from '../lib/sync/engine';
 
       const root = document.documentElement;
       if (root.dataset.learner) setCurrentLearner(root.dataset.learner);
@@ -98,6 +102,13 @@ const pageTitle = title === 'StudyFlix' ? title : `${title} · StudyFlix`;
         pill.querySelector('[data-name]')!.textContent = learner.name;
         pill.hidden = false;
       }
+
+      // Progress sync: a no-op unless this copy of the site is configured for it.
+      startSync();
+      const syncLink = document.querySelector<HTMLElement>('[data-sync-link]');
+      onSyncState((state) => {
+        if (syncLink) syncLink.hidden = state.status === 'off' || state.status === 'starting';
+      });
     </script>
   </body>
 </html>
