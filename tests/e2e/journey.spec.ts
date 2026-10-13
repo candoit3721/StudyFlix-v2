@@ -130,7 +130,10 @@ for (const slug of LONG_WORD_LESSONS) {
 
 test('curriculum coverage links expectations to lessons', async ({ page }) => {
   await page.goto('/curricula/ontario-science-2022-g6/');
-  await expect(page.getByText('2 of 11')).toBeVisible();
+  const total = await page.locator('li.expectation').count();
+  const gaps = await page.locator('li.expectation.is-gap').count();
+  expect(total).toBe(11);
+  await expect(page.locator('.coverage-summary strong')).toHaveText(`${total - gaps} of ${total}`);
   await expect(page.locator('#B2').getByRole('link', { name: 'The Six Kingdoms of Life' })).toBeVisible();
   await expect(page.locator('#E1')).toContainText('No lessons yet');
 });

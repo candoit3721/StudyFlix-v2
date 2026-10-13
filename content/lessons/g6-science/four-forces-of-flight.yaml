@@ -1,0 +1,215 @@
+title: The Four Forces of Flight
+summary: Meet lift, weight, thrust and drag, find out how air pushes on an airplane, and follow the forces on a trip from takeoff to landing.
+icon: plane
+minutes: 25
+expectations: [D2]
+objectives:
+  - Name the four forces of flight and the direction each one pushes or pulls.
+  - Explain where lift, weight, thrust and drag come from, and how air makes lift and drag possible.
+  - Use balanced and unbalanced forces to explain how an airplane takes off, cruises, speeds up, slows down and lands.
+blocks:
+  - type: explainer
+    id: air-is-matter
+    title: Air pushes back
+    markdown: |
+      A **force** is a push or a pull.
+
+      Air is all around you, even though you cannot see it. Air is **matter**. It has mass, it takes up space, and it pushes on everything it touches. That push is called **air pressure**.
+
+      Air also pushes back on anything that moves through it. You can feel this when you ride your bike fast. The air pushes on your face and body.
+
+      Try running while you hold a big piece of cardboard in front of you. The air pushes back hard on the cardboard.
+
+      That push from the air is what lets an airplane fly. Air pushing on the wings helps hold the airplane up. Air pushing on the airplane as it moves also slows it down.
+
+  - type: explainer
+    id: meet-the-four-forces
+    title: Meet the four forces
+    markdown: |
+      Four forces act on an airplane in flight: **lift**, **weight**, **thrust** and **drag**. Each one pushes or pulls the airplane in a different direction.
+
+      | Force | Direction | Where it comes from |
+      |---|---|---|
+      | Lift | Up | The wings, as air moves past them |
+      | Weight | Down, toward the centre of Earth | Gravity |
+      | Thrust | Forward | The engines |
+      | Drag | Backward, against the motion | Air resistance |
+
+      The forces work in **opposite pairs**:
+
+      - **Lift** pushes up, and **weight** pulls down.
+      - **Thrust** pushes forward, and **drag** pushes back.
+
+      In each pair, which force is bigger decides what the airplane does next. You will see how later in this lesson.
+
+  - type: explainer
+    id: lift-and-weight
+    title: Lift and weight
+    markdown: |
+      **Weight** is the pull of gravity on the airplane and everything in it: the people, their bags and the fuel. Weight pulls the airplane down, toward the centre of Earth.
+
+      The more mass an airplane has, the more weight it has.
+
+      **Lift** pushes the airplane up. It is made mostly by the wings, as air moves past them.
+
+      A wing has a special shape, and it is tilted up a little at the front. As the airplane moves, the wing turns the air flowing past it downward. The air pushes back on the wing, and it pushes the wing up.
+
+      The air pressure under the wing is higher than the air pressure on top of it. So the air pushes up on the wing harder than it pushes down.
+
+      A wing only makes lift when air is moving past it. The faster the air moves past the wing, the more lift the wing makes.
+
+      That is why an airplane speeds down a runway before it can lift off. Its wings need fast-moving air to make enough lift. A float plane on a lake in Northern Ontario does the same thing: it races across the water first.
+
+  - type: explainer
+    id: thrust-and-drag
+    title: Thrust and drag
+    markdown: |
+      **Thrust** pushes the airplane forward. It comes from the engines.
+
+      - A **propeller** spins and pushes air backward.
+      - A **jet engine** pushes hot gases out the back.
+
+      When an engine pushes air or gases backward, the airplane is pushed forward. The pilot changes thrust by giving the engines more or less power.
+
+      Birds make thrust by flapping their wings.
+
+      Some things fly with no engine at all. A paper airplane gets thrust only from your throw. After it leaves your hand, drag slows it and weight pulls it down, so it glides down to the floor.
+
+      **Drag** pushes back on the airplane, against the direction it is moving. Drag is **air resistance**. The airplane has to push air out of its way, and air rubs along its surface.
+
+      The faster an airplane goes, the more drag it has. Think of your bike again: the faster you ride, the harder the air pushes back on you.
+
+      A **streamlined** shape has less drag. Streamlined means smooth and slim, with a rounded or pointed front. That is why airplanes have smooth, slim bodies and rounded or pointed noses. A box with a flat front has more drag.
+
+  - type: explainer
+    id: balanced-or-unbalanced
+    title: Balanced or unbalanced?
+    markdown: |
+      When opposite forces are equal, they are **balanced**. When they are not equal, they are **unbalanced**.
+
+      Picture an airplane flying at a steady speed and a steady height. Its forces are balanced: lift equals weight, and thrust equals drag.
+
+      Balanced does not mean stopped. The airplane is still moving fast. It just does not speed up, slow down, rise or sink.
+
+      When the forces are unbalanced, the airplane's motion changes. The bigger force wins:
+
+      - Thrust bigger than drag → the airplane **speeds up**.
+      - Drag bigger than thrust → the airplane **slows down**.
+      - Lift bigger than weight → the airplane **starts to rise**.
+      - Weight bigger than lift → the airplane **starts to sink**.
+
+  - type: example
+    id: takeoff-to-landing
+    title: From takeoff to landing
+    problem: "A small propeller airplane is at the end of a runway in Thunder Bay, ready to fly to Sudbury. Follow the four forces through the trip. At each stage, are they balanced, or which force is bigger?"
+    steps:
+      - "**Speeding down the runway:** the pilot gives the engine lots of power. Thrust is bigger than drag, so the airplane speeds up. The ground holds it up for now."
+      - "**Lifting off:** the airplane is now going fast enough that its wings make more lift than its weight. Lift is bigger than weight, so it starts to rise."
+      - "**Cruising:** the airplane flies at a steady speed and a steady height. Lift equals weight, and thrust equals drag. The forces are balanced, even though the airplane is moving fast."
+      - "**Getting ready to land:** the pilot gives the engine less power. Drag is bigger than thrust, so the airplane slows down."
+      - "**Coming down:** with less speed, the wings make less lift. Weight is bigger than lift, so the airplane starts to sink toward the runway in Sudbury."
+    answer: "**When the forces are balanced, the airplane keeps the same speed and height. When they are unbalanced, its speed or height changes.**"
+
+  - type: flashcards
+    id: key-words
+    title: Key words
+    cards:
+      - front: Force
+        back: A push or a pull.
+      - front: Air pressure
+        back: The push of air on everything it touches.
+      - front: Gravity
+        back: The pull toward the centre of Earth that gives things their weight.
+      - front: Lift
+        back: The force from the wings that pushes an airplane up.
+      - front: Weight
+        back: The pull of gravity that pulls an airplane down.
+      - front: Thrust
+        back: The force from the engines that pushes an airplane forward.
+      - front: Drag
+        back: Air resistance that pushes back on an airplane as it moves.
+      - front: Streamlined
+        back: Smooth and slim with a rounded or pointed front, so it has less drag.
+      - front: Balanced forces
+        back: Opposite forces that are equal, so speed and height stay the same.
+      - front: Propeller
+        back: A spinning part that pushes air backward to make thrust.
+
+  - type: quiz
+    id: check
+    title: Check your understanding
+    items:
+      - kind: choice
+        prompt: Which force pulls an airplane down, toward the centre of Earth?
+        choices: [Lift, Thrust, Weight, Drag]
+        answer: Weight
+        explanation: Weight is the pull of gravity on the airplane and everything in it. Lift pushes up, thrust pushes forward and drag pushes back.
+      - kind: choice
+        prompt: The four forces work in opposite pairs. Which force works against thrust?
+        choices: [Lift, Drag, Weight]
+        answer: Drag
+        explanation: Thrust pushes the airplane forward and drag pushes it back. The other pair is lift and weight.
+      - kind: choice
+        prompt: Where does an airplane's thrust come from?
+        choices:
+          - The wings, as air moves past them
+          - Gravity pulling on the airplane
+          - The higher air pressure under the wings
+          - The engines, pushing air or hot gases backward
+        answer: The engines, pushing air or hot gases backward
+        explanation: A propeller or a jet engine pushes air or hot gases backward, and that pushes the airplane forward. The wings and the air pressure under them make lift, not thrust.
+      - kind: choice
+        prompt: Why does an airplane speed down the runway before it lifts off?
+        choices:
+          - To make its weight smaller
+          - To get rid of drag before it lifts off
+          - Its wings need fast-moving air past them to make enough lift
+        answer: Its wings need fast-moving air past them to make enough lift
+        explanation: A wing only makes lift when air moves past it, and the faster the air, the more lift. Going faster does not make weight smaller, and it makes drag bigger, not smaller.
+      - kind: text
+        prompt: What is the name of the force that pushes back on an airplane as it moves through the air?
+        accept: [drag, air resistance, the drag, air drag]
+        explanation: Drag is air resistance. It pushes against the direction the airplane is moving.
+      - kind: choice
+        prompt: Which shape has the least drag as it moves through the air?
+        choices:
+          - A smooth, slim shape with a rounded front
+          - A box with a flat front
+          - A rough shape with lots of bumps and corners
+        answer: A smooth, slim shape with a rounded front
+        explanation: A smooth, slim shape with a rounded or pointed front is streamlined, so it has less drag. A flat front or lots of bumps make more drag.
+      - kind: choice
+        prompt: An airplane flies faster and faster. What happens to its drag?
+        choices: [It gets bigger, It gets smaller, It stays the same]
+        answer: It gets bigger
+        explanation: The faster an airplane goes, the more drag it has. You feel the same thing on your bike when you ride fast.
+      - kind: choice
+        prompt: An airplane is cruising at a steady speed and a steady height. Are its forces balanced?
+        choices:
+          - No, they are unbalanced, because the airplane is moving fast
+          - Yes, lift equals weight and thrust equals drag
+          - No, they are unbalanced, because thrust must always be bigger than drag
+        answer: Yes, lift equals weight and thrust equals drag
+        explanation: Balanced does not mean stopped. With balanced forces, the airplane keeps moving fast, but it does not speed up, slow down, rise or sink.
+      - kind: choice
+        prompt: An airplane is cruising. The pilot gives the engine more power, so thrust becomes bigger than drag. What happens to the airplane's speed?
+        choices: [It goes down, It stays the same, It goes up]
+        answer: It goes up
+        explanation: The forces are now unbalanced. When thrust is bigger than drag, the airplane speeds up.
+      - kind: choice
+        prompt: An airplane slows down, so its wings make less lift. Now its weight is bigger than its lift. What happens?
+        choices: [It starts to rise, It starts to sink, It speeds up]
+        answer: It starts to sink
+        explanation: When weight is bigger than lift, the airplane starts to sink. That is how it comes down to land.
+      - kind: choice
+        prompt: Why could a wing not make any lift in a place with no air?
+        choices:
+          - There is no air to move past the wing and push it up
+          - There would be too much drag on the wing
+          - Air pressure would push the wing down too hard
+        answer: There is no air to move past the wing and push it up
+        explanation: Lift comes from air moving past the wing and pushing on it. With no air, there is no air pressure, no lift and no drag.
+      - kind: number
+        prompt: How many forces act on an airplane in flight?
+        answer: 4
+        explanation: Lift, weight, thrust and drag.
