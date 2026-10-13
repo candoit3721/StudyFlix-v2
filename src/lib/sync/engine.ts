@@ -196,7 +196,24 @@ export interface SyncState {
   lastSync: number | null;
 }
 
-export type SignInResult = 'ok' | 'credentials' | 'network';
+/**
+ * How a sign-in ended. Only a request that got no answer is `network`: a service that answers
+ * and refuses (sign-in turned off, too many attempts) must not be reported as unreachable.
+ */
+export type SignInResult =
+  | { outcome: 'ok' | 'credentials' | 'rate-limited' | 'network' }
+  | { outcome: 'refused'; code: string };
+
+/** Classify a failed sign-in from the auth error (or its absence, when no session came back). */
+export function signInFailure(error: unknown): SignInResult {
+  const { code, status, name } = (error ?? {}) as { code?: string; status?: number; name?: string };
+  if (code === 'invalid_credentials' || (name === 'AuthApiError' && status === 400 && !code)) {
+    return { outcome: 'credentials' };
+  }
+  if (status === 429 || code?.startsWith('over_')) return { outcome: 'rate-limited' };
+  if (name === 'AuthRetryableFetchError' || (error && !status)) return { outcome: 'network' };
+  return { outcome: 'refused', code: code ?? (status ? `HTTP ${status}` : 'no session') };
+}
 
 /** The sync status line on the family sign-in page. */
 export function syncStatusText(state: Pick<SyncState, 'phase' | 'pending'>): string {
@@ -361,21 +378,16 @@ export async function signIn(email: string, password: string): Promise<SignInRes
   try {
     client = await getClient();
   } catch {
-    return 'network';
+    return { outcome: 'network' };
   }
   try {
     const { data, error } = await client.auth.signInWithPassword({ email, password });
-    if (error || !data.session) {
-      const { code, status, name } = (error ?? {}) as { code?: string; status?: number; name?: string };
-      return code === 'invalid_credentials' || (name === 'AuthApiError' && status === 400)
-        ? 'credentials'
-        : 'network';
-    }
+    if (error || !data.session) return signInFailure(error);
     setState({ status: 'signed-in', email: data.session.user.email ?? email, phase: 'syncing' });
     void run();
-    return 'ok';
+    return { outcome: 'ok' };
   } catch {
-    return 'network';
+    return { outcome: 'network' };
   }
 }
 

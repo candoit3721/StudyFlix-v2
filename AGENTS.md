@@ -42,7 +42,8 @@ src/
   pages/                 routes; pages never contain study material
   styles/                design tokens and component styles (global.css, blocks.css, print.css)
 supabase/migrations/     database schema for progress sync (tables, view, Row Level Security)
-docs/                    supabase-sync.md: how progress sync works and its one-time setup
+docs/                    supabase-sync.md: how progress sync works, its one-time setup, and local review previews
+scripts/                 preview-local.sh (review previews on a local Supabase), db-snapshot.sh (production data for them)
 tests/unit/              Vitest, including the fast content validator and the PGlite migration test
 tests/e2e/               Playwright, with an in-memory fake Supabase backend for sync journeys
 factory/                 software factory profile, reviewer lenses and backlog

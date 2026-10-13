@@ -39,12 +39,20 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <script>
-  import { onSyncState, signIn, signOut, syncStatusText } from '../lib/sync/engine';
+  import { onSyncState, type SignInResult, signIn, signOut, syncStatusText } from '../lib/sync/engine';
 
-  const MESSAGES = {
-    credentials: 'That email and password do not match the family account.',
-    network: 'Could not reach the sync service. Check the internet connection and try again.',
-  };
+  function message(result: SignInResult): string {
+    switch (result.outcome) {
+      case 'credentials':
+        return 'That email and password do not match the family account.';
+      case 'rate-limited':
+        return 'Too many sign-in attempts. Wait a few minutes and try again.';
+      case 'refused':
+        return `The sync service refused the sign-in (${result.code}). Try again later; if it keeps happening, check the sign-in settings of the family Supabase project.`;
+      default:
+        return 'Could not reach the sync service. Check the internet connection and try again.';
+    }
+  }
 
   const form = document.querySelector<HTMLFormElement>('[data-sign-in]');
   const email = document.querySelector<HTMLInputElement>('#account-email');
@@ -77,13 +85,13 @@ import Base from '../layouts/Base.astro';
     const result = await signIn(email.value.trim(), password.value);
     submit.disabled = false;
     submit.textContent = 'Sign in';
-    if (result === 'ok') {
+    if (result.outcome === 'ok') {
       form.reset();
       signedIn?.focus();
       return;
     }
-    error.textContent = MESSAGES[result];
-    if (result === 'credentials') {
+    error.textContent = message(result);
+    if (result.outcome === 'credentials') {
       password.focus();
       password.select();
     }

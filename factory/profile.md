@@ -3,7 +3,15 @@ base_branch: main
 max_rounds: 2
 setup: npm ci --prefer-offline --no-audit --no-fund
 verify: npm run verify
-preview: npm run build && npx astro preview --port $FACTORY_PORT --ignore-lock
+preview: bash scripts/preview-local.sh
+preview_timeout: 900
+preview_exclusive: true
+deploy: git push origin main
+deploy_wait: github-actions
+smoke: https://candoit3721.github.io/StudyFlix-v2/
+migrate: npx --yes supabase@2.120.0 db push --yes
+migrations: [supabase/migrations/]
+human_only: [supabase/migrations/]
 reviewers: [pedagogy, experience, code]
 model_pedagogy: opus
 model_experience: sonnet
@@ -40,6 +48,8 @@ Escalate to a human when **any** of these is true:
    This resets children's saved progress.
 4. It adds curriculum expectation text, or the pedagogy review noted any fact it could not confirm.
 5. The diff touches files outside the spec's scope.
+6. It adds or changes a database migration in `supabase/migrations/`.
+   The board script also refuses to merge these without `/factory:approve`.
 
 Otherwise (new or improved lessons inside an existing course, all reviews PASS, verify succeeded) the job **auto-merges**.
 
@@ -51,3 +61,10 @@ Otherwise (new or improved lessons inside an existing course, all reviews PASS, 
 - Run `npm run validate` after every content edit, and `npm run verify` before finishing.
 - UI is checked in a real browser at 1280 px and 390 px.
   Start it with `npm run build && npx astro preview --port <free port> --background` from the worktree; stop it with `npx astro preview stop`.
+
+## Deploying
+
+Every merge to `main` deploys: the factory pushes `main`, GitHub Actions builds and publishes to GitHub Pages, and the factory checks the live site.
+Pending database migrations are applied to the family Supabase project first.
+- Migrations must be additive (new tables, columns, policies), so the site that is still live keeps working while it deploys; never drop or rename in the same job that stops using something.
+- Never put secrets in the repository; the site only uses the publishable Supabase key from the repository variables.

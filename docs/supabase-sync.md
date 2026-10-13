@@ -96,6 +96,31 @@ For `npm run dev` on your computer, run `cp .env.example .env`: `.env.example` h
 With a `.env`, `npm run build` and `npm run verify` also build a copy with sync on, as CI does once the variables are set; every test passes either way, and signed-out pages still send nothing to Supabase.
 Without a `.env`, or if either variable is missing or empty, the site behaves exactly as before: progress stays in each browser, and the sign-in page says that syncing is not set up.
 
+## Reviewing a job against a local copy
+
+When a factory job waits for review, its preview runs against a local Supabase in Docker, not the family project.
+`scripts/preview-local.sh` (the profile's `preview` command):
+1. starts the local stack (`supabase/config.toml`: database, auth, API and Studio at <http://127.0.0.1:54323>);
+2. rebuilds the local database from the job's own migrations, so a schema change is tried here before it reaches production;
+3. loads the production snapshot, so the progress and the family sign-in are the real ones;
+4. builds the site pointed at the local Supabase and serves it.
+
+Only one job is previewed at a time, because there is one local database; starting a preview stops the others.
+Signing in on a preview uses the family email and password, and only changes the local copy.
+
+The snapshot is taken by hand, whenever fresher data is useful:
+
+```bash
+scripts/db-snapshot.sh
+```
+
+It needs Docker, and the Supabase CLI logged in and linked once (`npx supabase login`, then `npx supabase link --project-ref qyeksmswibgkmsfhbrpv`).
+It saves `supabase/.snapshot/`, which holds the children's progress and the account's password hash: it is ignored by git and must never leave the computer.
+Without a snapshot, previews start with an empty database.
+
+After a job merges, the factory deploys: it applies new migrations to the family project (`npx supabase db push`), then pushes `main`, which publishes the site.
+Migrations only merge after a parent's `/factory:approve`, and must only add things, so the live site keeps working while it deploys.
+
 ## When something goes wrong
 
 - **"Could not reach the sync service"** on the sign-in page means the device is offline or Supabase is not answering.

@@ -255,6 +255,25 @@ test.describe('family sign-in page', () => {
     await expect(password).toBeFocused();
     await expectNoSeriousAxeViolations(page);
 
+    // The service answers but refuses: it must not be reported as unreachable.
+    fake.signInRefusal = {
+      status: 422,
+      error_code: 'email_provider_disabled',
+      msg: 'Email logins are disabled',
+    };
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(alert).toHaveText(
+      'The sync service refused the sign-in (email_provider_disabled). Try again later; if it keeps happening, check the sign-in settings of the family Supabase project.',
+    );
+    fake.signInRefusal = {
+      status: 429,
+      error_code: 'over_request_rate_limit',
+      msg: 'Request rate limit reached',
+    };
+    await page.getByRole('button', { name: 'Sign in' }).click();
+    await expect(alert).toHaveText('Too many sign-in attempts. Wait a few minutes and try again.');
+    fake.signInRefusal = null;
+
     // The service cannot be reached.
     fake.authFailure = true;
     await password.fill(FAKE_PASSWORD);

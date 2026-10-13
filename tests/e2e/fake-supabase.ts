@@ -59,6 +59,8 @@ export class FakeSupabase {
   restFailure: 'http' | 'network' | null = null;
   /** Make the auth endpoints fail like an unreachable service. */
   authFailure = false;
+  /** Make password sign-in answer with this refusal, as the real service does (for example 429). */
+  signInRefusal: { status: number; error_code: string; msg: string } | null = null;
   private tokens = new Map<string, string>();
   private counter = 0;
 
@@ -153,6 +155,8 @@ export class FakeSupabase {
       if (path === '/auth/v1/token' && method === 'POST') {
         const body = request.postDataJSON() as Record<string, string>;
         if (url.searchParams.get('grant_type') === 'password') {
+          const refusal = this.signInRefusal;
+          if (refusal) return json(refusal.status, { code: refusal.status, ...refusal });
           if (body.email === FAKE_EMAIL && body.password === FAKE_PASSWORD) return json(200, this.session());
           return json(400, {
             code: 400,

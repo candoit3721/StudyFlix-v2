@@ -2,7 +2,7 @@
  * Progress sync: the pure model, the outbox and one sync run against in-memory fakes.
  * The browser globals progress.ts uses (localStorage, window) are stubbed with in-memory versions.
  */
-import { createClient } from '@supabase/supabase-js';
+import { AuthApiError, AuthRetryableFetchError, createClient } from '@supabase/supabase-js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getCachedProgress,
@@ -18,6 +18,7 @@ import {
   flush,
   pull,
   type SyncBackend,
+  signInFailure,
   supabaseBackend,
   syncOnce,
   syncStatusText,
@@ -213,6 +214,22 @@ function recordRandomAnswers(seed: number, count: number): ProgressEvent[] {
   vi.useRealTimers();
   return events;
 }
+
+describe('sign-in failures', () => {
+  it('reports only an unanswered request as unreachable', () => {
+    const api = (status: number, code?: string) => new AuthApiError('refused', status, code);
+    expect(signInFailure(api(400, 'invalid_credentials'))).toEqual({ outcome: 'credentials' });
+    expect(signInFailure(api(400))).toEqual({ outcome: 'credentials' });
+    expect(signInFailure(api(429, 'over_request_rate_limit'))).toEqual({ outcome: 'rate-limited' });
+    expect(signInFailure(api(422, 'email_provider_disabled'))).toEqual({
+      outcome: 'refused',
+      code: 'email_provider_disabled',
+    });
+    expect(signInFailure(api(500))).toEqual({ outcome: 'refused', code: 'HTTP 500' });
+    expect(signInFailure(new AuthRetryableFetchError('Failed to fetch', 0))).toEqual({ outcome: 'network' });
+    expect(signInFailure(null)).toEqual({ outcome: 'refused', code: 'no session' });
+  });
+});
 
 describe('model: the server summary folds back into the same cache', () => {
   it('matches what recordItem and recordPractice build, for many random sequences', () => {
