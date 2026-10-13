@@ -259,3 +259,112 @@ describe('money answers', () => {
     expect(() => generateSet('money', { amounts: 'pennies' }, 1, 'x')).toThrow();
   });
 });
+
+describe('fraction-of-a-quantity answers', () => {
+  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+  const num = (text: string | undefined) => Number((text ?? '').replace(/,/g, ''));
+  const FORMS = {
+    part: /^What is (\d+)\/(\d+) of ([\d,]+)\?$/,
+    whole: /^(\d+)\/(\d+) of a number is ([\d,]+)\. What is the number\?$/,
+    chain: /^What is (\d+)\/(\d+) of (\d+)\/(\d+) of ([\d,]+)\?$/,
+  } as const;
+  const modes = ['part', 'whole', 'chain'] as const;
+  type Mode = (typeof modes)[number];
+  const numberItems = (mode: Mode, count = 30, seed: string = mode) =>
+    generateSet('fraction-of-a-quantity', { mode }, count, seed).map(({ item }) => {
+      if (item.kind !== 'number') throw new Error(`Expected a number item, got ${item.kind}`);
+      return item;
+    });
+  /** The numbers matched by a prompt's form, or a failed expectation. */
+  const parse = (mode: Mode, prompt: string) => {
+    const match = prompt.match(FORMS[mode]);
+    expect(match, prompt).not.toBeNull();
+    return (match ?? []).slice(1).map(num);
+  };
+  const expectProperLowest = (n: number, d: number, maxDen: number) => {
+    expect(d).toBeGreaterThanOrEqual(2);
+    expect(d).toBeLessThanOrEqual(maxDen);
+    expect(n).toBeGreaterThanOrEqual(1);
+    expect(n).toBeLessThan(d);
+    expect(gcd(n, d)).toBe(1);
+  };
+
+  it('part: answer × b = a × N, and N splits evenly into b parts', () => {
+    for (const item of numberItems('part')) {
+      const [a = 0, b = 0, n = 0] = parse('part', item.prompt);
+      expectProperLowest(a, b, 10);
+      expect(n % b).toBe(0);
+      expect(item.answer * b).toBe(a * n);
+    }
+  });
+
+  it('whole: answer × a = P × b, and the whole splits evenly into b parts', () => {
+    for (const item of numberItems('whole')) {
+      const [a = 0, b = 0, p = 0] = parse('whole', item.prompt);
+      expectProperLowest(a, b, 10);
+      expect(item.answer % b).toBe(0);
+      expect(item.answer * a).toBe(p * b);
+    }
+  });
+
+  it('chain: every step is whole, and answer × b × d = a × c × N', () => {
+    for (const item of numberItems('chain')) {
+      const [a = 0, b = 0, c = 0, d = 0, n = 0] = parse('chain', item.prompt);
+      expectProperLowest(a, b, 6);
+      expectProperLowest(c, d, 6);
+      expect((n * c) % d).toBe(0);
+      expect((((n * c) / d) * a) % b).toBe(0);
+      expect(item.answer * b * d).toBe(a * c * n);
+    }
+  });
+
+  it('does not mirror part questions in whole questions drawn from the same seed', () => {
+    // Practice blocks in one lesson share a seed. A mirrored set would show each whole answer
+    // as the number in a part question.
+    for (let seed = 0; seed < 20; seed++) {
+      const parts = new Set(numberItems('part', 5, `s${seed}`).map((i) => parse('part', i.prompt).join(' ')));
+      const mirrored = numberItems('whole', 5, `s${seed}`).filter((item) => {
+        const [a, b] = parse('whole', item.prompt);
+        return parts.has([a, b, item.answer].join(' '));
+      });
+      expect(mirrored.length).toBeLessThan(5);
+    }
+  });
+
+  it('gives whole-number answers above 0, with no tolerance and no unit', () => {
+    for (const mode of modes) {
+      for (const item of numberItems(mode)) {
+        expect(Number.isInteger(item.answer) && item.answer > 0).toBe(true);
+        expect(item.tolerance).toBe(0);
+        expect(item.unit).toBeUndefined();
+      }
+    }
+  });
+
+  it('explanations do true arithmetic, never × 1 or ÷ 1, and end with the answer', () => {
+    for (const mode of modes) {
+      for (const item of numberItems(mode, 200, `${mode}-explanations`)) {
+        const explanation = item.explanation ?? '';
+        expect(explanation).not.toMatch(/[×÷] 1(?!\d)/);
+        const ending = new RegExp(`(?:^|[^\\d,])${formatNumber(item.answer)}\\.$`);
+        expect(explanation, explanation).toMatch(ending);
+        const steps = [...explanation.matchAll(/([\d,]+) ([×÷]) ([\d,]+) = ([\d,]+)/g)];
+        expect(steps.length).toBeGreaterThan(0);
+        for (const [step, x, op, y, z] of steps) {
+          const result = op === '×' ? num(x) * num(y) : num(x) / num(y);
+          expect(result, step).toBe(num(z));
+        }
+      }
+    }
+  });
+
+  it('defaults to mixed and draws on every form', () => {
+    const prompts = generateSet('fraction-of-a-quantity', {}, 30, 'mixed').map(({ item }) => item.prompt);
+    for (const form of Object.values(FORMS)) expect(prompts.some((p) => form.test(p))).toBe(true);
+  });
+
+  it('rejects params outside the design', () => {
+    expect(() => generateSet('fraction-of-a-quantity', { mode: 'nope' }, 1, 'x')).toThrow();
+    expect(() => generateSet('fraction-of-a-quantity', { nope: 1 }, 1, 'x')).toThrow();
+  });
+});

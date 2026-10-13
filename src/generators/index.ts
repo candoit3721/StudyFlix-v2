@@ -1,5 +1,6 @@
 import { createRng, hashKey } from '../lib/rng';
 import type { Item } from '../model/schemas';
+import { fractionOfAQuantity } from './fraction-of-a-quantity';
 import { gaussSum } from './gauss-sum';
 import { money } from './money';
 import { ratiosRates } from './ratios-rates';
@@ -8,6 +9,7 @@ import type { Generator } from './types';
 /** Every generator a practice block may reference. Add new generators here. */
 // biome-ignore lint/suspicious/noExplicitAny: each generator has its own params type; generateSet parses them.
 export const GENERATORS: Record<string, Generator<any>> = {
+  [fractionOfAQuantity.id]: fractionOfAQuantity,
   [gaussSum.id]: gaussSum,
   [money.id]: money,
   [ratiosRates.id]: ratiosRates,

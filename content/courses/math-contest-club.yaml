@@ -7,3 +7,7 @@ units:
     lessons:
       - pairing-trick
       - any-range
+  - id: fractions
+    title: Fractions
+    lessons:
+      - fraction-of-a-quantity
