@@ -28,29 +28,73 @@ The browser talks to Supabase directly, and Row Level Security makes sure only t
   Signing out keeps the progress on the device.
 - `@supabase/supabase-js` is downloaded only on a signed-in device, or when a parent signs in, so signed-out pages make no requests to Supabase at all.
 
+## The family project
+
+| | |
+|---|---|
+| Project | `studyflix`, in the Supabase organization Study-Flix (free plan) |
+| Project ref | `qyeksmswibgkmsfhbrpv` |
+| Region | `ca-central-1` (Canada Central) |
+| Project URL | `https://qyeksmswibgkmsfhbrpv.supabase.co` |
+| Publishable key | `sb_publishable__j92W7nS36szAeo4rvFHzA_2qsbu7d1` |
+| Dashboard | <https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv> |
+
+The project URL and the publishable key are public by design: they are built into the published site, and Row Level Security, not the key, protects the data.
+That is why they are written here and in `.env.example`.
+Never commit anything secret: not a `.env` file, not a secret key (`sb_secret_...`), not the legacy `service_role` key, and not the database password.
+
 ## One-time setup (a parent does this once)
 
-1. **Create a Supabase project** at [supabase.com](https://supabase.com) (the free plan is enough for a family).
+Do the steps in this order.
+The published site only turns sync on at step 5, so by then the tables exist and no one else can create an account.
+
+1. **Create the Supabase project.**
+   Done on 2026-10-12: the `studyflix` project above.
 2. **Create the tables.**
-   Open the project's SQL editor, paste the whole of `supabase/migrations/20261012000000_learner_progress.sql`, and run it.
-   If you use the Supabase CLI instead, link the project and run `supabase db push`.
-3. **Set up sign-in** under Authentication:
-   - keep the **Email** provider turned on;
-   - under Sign In / Providers (or Authentication settings), turn **off** "Allow new users to sign up", so no one else can create an account;
-   - under Authentication > Users, choose **Add user**, enter the family email address and a strong password, and tick **Auto Confirm User**.
-     This is the one account every device signs in with.
-4. **Connect the site.**
-   In the project's Connect dialog (or Project Settings > API Keys), copy the **project URL** and the **publishable key** (`sb_publishable_...`; a legacy anon key also works).
-   Both are public by design: Row Level Security protects the data, not the key.
-   - For the published site: in GitHub, open the repository's Settings > Secrets and variables > Actions > **Variables**, and add `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_PUBLISHABLE_KEY` as repository variables.
-     The next push to `main` builds and deploys the site with sync turned on.
-   - For `npm run dev` on your computer: copy `.env.example` to `.env` and fill in the same two values.
-     `.env` is ignored by git; never commit it.
-5. **Sign in on each device** at `/account/` (the "Family sign-in" link in the footer).
+   Open the [SQL editor](https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv/sql/new), paste the whole of `supabase/migrations/20261012000000_learner_progress.sql`, and choose **Run**.
+   It should finish with "Success. No rows returned".
+   If you use the Supabase CLI instead, run these from the repository folder:
+
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref qyeksmswibgkmsfhbrpv
+   npx supabase db push
+   ```
+
+   Check it under [Table Editor](https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv/editor): the `public` schema now has the tables `progress_events` and `learner_visits`, both with RLS enabled, and the view `progress_summary`.
+   Run the migration only once; a second run stops with "relation already exists" and changes nothing.
+3. **Turn off sign-ups.**
+   Open Authentication > [Sign In / Providers](https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv/auth/providers).
+   Under User Signups, turn **off** "Allow new users to sign up" and choose **Save changes**.
+   Keep the **Email** provider turned on, because the family account signs in with email and password.
+   This matters even though the site has no sign-up form: the publishable key is public, so with sign-ups on, anyone could create an account through the API.
+4. **Create the family user.**
+   Open Authentication > [Users](https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv/auth/users), choose **Add user** > **Create new user**, enter the family email address and a strong password, keep **Auto Confirm User** ticked, and choose **Create user**.
+   This is the one account every device signs in with.
+   Keep the password in the family's password manager; it is never stored in this repository.
+5. **Turn sync on for the published site.**
+   In GitHub, open the repository's Settings > Secrets and variables > Actions, choose the **Variables** tab (not Secrets, because the workflow reads `vars.`), and add two repository variables with **New repository variable**:
+
+   | Name | Value |
+   |---|---|
+   | `PUBLIC_SUPABASE_URL` | `https://qyeksmswibgkmsfhbrpv.supabase.co` |
+   | `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `sb_publishable__j92W7nS36szAeo4rvFHzA_2qsbu7d1` |
+
+   Or, with the GitHub CLI, from the repository folder:
+
+   ```bash
+   gh variable set PUBLIC_SUPABASE_URL --body 'https://qyeksmswibgkmsfhbrpv.supabase.co'
+   gh variable set PUBLIC_SUPABASE_PUBLISHABLE_KEY --body 'sb_publishable__j92W7nS36szAeo4rvFHzA_2qsbu7d1'
+   ```
+
+   The next push to `main` (or a re-run of the latest CI run on `main`) builds and deploys the site with sync turned on, and the footer then shows "Family sign-in".
+6. **Sign in on each device** at `/account/` (the "Family sign-in" link in the footer).
    Progress already saved on that device is uploaded at its first sign-in.
    From then on, the device stays signed in until someone chooses "Sign out of this device".
 
-If either variable is missing or empty, the site behaves exactly as before: progress stays in each browser, and the sign-in page says that syncing is not set up.
+For `npm run dev` on your computer, run `cp .env.example .env`: `.env.example` holds the same two public values, and `.env` is ignored by git.
+With a `.env`, `npm run build` and `npm run verify` also build a copy with sync on, as CI does once the variables are set; every test passes either way, and signed-out pages still send nothing to Supabase.
+Without a `.env`, or if either variable is missing or empty, the site behaves exactly as before: progress stays in each browser, and the sign-in page says that syncing is not set up.
 
 ## When something goes wrong
 
@@ -72,4 +116,4 @@ If either variable is missing or empty, the site behaves exactly as before: prog
   Unknown requests are logged and answered with 501.
 - **Migration test.** `tests/unit/migration.test.ts` runs the migration in PGlite (Postgres in WebAssembly) with a minimal stand-in for Supabase's `auth` schema and roles, and checks the view, Row Level Security and grants.
 - **Pure logic.** `tests/unit/sync.test.ts` covers the model, the outbox and a full sync run against in-memory fakes.
-- Never point tests or agents at the real project, and never commit a real URL or key.
+- Never point tests or agents at the real project, and never commit a secret: the project URL and publishable key above are the only Supabase values that belong in the repository.

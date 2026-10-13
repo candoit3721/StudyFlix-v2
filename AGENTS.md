@@ -101,7 +101,8 @@ The schema comments are the reference.
   No UI framework.
 - Wrap every `localStorage` access in try/catch (see `src/lib/progress.ts`).
 - Pages read progress synchronously from `src/lib/progress.ts`; only `src/lib/sync/engine.ts` talks to Supabase, and it loads `@supabase/supabase-js` lazily.
-  Never commit a `.env` file or a real Supabase URL or key (see `docs/supabase-sync.md`).
+  The family project's URL and publishable key are public and live in `docs/supabase-sync.md` and `.env.example`.
+  Never commit a `.env` file, a secret key (`sb_secret_...`), the `service_role` key or the database password.
 - Progress keys must stay stable: block `id`s and quiz prompts identify progress.
   Changing a block id or a prompt resets that progress, which is acceptable but should be deliberate.
 - Generators are pure and seeded, compute their answers, and use plain-text prompts.
