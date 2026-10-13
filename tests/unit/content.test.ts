@@ -17,7 +17,7 @@ describe('content/', () => {
 
   it('cross-references are consistent', () => {
     try {
-      buildCatalog(content, { iconExists });
+      buildCatalog(content, { iconExists, base: '/' });
     } catch (error) {
       if (error instanceof CatalogError) expect.fail(error.message);
       throw error;

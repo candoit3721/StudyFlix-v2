@@ -1,12 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/paths';
 ---
 
 <Base title="Page not found">
   <section class="wrap not-found">
     <h1>This page wandered off.</h1>
     <p>The lesson may have moved. Head back and pick a learner.</p>
-    <a class="button" href="/">Back to StudyFlix</a>
+    <a class="button" href={withBase('/')}>Back to StudyFlix</a>
   </section>
 </Base>
 

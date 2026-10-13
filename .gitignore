@@ -1,5 +1,6 @@
-# build output
+# build output (dist-other-base/ is the second e2e pass's build, see docs/deploy.md)
 dist/
+dist-other-base/
 # generated types
 .astro/
 

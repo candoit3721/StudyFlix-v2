@@ -2,10 +2,10 @@ import AxeBuilder from '@axe-core/playwright';
 import { type Browser, type BrowserContext, expect, type Page, test } from '@playwright/test';
 import { buildSyncConfig } from './build-env';
 import { FAKE_EMAIL, FAKE_PASSWORD, FakeSupabase } from './fake-supabase';
-import { answerItem, chooseLearner } from './helpers';
+import { answerItem, chooseLearner, site } from './helpers';
 
-const SIX_KINGDOMS = '/courses/g6-science/six-kingdoms/';
-const BIODIVERSITY = '/courses/g6-science/what-is-biodiversity/';
+const SIX_KINGDOMS = site('/courses/g6-science/six-kingdoms/');
+const BIODIVERSITY = site('/courses/g6-science/what-is-biodiversity/');
 const NOT_SET_UP =
   'Syncing is not set up for this copy of StudyFlix. Progress is saved in this browser only.';
 const CHOOSER_NOTE =
@@ -50,7 +50,7 @@ async function disableSync(context: BrowserContext): Promise<void> {
 }
 
 async function signIn(page: Page): Promise<void> {
-  await page.goto('/account/');
+  await page.goto(site('/account/'));
   await page.getByLabel('Email').fill(FAKE_EMAIL);
   await page.getByLabel('Password').fill(FAKE_PASSWORD);
   await page.getByRole('button', { name: 'Sign in' }).click();
@@ -113,7 +113,7 @@ test.describe('sync not configured', () => {
   test('the site says so, hides sign-in and never downloads the sync library', async ({ page }) => {
     const scripts = collectScripts(page);
 
-    await page.goto('/');
+    await page.goto(site('/'));
     await expect(page.locator('.chooser-list')).toBeVisible();
     await expect(page.locator('[data-sync-note]')).toBeHidden();
     await expect(page.locator('[data-sync-link]')).toBeHidden();
@@ -122,7 +122,7 @@ test.describe('sync not configured', () => {
     await page.goto(SIX_KINGDOMS);
     await answerItem(page.locator('#check li.item').first(), true);
 
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Family sign-in');
     await expect(page.getByText(NOT_SET_UP)).toBeVisible();
     await expect(page.locator('form')).toBeHidden();
@@ -140,7 +140,7 @@ test('without the test override, the build config decides', async ({ page }) => 
   // builds with the family project, or with empty values while the repository variables are not set
   // yet (which must also mean "not configured").
   const configured = buildSyncConfig() !== null;
-  await page.goto('/account/');
+  await page.goto(site('/account/'));
   if (configured) {
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.locator('[data-sync-link]')).toBeVisible();
@@ -163,8 +163,8 @@ test.describe('sync configured, signed out', () => {
     await chooseLearner(page, 'Sophia');
     await page.goto(SIX_KINGDOMS);
     await answerItem(page.locator('#check li.item').first(), true);
-    await page.goto('/learners/sophia/');
-    await page.goto('/account/');
+    await page.goto(site('/learners/sophia/'));
+    await page.goto(site('/account/'));
     await page.evaluate(() => window.dispatchEvent(new Event('online')));
 
     if (configured) expect(requests.filter((url) => url.host === configured)).toEqual([]);
@@ -180,22 +180,25 @@ test.describe('sync configured, signed out', () => {
     await fake.install(context, baseURL ?? '');
     const scripts = collectScripts(page);
 
-    await page.goto('/');
+    await page.goto(site('/'));
     const note = page.locator('[data-sync-note]');
     await expect(note).toBeVisible();
     await expect(note).toContainText(CHOOSER_NOTE);
-    await expect(note.getByRole('link', { name: 'Family sign-in' })).toHaveAttribute('href', '/account/');
+    await expect(note.getByRole('link', { name: 'Family sign-in' })).toHaveAttribute(
+      'href',
+      site('/account/'),
+    );
     await expectNoSeriousAxeViolations(page);
     await expectNoSidewaysScroll(page);
 
     await chooseLearner(page, 'Sophia');
     const footerLink = page.locator('.site-footer').getByRole('link', { name: 'Family sign-in' });
     await expect(footerLink).toBeVisible();
-    await expect(footerLink).toHaveAttribute('href', '/account/');
+    await expect(footerLink).toHaveAttribute('href', site('/account/'));
     await page.goto(SIX_KINGDOMS);
     await expect(footerLink).toBeVisible();
     await answerItem(page.locator('#check li.item').first(), true);
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
     await expect(page.getByLabel('Email')).toBeVisible();
 
     expect(fake.requests).toEqual([]);
@@ -204,7 +207,7 @@ test.describe('sync configured, signed out', () => {
 
   test('the footer wraps cleanly with three items', async ({ context, page, baseURL }) => {
     await new FakeSupabase().install(context, baseURL ?? '');
-    await page.goto('/learners/sophia/');
+    await page.goto(site('/learners/sophia/'));
     const items = page.locator('.site-footer .wrap > *');
     await expect(page.locator('[data-sync-link]')).toBeVisible();
     const boxes = await Promise.all((await items.all()).map((item) => item.boundingBox()));
@@ -222,7 +225,7 @@ test.describe('family sign-in page', () => {
     const fake = new FakeSupabase();
     await fake.install(context, baseURL ?? '');
     const scripts = collectScripts(page);
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
 
     await expect(page).toHaveTitle(/^Family sign-in/);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Family sign-in');
@@ -296,11 +299,11 @@ test.describe('family sign-in page', () => {
     await expect(page.locator('[data-sync-status]')).toHaveText('Everything is synced.');
 
     // A signed-in device does not see the chooser notice.
-    await page.goto('/');
+    await page.goto(site('/'));
     await expect(page.locator('.chooser-list')).toBeVisible();
     await expect(page.locator('[data-sync-note]')).toBeHidden();
 
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
     await page.getByRole('button', { name: 'Sign out of this device' }).click();
     await expect(page.getByLabel('Email')).toBeVisible();
     await expect(page.getByLabel('Email')).toBeFocused();
@@ -396,7 +399,7 @@ test.describe('across devices', () => {
     await page.reload();
     await page.goto(SIX_KINGDOMS);
     await page.getByRole('link', { name: 'Sophia' }).click();
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
     await page.getByRole('button', { name: 'Sign out of this device' }).click();
     await expect(page.getByLabel('Email')).toBeVisible();
 
@@ -434,7 +437,7 @@ test.describe('across devices', () => {
     await expect(page.getByRole('alert')).toHaveCount(0);
     await expect(first.locator('.item-feedback')).toHaveText('Correct!');
 
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
     await expect(page.locator('[data-sync-status]')).toHaveText(OFFLINE);
     fake.restFailure = 'network';
     await page.reload();
@@ -445,7 +448,7 @@ test.describe('across devices', () => {
     await page.goto(SIX_KINGDOMS);
     await expect.poll(() => answered(fake, 'g6-science/six-kingdoms', key)).toBe(1);
     await page.reload();
-    await page.goto('/account/');
+    await page.goto(site('/account/'));
     await expect(page.locator('[data-sync-status]')).toHaveText('Everything is synced.');
     expect(fake.events.filter((e) => e.key === key)).toHaveLength(1);
     await context.close();
@@ -467,7 +470,7 @@ test.describe('across devices', () => {
     await answerItem(items.nth(0), true);
     await expect(items.nth(0).locator('.item-feedback')).toHaveText('Correct!');
     const home = await b.context.newPage();
-    await home.goto('/learners/sophia/');
+    await home.goto(site('/learners/sophia/'));
     await expect(home.locator('[data-title]')).toHaveText('The Six Kingdoms of Life');
     await expect.poll(() => answered(fake, 'g6-science/six-kingdoms')).toBe(1);
 

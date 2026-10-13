@@ -1,18 +1,19 @@
 import { expect, test } from '@playwright/test';
+import { site } from './helpers';
 
 test('worksheet and answer key come from the same practice set', async ({ page }) => {
-  await page.goto('/courses/math-contest-club/any-range/worksheet/');
+  await page.goto(site('/courses/math-contest-club/any-range/worksheet/'));
   const prompts = await page.locator('.print-block--practice .print-prompt').allTextContents();
   expect(prompts).toHaveLength(6);
 
-  await page.goto('/courses/math-contest-club/any-range/answer-key/');
+  await page.goto(site('/courses/math-contest-club/any-range/answer-key/'));
   const keyPrompts = await page.locator('.key-items').last().locator('.key-prompt').allTextContents();
   expect(keyPrompts).toEqual(prompts);
   await expect(page.locator('.key-answer').first()).toHaveText('31');
 });
 
 test('the printed worksheet hides the toolbar and fits the page width', async ({ page }) => {
-  await page.goto('/courses/g6-science/six-kingdoms/worksheet/');
+  await page.goto(site('/courses/g6-science/six-kingdoms/worksheet/'));
   await page.emulateMedia({ media: 'print' });
   await expect(page.locator('.print-toolbar')).toBeHidden();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -22,7 +23,7 @@ test('the printed worksheet hides the toolbar and fits the page width', async ({
 });
 
 test('generated choice and unit questions print with their choices and units', async ({ page }) => {
-  await page.goto('/courses/g6-math/ratios-and-rates/worksheet/');
+  await page.goto(site('/courses/g6-math/ratios-and-rates/worksheet/'));
   const items = page.locator('.print-block--practice .print-items > li');
   await expect(items).toHaveCount(8);
   const simplify = items.filter({ hasText: 'in lowest terms?' }).first();
@@ -30,7 +31,7 @@ test('generated choice and unit questions print with their choices and units', a
   const speed = items.filter({ hasText: 'kilometres' }).first();
   await expect(speed.locator('.print-line')).toHaveText(/km\/h/);
 
-  await page.goto('/courses/g6-math/ratios-and-rates/answer-key/');
+  await page.goto(site('/courses/g6-math/ratios-and-rates/answer-key/'));
   const answer = page
     .locator('.key-items')
     .last()
