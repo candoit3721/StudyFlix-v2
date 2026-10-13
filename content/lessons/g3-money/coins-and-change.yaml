@@ -84,7 +84,7 @@ blocks:
       - A loonie is worth 100&nbsp;cents. Count up from 65&nbsp;cents to 100&nbsp;cents.
       - A dime takes you from 65 to 75&nbsp;cents.
       - A quarter takes you from 75 to 100&nbsp;cents.
-      - "You counted up a dime and a quarter: 10 + 25 = 35."
+      - "You counted up a dime and a quarter: 10&nbsp;+&nbsp;25&nbsp;=&nbsp;35."
     answer: Your change is **35&nbsp;cents**.
 
   - type: example
@@ -93,7 +93,7 @@ blocks:
     problem: A book costs 7&nbsp;dollars. You pay with a 10-dollar bill. How much change do you get?
     steps:
       - "Count up from 7&nbsp;dollars to 10&nbsp;dollars: 8, 9, 10. That is 3&nbsp;dollars."
-      - "Check: 7 + 3 = 10."
+      - "Check: 7&nbsp;+&nbsp;3&nbsp;=&nbsp;10."
     answer: Your change is **3&nbsp;dollars**.
 
   - type: quiz
@@ -109,7 +109,7 @@ blocks:
         prompt: How many cents is a toonie worth?
         answer: 200
         unit: cents
-        explanation: A toonie is worth 2&nbsp;dollars, and each dollar is 100&nbsp;cents. 100 + 100 = 200.
+        explanation: A toonie is worth 2&nbsp;dollars, and each dollar is 100&nbsp;cents. 100&nbsp;+&nbsp;100&nbsp;=&nbsp;200.
       - kind: number
         prompt: How many quarters make 1&nbsp;dollar?
         answer: 4
@@ -119,12 +119,12 @@ blocks:
         prompt: You have 1 quarter, 2 dimes and 1 nickel. How many cents is that?
         answer: 50
         unit: cents
-        explanation: "Start with the quarter, then count on the dimes and the nickel: 25 + 20 + 5 = 50."
+        explanation: "Start with the quarter, then count on the dimes and the nickel: 25&nbsp;+&nbsp;20&nbsp;+&nbsp;5&nbsp;=&nbsp;50."
       - kind: choice
         prompt: Which coins make 30&nbsp;cents?
         choices: ["1 quarter and 1 nickel", "1 quarter and 1 dime", "2 dimes and 1 nickel", "3 nickels"]
         answer: "1 quarter and 1 nickel"
-        explanation: "25 + 5 = 30. The others make 35&nbsp;cents (25 + 10), 25&nbsp;cents (10 + 10 + 5) and 15&nbsp;cents (5 + 5 + 5)."
+        explanation: "25&nbsp;+&nbsp;5&nbsp;=&nbsp;30. The others make 35&nbsp;cents (25&nbsp;+&nbsp;10), 25&nbsp;cents (10&nbsp;+&nbsp;10&nbsp;+&nbsp;5) and 15&nbsp;cents (5&nbsp;+&nbsp;5&nbsp;+&nbsp;5)."
       - kind: number
         prompt: A pencil costs 40&nbsp;cents. You pay with 2 quarters. How much change do you get?
         answer: 10
