@@ -1,0 +1,8 @@
+title: Grade 3 Money
+subject: math
+summary: Get to know Canadian coins, count a handful of them, and make change by counting up, with amounts in cents and in whole dollars.
+units:
+  - id: canadian-coins
+    title: Canadian Coins
+    lessons:
+      - coins-and-change
