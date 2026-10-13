@@ -74,6 +74,11 @@ function list(parts: readonly string[]): string {
   return `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}`;
 }
 
+/** "65 + 35 = 100", kept on one line so a sum never splits at 390 px. */
+function sum(terms: readonly number[], result: string): string {
+  return `${terms.map(formatNumber).join(`${NB}+${NB}`)}${NB}=${NB}${result}`;
+}
+
 function capitalize(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
@@ -87,7 +92,7 @@ function drawCoins(
 ): number[] {
   for (;;) {
     const counts = coins.map((_, i) => rng.int(0, max[i] ?? 0));
-    const total = counts.reduce((sum, n, i) => sum + n * (coins[i]?.value ?? 0), 0);
+    const total = counts.reduce((acc, n, i) => acc + n * (coins[i]?.value ?? 0), 0);
     if (counts.reduce((a, b) => a + b, 0) >= 2 && accept(total)) return counts;
   }
 }
@@ -102,7 +107,8 @@ function countCoins(rng: Rng, unit: Unit): Item {
     const n = counts[i] ?? 0;
     return n > 0 ? [{ coin, n, subtotal: n * coin.value }] : [];
   });
-  const total = present.reduce((sum, p) => sum + p.subtotal, 0);
+  const subtotalValues = present.map((p) => p.subtotal);
+  const total = subtotalValues.reduce((a, b) => a + b, 0);
   const handful = list(present.map(({ coin, n }) => count(n, coin.singular, coin.plural)));
   const subtotals = list(
     present.map(
@@ -110,10 +116,7 @@ function countCoins(rng: Rng, unit: Unit): Item {
         `${count(n, coin.singular, coin.plural)} ${n === 1 ? 'makes' : 'make'} ${amount(subtotal, unit)}`,
     ),
   );
-  const sum =
-    present.length > 1
-      ? ` ${present.map((p) => formatNumber(p.subtotal)).join(' + ')} = ${amount(total, unit)}.`
-      : '';
+  const addUp = present.length > 1 ? ` ${sum(subtotalValues, amount(total, unit))}.` : '';
   const worth =
     unit === 'dollars'
       ? `${list(present.map(({ coin }) => `a ${coin.singular} is ${amount(coin.value, unit)}`))}. `
@@ -124,7 +127,7 @@ function countCoins(rng: Rng, unit: Unit): Item {
     answer: total,
     tolerance: 0,
     unit,
-    explanation: `${capitalize(worth)}${capitalize(subtotals)}.${sum}`,
+    explanation: `${capitalize(worth)}${capitalize(subtotals)}.${addUp}`,
   };
 }
 
@@ -139,7 +142,7 @@ function makeChange(rng: Rng, unit: Unit): Item {
       answer: change,
       tolerance: 0,
       unit,
-      explanation: `A loonie is worth ${amount(100, unit)}. Count up from ${amount(price, unit)} to ${amount(100, unit)}: that is ${amount(change, unit)}. Check: ${formatNumber(price)} + ${formatNumber(change)} = ${formatNumber(100)}.`,
+      explanation: `A loonie is worth ${amount(100, unit)}. Count up from ${amount(price, unit)} to ${amount(100, unit)}: that is ${amount(change, unit)}. Check: ${sum([price, change], formatNumber(100))}.`,
     };
   }
   const thing = rng.pick(DOLLAR_THINGS);
@@ -154,7 +157,7 @@ function makeChange(rng: Rng, unit: Unit): Item {
     answer: change,
     tolerance: 0,
     unit,
-    explanation: `Count up from ${amount(price, unit)} to ${amount(bill, unit)}: that is ${amount(change, unit)}. Check: ${formatNumber(price)} + ${formatNumber(change)} = ${formatNumber(bill)}.`,
+    explanation: `Count up from ${amount(price, unit)} to ${amount(bill, unit)}: that is ${amount(change, unit)}. Check: ${sum([price, change], formatNumber(bill))}.`,
   };
 }
 
