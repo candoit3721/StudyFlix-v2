@@ -1,6 +1,7 @@
 import { createRng, hashKey } from '../lib/rng';
 import type { Item } from '../model/schemas';
 import { gaussSum } from './gauss-sum';
+import { money } from './money';
 import { ratiosRates } from './ratios-rates';
 import type { Generator } from './types';
 
@@ -8,6 +9,7 @@ import type { Generator } from './types';
 // biome-ignore lint/suspicious/noExplicitAny: each generator has its own params type; generateSet parses them.
 export const GENERATORS: Record<string, Generator<any>> = {
   [gaussSum.id]: gaussSum,
+  [money.id]: money,
   [ratiosRates.id]: ratiosRates,
 };
 
