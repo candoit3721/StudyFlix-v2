@@ -1,0 +1,146 @@
+title: Coins and Change
+summary: Meet the Canadian coins, count a handful of them, and make change by counting up from the price.
+icon: coins
+minutes: 25
+objectives:
+  - Name the Canadian coins and tell what each one is worth.
+  - Count a handful of coins by starting with the coins worth the most.
+  - Make change by counting up from the price.
+blocks:
+  - type: explainer
+    id: meet-the-coins
+    title: Meet the coins
+    markdown: |
+      Canada has five coins you will see most days. Each one is worth a different amount.
+
+      | Coin | Worth | Picture |
+      |---|---|---|
+      | Nickel | 5&nbsp;cents | A beaver |
+      | Dime | 10&nbsp;cents | The Bluenose, a sailing ship |
+      | Quarter | 25&nbsp;cents | A caribou |
+      | Loonie | 1&nbsp;dollar | A loon |
+      | Toonie | 2&nbsp;dollars | A polar bear |
+
+      These are the usual pictures. Some special coins show a different picture.
+
+      **100&nbsp;cents make 1&nbsp;dollar.** So a loonie is worth 100&nbsp;cents, and a toonie is worth 200&nbsp;cents.
+
+      Canada stopped sending out pennies in 2013. So when you pay with cash, the total is rounded to the nearest 5&nbsp;cents.
+
+      Here is a fun fact. The dime is the smallest of these coins, but it is worth more than the bigger nickel!
+
+  - type: flashcards
+    id: coin-values
+    title: Flip the coins
+    cards:
+      - front: Nickel
+        back: 5&nbsp;cents. It usually shows a beaver.
+      - front: Dime
+        back: 10&nbsp;cents. It usually shows the Bluenose, a sailing ship.
+      - front: Quarter
+        back: 25&nbsp;cents. It usually shows a caribou.
+      - front: Loonie
+        back: 1&nbsp;dollar, which is 100&nbsp;cents. It usually shows a loon.
+      - front: Toonie
+        back: 2&nbsp;dollars, which is 200&nbsp;cents. It usually shows a polar bear.
+
+  - type: explainer
+    id: counting-coins
+    title: Counting a handful of coins
+    markdown: |
+      To count a handful of coins, first **sort** them into piles: quarters, dimes and nickels.
+
+      **Start with the coins worth the most.** Count the quarters by 25s: 25, 50, 75.
+
+      Then **count on** from there. Count on the dimes by 10s, and then the nickels by 5s.
+
+      The last number you say is how much money you have.
+
+  - type: example
+    id: count-a-handful
+    title: Count the coins
+    problem: You have 2 quarters, 1 dime and 3 nickels. How many cents is that?
+    steps:
+      - "Start with the quarters. Count by 25s: 25, 50."
+      - "Count on the dime by 10s: 60."
+      - "Count on the nickels by 5s: 65, 70, 75."
+    answer: You have **75&nbsp;cents**.
+
+  - type: explainer
+    id: making-change
+    title: Making change
+    markdown: |
+      **Change** is the money you get back when you pay more than the price.
+
+      To find your change, **count up** from the price to the amount you paid.
+
+      Add up the amounts you counted. That is your change.
+
+  - type: example
+    id: change-from-a-loonie
+    title: Change from a loonie
+    problem: A freezie costs 65&nbsp;cents. You pay with a loonie. How much change do you get?
+    steps:
+      - A loonie is worth 100&nbsp;cents. Count up from 65&nbsp;cents to 100&nbsp;cents.
+      - A dime takes you from 65 to 75&nbsp;cents.
+      - A quarter takes you from 75 to 100&nbsp;cents.
+      - "You counted up a dime and a quarter: 10&nbsp;+&nbsp;25&nbsp;=&nbsp;35."
+    answer: Your change is **35&nbsp;cents**.
+
+  - type: example
+    id: change-from-a-bill
+    title: Change from a bill
+    problem: A book costs 7&nbsp;dollars. You pay with a 10-dollar bill. How much change do you get?
+    steps:
+      - "Count up from 7&nbsp;dollars to 10&nbsp;dollars: 8, 9, 10. That is 3&nbsp;dollars."
+      - "Check: 7&nbsp;+&nbsp;3&nbsp;=&nbsp;10."
+    answer: Your change is **3&nbsp;dollars**.
+
+  - type: quiz
+    id: check
+    title: Check your coins
+    items:
+      - kind: choice
+        prompt: Which coin is worth 10&nbsp;cents?
+        choices: ["Nickel", "Dime", "Quarter", "Toonie"]
+        answer: "Dime"
+        explanation: The dime is worth 10&nbsp;cents. It is smaller than the nickel, but it is worth more. A nickel is worth only 5&nbsp;cents.
+      - kind: number
+        prompt: How many cents is a toonie worth?
+        answer: 200
+        unit: cents
+        explanation: A toonie is worth 2&nbsp;dollars, and each dollar is 100&nbsp;cents. 100&nbsp;+&nbsp;100&nbsp;=&nbsp;200.
+      - kind: number
+        prompt: How many quarters make 1&nbsp;dollar?
+        answer: 4
+        unit: quarters
+        explanation: "1&nbsp;dollar is 100&nbsp;cents. Count by 25s: 25, 50, 75, 100. That is 4&nbsp;quarters."
+      - kind: number
+        prompt: You have 1 quarter, 2 dimes and 1 nickel. How many cents is that?
+        answer: 50
+        unit: cents
+        explanation: "Start with the quarter, then count on the dimes and the nickel: 25&nbsp;+&nbsp;20&nbsp;+&nbsp;5&nbsp;=&nbsp;50."
+      - kind: choice
+        prompt: Which coins make 30&nbsp;cents?
+        choices: ["1 quarter and 1 nickel", "1 quarter and 1 dime", "2 dimes and 1 nickel", "3 nickels"]
+        answer: "1 quarter and 1 nickel"
+        explanation: "25&nbsp;+&nbsp;5&nbsp;=&nbsp;30. The others make 35&nbsp;cents (25&nbsp;+&nbsp;10), 25&nbsp;cents (10&nbsp;+&nbsp;10&nbsp;+&nbsp;5) and 15&nbsp;cents (5&nbsp;+&nbsp;5&nbsp;+&nbsp;5)."
+      - kind: number
+        prompt: A pencil costs 40&nbsp;cents. You pay with 2 quarters. How much change do you get?
+        answer: 10
+        unit: cents
+        explanation: "2 quarters are worth 50&nbsp;cents. Count up from 40&nbsp;cents to 50&nbsp;cents: that is 10&nbsp;cents."
+
+  - type: practice
+    id: practice-counting
+    title: Practise counting coins
+    generator: money
+    params: { mode: count-coins }
+    count: 6
+
+  - type: practice
+    id: practice-change
+    title: Practise making change
+    generator: money
+    params: { mode: make-change }
+    count: 6

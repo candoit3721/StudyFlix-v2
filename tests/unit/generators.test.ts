@@ -144,3 +144,118 @@ describe('ratios-rates answers', () => {
     }
   });
 });
+
+describe('money answers', () => {
+  const COIN_VALUES: Record<string, { value: number; unit: 'cents' | 'dollars' }> = {
+    quarter: { value: 25, unit: 'cents' },
+    dime: { value: 10, unit: 'cents' },
+    nickel: { value: 5, unit: 'cents' },
+    toonie: { value: 2, unit: 'dollars' },
+    loonie: { value: 1, unit: 'dollars' },
+  };
+  const modes = ['count-coins', 'make-change'] as const;
+  const amountKinds = ['cents', 'dollars'] as const;
+  const setOf = (mode: (typeof modes)[number], amounts: (typeof amountKinds)[number]) =>
+    generateSet('money', { mode, amounts }, 30, `${mode}-${amounts}`);
+  const numberItems = (mode: (typeof modes)[number], amounts: (typeof amountKinds)[number]) =>
+    setOf(mode, amounts).map(({ item }) => {
+      if (item.kind !== 'number') throw new Error(`Expected a number item, got ${item.kind}`);
+      return item;
+    });
+  /** Which of the four variants a prompt belongs to, read from its wording alone. */
+  const variantOf = (prompt: string) => {
+    if (/How many cents is that\?$/.test(prompt)) return 'count-cents';
+    if (/How many dollars is that\?$/.test(prompt)) return 'count-dollars';
+    if (/You pay with a loonie\./.test(prompt)) return 'change-cents';
+    if (/You pay with a (5|10|20)-dollar bill\./.test(prompt)) return 'change-dollars';
+    return 'unknown';
+  };
+
+  it('generates a 30-item set for every mode and amount kind', () => {
+    for (const mode of modes) {
+      for (const amounts of amountKinds) expect(setOf(mode, amounts)).toHaveLength(30);
+    }
+  });
+
+  it('count-coins: the coins named in the prompt add up to the answer', () => {
+    for (const amounts of amountKinds) {
+      for (const item of numberItems('count-coins', amounts)) {
+        expect(variantOf(item.prompt)).toBe(amounts === 'cents' ? 'count-cents' : 'count-dollars');
+        const coins = [...item.prompt.matchAll(/(\d+)\s(quarter|dime|nickel|toonie|loonie)(s?)\b/g)];
+        // Every coin word in the prompt comes with its count.
+        const coinWords = item.prompt.match(/quarter|dime|nickel|toonie|loonie/g) ?? [];
+        expect(coins.length).toBe(coinWords.length);
+        let total = 0;
+        let coinCount = 0;
+        for (const [, n, name, plural] of coins) {
+          const coin = COIN_VALUES[name ?? ''];
+          expect(coin?.unit).toBe(amounts);
+          expect(plural).toBe(Number(n) === 1 ? '' : 's');
+          total += Number(n) * (coin?.value ?? 0);
+          coinCount += Number(n);
+        }
+        expect(coinCount).toBeGreaterThanOrEqual(2);
+        expect(item.answer).toBe(total);
+      }
+    }
+  });
+
+  it('make-change: price + change = payment, and the payment is more than the price', () => {
+    for (const amounts of amountKinds) {
+      for (const item of numberItems('make-change', amounts)) {
+        expect(variantOf(item.prompt)).toBe(amounts === 'cents' ? 'change-cents' : 'change-dollars');
+        const [, priceText, priceUnit] = item.prompt.match(/costs (\d+)\s(cents?|dollars?)\./) ?? [];
+        expect(priceText).toBeTruthy();
+        const price = Number(priceText);
+        expect(priceUnit).toBe(price === 1 ? amounts.slice(0, -1) : amounts);
+        const bill = item.prompt.match(/pay with a (\d+)-dollar bill/)?.[1];
+        const payment = /pay with a loonie\b/.test(item.prompt) ? 100 : Number(bill);
+        expect(payment).toBeGreaterThan(price);
+        expect(price + item.answer).toBe(payment);
+        if (amounts === 'cents') {
+          expect(price % 5).toBe(0);
+          expect(price).toBeLessThan(100);
+        }
+      }
+    }
+  });
+
+  it('keeps cents and dollars apart, with whole-number answers above 0', () => {
+    for (const mode of modes) {
+      for (const amounts of amountKinds) {
+        for (const item of numberItems(mode, amounts)) {
+          expect(item.unit).toBe(amounts);
+          expect(item.tolerance).toBe(0);
+          expect(Number.isInteger(item.answer) && item.answer > 0).toBe(true);
+          expect(item.prompt).not.toMatch(amounts === 'cents' ? /dollar|toonie/ : /cent|quarter|dime|nickel/);
+          if (amounts === 'cents') {
+            expect(item.answer % 5).toBe(0);
+            expect(item.answer).toBeLessThan(100);
+          }
+          for (const text of [item.prompt, item.explanation ?? '', item.unit ?? '']) {
+            expect(text).not.toMatch(/[$*_`#]/);
+            expect(text).not.toMatch(/\d\.\d/);
+            expect(text).not.toMatch(/penn(y|ies)/i);
+          }
+        }
+      }
+    }
+  });
+
+  it('defaults to mixed modes and both amount kinds, and draws on all four variants', () => {
+    const variants = new Set(generateSet('money', {}, 30, 'mixed').map(({ item }) => variantOf(item.prompt)));
+    expect([...variants].sort()).toEqual(['change-cents', 'change-dollars', 'count-cents', 'count-dollars']);
+  });
+
+  it('never writes "a" in front of a number except before a bill, nor "a" before a vowel', () => {
+    for (const { item } of generateSet('money', {}, 200, 'articles')) {
+      expect(item.prompt).not.toMatch(/\ba\s(?!(?:5|10|20)-dollar bill\b)\d/i);
+      expect(item.prompt).not.toMatch(/\ba\s[aeiou]/i);
+    }
+  });
+
+  it('rejects params outside the design', () => {
+    expect(() => generateSet('money', { mode: 'decimals' }, 1, 'x')).toThrow();
+    expect(() => generateSet('money', { amounts: 'pennies' }, 1, 'x')).toThrow();
+  });
+});
