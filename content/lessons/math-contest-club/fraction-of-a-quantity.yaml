@@ -113,7 +113,7 @@ blocks:
         prompt: Which calculation gives $\frac{3}{5}$ of 40?
         choices: ['$40 \div 3 \times 5$', '$40 \div 5 \times 3$', '$40 \div 5 + 3$']
         answer: '$40 \div 5 \times 3$'
-        explanation: Divide by the denominator, 5, then multiply by the numerator, 3. $40 \div 5 \times 3 = 24$. The calculation $40 \div 3 \times 5$ swaps the two numbers, and $40 \div 5 + 3 = 11$ adds instead of multiplying.
+        explanation: Divide by the denominator, 5, then multiply by the numerator, 3, to get $40 \div 5 \times 3 = 24$. The calculation $40 \div 3 \times 5$ swaps the two numbers, and $40 \div 5 + 3 = 11$ adds instead of multiplying.
       - kind: number
         prompt: A class has 30 students. $\frac{2}{5}$ of them ride the bus. How many students ride the bus?
         answer: 12
