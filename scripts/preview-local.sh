@@ -19,8 +19,24 @@ main="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
 snapshot="$main/supabase/.snapshot"
 db_container="supabase_db_$(sed -n 's/^project_id = "\(.*\)"/\1/p' supabase/config.toml)"
 
+# Run the same service versions as production. `supabase link` pinned them
+# in the main checkout's supabase/.temp, which a job worktree does not have.
+# Copy only the versions, never the link itself: a preview must not be able
+# to reach the production project.
+here="$(git rev-parse --show-toplevel)"
+if [ "$here" != "$main" ] && [ -d "$main/supabase/.temp" ]; then
+  mkdir -p supabase/.temp
+  cp "$main"/supabase/.temp/*-version supabase/.temp/
+fi
+
 echo "== Local Supabase"
-"${SUPABASE[@]}" start
+# A stack left half-running (an interrupted reset, a Docker restart) will not
+# start; stopping it keeps its data, so try once more from a clean state.
+if ! "${SUPABASE[@]}" start; then
+  echo "== Restarting the local Supabase from a clean state"
+  "${SUPABASE[@]}" stop
+  "${SUPABASE[@]}" start
+fi
 
 echo "== Database from this checkout's migrations"
 "${SUPABASE[@]}" db reset --local --yes
