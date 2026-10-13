@@ -8,7 +8,7 @@ import { PGlite } from '@electric-sql/pglite';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 const MIGRATION = readFileSync(
-  new URL('../../supabase/migrations/20261012000000_learner_progress.sql', import.meta.url),
+  new URL('../../supabase/migrations/20261013004603_learner_progress.sql', import.meta.url),
   'utf8',
 );
 

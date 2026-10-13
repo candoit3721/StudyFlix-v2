@@ -21,7 +21,7 @@ The browser talks to Supabase directly, and Row Level Security makes sure only t
   Each answer updates the cache at once and, on a device that has synced before, is also queued in an outbox (`src/lib/sync/outbox.ts`).
 - `src/lib/sync/engine.ts` runs when a page loads, when the browser comes back online, when the tab becomes visible, and shortly after each answer.
   It sends the outbox, pulls the per-learner summary and the last visits, and rebuilds the local cache (`src/lib/sync/model.ts` holds the pure logic).
-- The database (`supabase/migrations/20261012000000_learner_progress.sql`) stores answers as append-only events, so two devices can never overwrite each other and a retried send is ignored.
+- The database (`supabase/migrations/20261013004603_learner_progress.sql`) stores answers as append-only events, so two devices can never overwrite each other and a retried send is ignored.
   The `progress_summary` view adds them up per learner, lesson and item.
   `learner_visits` keeps one last visit per learner, and never moves it backwards.
 - At a device's first sign-in, the progress already saved on that device is uploaded once.
@@ -51,7 +51,7 @@ The published site only turns sync on at step 5, so by then the tables exist and
 1. **Create the Supabase project.**
    Done on 2026-10-12: the `studyflix` project above.
 2. **Create the tables.**
-   Open the [SQL editor](https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv/sql/new), paste the whole of `supabase/migrations/20261012000000_learner_progress.sql`, and choose **Run**.
+   Open the [SQL editor](https://supabase.com/dashboard/project/qyeksmswibgkmsfhbrpv/sql/new), paste the whole of `supabase/migrations/20261013004603_learner_progress.sql`, and choose **Run**.
    It should finish with "Success. No rows returned".
    If you use the Supabase CLI instead, run these from the repository folder:
 
